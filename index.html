@@ -246,37 +246,54 @@
     }
     
     async function loadLeaderboard() {
-      const { data, error } = await sb
-        .from('leaderboard')
-        .select('*')
-        .limit(50);
-      
-      const container = document.getElementById('leaderboard-container');
-      
-      if (error || !data || data.length === 0) {
-        container.innerHTML = '<div style="text-align:center; color:#999; padding:20px;">🏆 Нет данных</div>';
-        return;
-      }
-      
-      container.innerHTML = `
-        <table style="width:100%; border-collapse:collapse;">
-          <thead>
-            <tr style="background:#f8f9fa;"><th style="padding:12px; text-align:left;">🥇 Место</th><th style="padding:12px; text-align:left;">Участник</th><th style="padding:12px; text-align:left;">🏃 Км</th><th style="padding:12px; text-align:left;">📊 Тренировок</th><th style="padding:12px; text-align:left;">⏱ Время</th></tr>
-          </thead>
-          <tbody>
-            ${data.map(item => `
-              <tr>
-                <td style="padding:12px; border-bottom:1px solid #eee;"><strong>${item.place}</strong></td>
-                <td style="padding:12px; border-bottom:1px solid #eee;">${escapeHtml(item.participant || item.username)}</td>
-                <td style="padding:12px; border-bottom:1px solid #eee;"><strong>${(item.total_km || 0).toFixed(2)}</strong></td>
-                <td style="padding:12px; border-bottom:1px solid #eee;">${item.activities_count || 0}</td>
-                <td style="padding:12px; border-bottom:1px solid #eee;">${Math.floor((item.total_time_min || 0) / 60)}ч ${(item.total_time_min || 0) % 60}мин</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      `;
+  try {
+    const { data, error } = await sb
+      .from('leaderboard')
+      .select('*')
+      .limit(50);
+    
+    const container = document.getElementById('leaderboard-container');
+    
+    if (error) {
+      console.error('Leaderboard error:', error);
+      container.innerHTML = '<div style="text-align:center; color:#999; padding:20px;">🏆 Ошибка загрузки</div>';
+      return;
     }
+    
+    if (!data || data.length === 0) {
+      container.innerHTML = '<div style="text-align:center; color:#999; padding:20px;">🏆 Нет данных</div>';
+      return;
+    }
+    
+    container.innerHTML = `
+      <table style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="background:#f8f9fa;">
+            <th style="padding:12px; text-align:left;">🥇 Место</th>
+            <th style="padding:12px; text-align:left;">Участник</th>
+            <th style="padding:12px; text-align:left;">🏃 Км</th>
+            <th style="padding:12px; text-align:left;">📊 Тренировок</th>
+            <th style="padding:12px; text-align:left;">⏱ Время</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.map(item => `
+            <tr>
+              <td style="padding:12px; border-bottom:1px solid #eee;"><strong>${item.place}</strong></td>
+              <td style="padding:12px; border-bottom:1px solid #eee;">${escapeHtml(item.participant || item.username)}</td>
+              <td style="padding:12px; border-bottom:1px solid #eee;"><strong>${(item.total_km || 0).toFixed(2)}</strong></td>
+              <td style="padding:12px; border-bottom:1px solid #eee;">${item.activities_count || 0}</td>
+              <td style="padding:12px; border-bottom:1px solid #eee;">${Math.floor((item.total_time_min || 0) / 60)}ч ${(item.total_time_min || 0) % 60}мин</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  } catch (err) {
+    console.error('Leaderboard exception:', err);
+    document.getElementById('leaderboard-container').innerHTML = '<div style="text-align:center; color:#999; padding:20px;">🏆 Ошибка загрузки</div>';
+  }
+}
     
     function escapeHtml(str) {
       if (!str) return '';
@@ -322,46 +339,60 @@
     }
     
     async function renderDashboard() {
-      const { data: profile } = await sb
-        .from('profiles')
-        .select('*')
-        .eq('id', currentUser.id)
-        .single();
-      
-      document.getElementById('app').innerHTML = `
-        <div class="header">
-          <div class="user-info">
-            👋 <strong>${escapeHtml(profile?.name_full || currentUser.email?.split('@')[0])}</strong>
-          </div>
-          <button class="secondary" onclick="logout()">🚪 Выйти</button>
-        </div>
-        <div class="card">
-          <h3>📊 Моя статистика</h3>
-          <div id="stats-container" class="stats-grid">⏳ Загрузка...</div>
-        </div>
-        <div class="card">
-          <h3>➕ Добавить тренировку</h3>
-          <input type="text" id="activity-link" placeholder="Вставьте ссылку на тренировку из Strava или Garmin">
-          <button onclick="addActivity()">📎 Добавить по ссылке</button>
-          <div id="activity-error" class="error"></div>
-          <div style="margin-top: 15px; font-size: 13px; color: #999; text-align: center;">
-            💡 Поддерживаются ссылки: strava.com/activities/... и connect.garmin.com/activity/...
-          </div>
-        </div>
-        <div class="card">
-          <h3>📋 Мои тренировки</h3>
-          <div id="activities-list">⏳ Загрузка...</div>
-        </div>
-        <div class="card">
-          <h3>🏆 Таблица лидеров</h3>
-          <div id="leaderboard-container">⏳ Загрузка...</div>
-        </div>
-      `;
-      
-      loadStats();
-      loadActivities();
-      loadLeaderboard();
+  // Пытаемся получить профиль пользователя
+  let profile = null;
+  try {
+    const { data, error } = await sb
+      .from('profiles')
+      .select('*')
+      .eq('id', currentUser.id)
+      .maybeSingle();
+    
+    if (error) {
+      console.error('Profile fetch error:', error);
+    } else {
+      profile = data;
     }
+  } catch (err) {
+    console.error('Profile fetch exception:', err);
+  }
+  
+  const displayName = profile?.name_full || currentUser.email?.split('@')[0] || 'Пользователь';
+  
+  document.getElementById('app').innerHTML = `
+    <div class="header">
+      <div class="user-info">
+        👋 <strong>${escapeHtml(displayName)}</strong>
+      </div>
+      <button class="secondary" onclick="logout()">🚪 Выйти</button>
+    </div>
+    <div class="card">
+      <h3>📊 Моя статистика</h3>
+      <div id="stats-container" class="stats-grid">⏳ Загрузка...</div>
+    </div>
+    <div class="card">
+      <h3>➕ Добавить тренировку</h3>
+      <input type="text" id="activity-link" placeholder="Вставьте ссылку на тренировку из Strava или Garmin">
+      <button onclick="addActivity()">📎 Добавить по ссылке</button>
+      <div id="activity-error" class="error"></div>
+      <div style="margin-top: 15px; font-size: 13px; color: #999; text-align: center;">
+        💡 Поддерживаются ссылки: strava.com/activities/... и connect.garmin.com/activity/...
+      </div>
+    </div>
+    <div class="card">
+      <h3>📋 Мои тренировки</h3>
+      <div id="activities-list">⏳ Загрузка...</div>
+    </div>
+    <div class="card">
+      <h3>🏆 Таблица лидеров</h3>
+      <div id="leaderboard-container">⏳ Загрузка...</div>
+    </div>
+  `;
+  
+  loadStats();
+  loadActivities();
+  loadLeaderboard();
+}
     
     async function render() {
       const { data: { session } } = await sb.auth.getSession();
