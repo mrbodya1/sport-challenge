@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Спортивный челлендж</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    h1, h2, h3 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    
+    h1 {
+      font-size: 28px;
+      color: #FC4C02;
+    }
+    
+    h2 {
+      font-size: 22px;
+    }
+    
+    h3 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 10px;
+    }
+    
+    .tab {
+      padding: 8px 20px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: 16px;
+      font-weight: 500;
+      color: #666;
+      border-radius: 20px;
+      transition: all 0.2s;
+    }
+    
+    .tab:hover {
+      color: #FC4C02;
+    }
+    
+    .tab.active {
+      color: #FC4C02;
+      background: #fff0e6;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .form-group {
+      margin-bottom: 18px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #333;
+      font-size: 14px;
+    }
+    
+    input, select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 16px;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+    
+    input:focus, select:focus {
+      outline: none;
+      border-color: #FC4C02;
+    }
+    
+    button {
+      background: #FC4C02;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 40px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s;
+      font-family: inherit;
+    }
+    
+    button:hover {
+      background: #e34402;
+    }
+    
+    button.secondary {
+      background: #6c757d;
+    }
+    
+    button.secondary:hover {
+      background: #5a6268;
+    }
+    
+    button.small {
+      width: auto;
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+    
+    .error {
+      color: #dc3545;
+      margin-top: 12px;
+      font-size: 14px;
+      text-align: center;
+    }
+    
+    .success {
+      color: #28a745;
+      margin-top: 12px;
+      font-size: 14px;
+      text-align: center;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .stat-card {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 16px;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 28px;
+      font-weight: bold;
+      color: #FC4C02;
+    }
+    
+    .stat-label {
+      font-size: 14px;
+      color: #666;
+      margin-top: 8px;
+    }
+    
+    .activity-item {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .activity-info {
+      flex: 1;
+    }
+    
+    .activity-name {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .activity-meta {
+      font-size: 13px;
+      color: #666;
+    }
+    
+    .delete-btn {
+      background: #dc3545;
+      padding: 6px 14px;
+      font-size: 12px;
+      width: auto;
+      margin: 0;
+    }
+    
+    .delete-btn:hover {
+      background: #c82333;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    
+    th {
+      background: #f8f9fa;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    .user-info {
+      background: white;
+      padding: 12px 20px;
+      border-radius: 40px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .loader {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #FC4C02;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <div class="loading">⏳ Загрузка...</div>
+  </div>
+
+  <script>
+    // 🔧 ЗАМЕНИТЕ ЭТОТ URL НА ВАШ GAS API
+    const API_URL = 'https://script.google.com/macros/s/ВАШ_ID_ЗДЕСЬ/exec';
+    
+    let currentUser = null;
+    
+    async function callApi(action, data) {
+      const formData = new FormData();
+      formData.append('action', action);
+      formData.append('data', JSON.stringify(data));
+      
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        body: formData
+      });
+      
+      return await response.json();
+    }
+    
+    async function login() {
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+      const errorDiv = document.getElementById('login-error');
+      
+      errorDiv.innerHTML = '<span class="loader"></span> Вход...';
+      
+      const result = await callApi('login', { username, password });
+      
+      if (result.success) {
+        currentUser = result;
+        localStorage.setItem('user', JSON.stringify(result));
+        render();
+      } else {
+        errorDiv.innerHTML = '❌ ' + result.error;
+      }
+    }
+    
+    async function register() {
+      const username = document.getElementById('reg-username').value;
+      const password = document.getElementById('reg-password').value;
+      const firstName = document.getElementById('reg-firstname').value;
+      const lastName = document.getElementById('reg-lastname').value;
+      const errorDiv = document.getElementById('register-error');
+      
+      if (!username || !password || !firstName || !lastName) {
+        errorDiv.innerHTML = '❌ Заполните все поля';
+        return;
+      }
+      
+      errorDiv.innerHTML = '<span class="loader"></span> Регистрация...';
+      
+      const result = await callApi('register', { username, password, firstName, lastName });
+      
+      if (result.success) {
+        errorDiv.style.color = '#28a745';
+        errorDiv.innerHTML = '✅ Регистрация успешна! Теперь войдите.';
+        setTimeout(() => {
+          switchTab('login');
+          document.getElementById('login-username').value = username;
+          errorDiv.innerHTML = '';
+        }, 1500);
+      } else {
+        errorDiv.style.color = '#dc3545';
+        errorDiv.innerHTML = '❌ ' + result.error;
+      }
+    }
+    
+    async function addActivity() {
+      const link = document.getElementById('activity-link').value;
+      const errorDiv = document.getElementById('activity-error');
+      
+      if (!link) {
+        errorDiv.innerHTML = '❌ Введите ссылку';
+        return;
+      }
+      
+      errorDiv.innerHTML = '<span class="loader"></span> Обработка...';
+      
+      const result = await callApi('processLink', { username: currentUser.username, link });
+      
+      if (result.success) {
+        errorDiv.style.color = '#28a745';
+        errorDiv.innerHTML = '✅ Тренировка добавлена! ' + result.distance + ' км';
+        document.getElementById('activity-link').value = '';
+        loadActivities();
+        loadStats();
+        loadLeaderboard();
+        setTimeout(() => { errorDiv.innerHTML = ''; }, 3000);
+      } else {
+        errorDiv.style.color = '#dc3545';
+        errorDiv.innerHTML = '❌ ' + result.error;
+      }
+    }
+    
+    async function deleteActivity(activityId) {
+      if (confirm('Удалить эту тренировку?')) {
+        await callApi('deleteActivity', { username: currentUser.username, activityId });
+        loadActivities();
+        loadStats();
+        loadLeaderboard();
+      }
+    }
+    
+    async function loadStats() {
+      const activities = await callApi('getActivities', { username: currentUser.username });
+      const totalKm = activities.reduce((sum, a) => sum + (a.distanceKm || 0), 0);
+      const totalActivities = activities.length;
+      const avgDistance = totalActivities > 0 ? (totalKm / totalActivities).toFixed(2) : 0;
+      
+      const container = document.getElementById('stats-container');
+      if (container) {
+        container.innerHTML = `
+          <div class="stat-card">
+            <div class="stat-value">${totalKm.toFixed(2)}</div>
+            <div class="stat-label">Всего км</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${totalActivities}</div>
+            <div class="stat-label">Тренировок</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${avgDistance}</div>
+            <div class="stat-label">Средняя км</div>
+          </div>
+        `;
+      }
+    }
+    
+    async function loadActivities() {
+      const activities = await callApi('getActivities', { username: currentUser.username });
+      const container = document.getElementById('activities-list');
+      
+      if (!container) return;
+      
+      if (!activities || activities.length === 0) {
+        container.innerHTML = '<div style="text-align:center; color:#999; padding:20px;">📭 Нет тренировок</div>';
+        return;
+      }
+      
+      container.innerHTML = activities.map(a => `
+        <div class="activity-item">
+          <div class="activity-info">
+            <div class="activity-name">${escapeHtml(a.name || 'Без названия')}</div>
+            <div class="activity-meta">
+              ${a.activityDate || '—'} | ${a.distanceKm || 0} км
+              ${a.durationMin ? ' | ' + Math.floor(a.durationMin/60) + 'ч ' + (a.durationMin%60) + 'мин' : ''}
+              ${a.paceMinPerKm ? ' | темп ' + a.paceMinPerKm : ''}
+            </div>
+          </div>
+          <button class="delete-btn" onclick="deleteActivity('${a.id}')">Удалить</button>
+        </div>
+      `).join('');
+    }
+    
+    async function loadLeaderboard() {
+      const leaderboard = await callApi('getLeaderboard', {});
+      const container = document.getElementById('leaderboard-container');
+      
+      if (!container) return;
+      
+      if (!leaderboard || leaderboard.length === 0) {
+        container.innerHTML = '<div style="text-align:center; color:#999; padding:20px;">🏆 Нет данных</div>';
+        return;
+      }
+      
+      container.innerHTML = `
+        <table>
+          <thead>
+            <tr><th>🥇 Место</th><th>Участник</th><th>🏃 Км</th><th>📊 Тренировок</th></tr>
+          </thead>
+          <tbody>
+            ${leaderboard.map((item, i) => `
+              <tr>
+                <td><strong>${i+1}</strong></td>
+                <td>${escapeHtml(item.participant || '—')}</td>
+                <td><strong>${item.total_km || 0}</strong></td>
+                <td>${item.activities_count || 0}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+    
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('user');
+      render();
+    }
+    
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(tab + '-tab').classList.add('active');
+    }
+    
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    
+    function renderAuth() {
+      document.getElementById('app').innerHTML = `
+        <div class="card">
+          <h1>🏃‍♂️ Спортивный челлендж</h1>
+          
+          <div class="tabs">
+            <button class="tab active" onclick="switchTab('login')">Вход</button>
+            <button class="tab" onclick="switchTab('register')">Регистрация</button>
+          </div>
+          
+          <div id="login-tab" class="tab-content active">
+            <div class="form-group">
+              <label>Логин</label>
+              <input type="text" id="login-username" placeholder="Введите логин">
+            </div>
+            <div class="form-group">
+              <label>Пароль</label>
+              <input type="password" id="login-password" placeholder="Введите пароль">
+            </div>
+            <button onclick="login()">Войти</button>
+            <div id="login-error" class="error"></div>
+          </div>
+          
+          <div id="register-tab" class="tab-content">
+            <div class="form-group">
+              <label>Логин</label>
+              <input type="text" id="reg-username" placeholder="Уникальный логин">
+            </div>
+            <div class="form-group">
+              <label>Имя</label>
+              <input type="text" id="reg-firstname" placeholder="Ваше имя">
+            </div>
+            <div class="form-group">
+              <label>Фамилия</label>
+              <input type="text" id="reg-lastname" placeholder="Ваша фамилия">
+            </div>
+            <div class="form-group">
+              <label>Пароль</label>
+              <input type="password" id="reg-password" placeholder="Придумайте пароль">
+            </div>
+            <button onclick="register()">Зарегистрироваться</button>
+            <div id="register-error" class="error"></div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function renderDashboard() {
+      document.getElementById('app').innerHTML = `
+        <div class="header">
+          <div class="user-info">
+            👋 <strong>${escapeHtml(currentUser.name)}</strong> (@${escapeHtml(currentUser.username)})
+          </div>
+          <button class="secondary" style="width: auto; padding: 10px 20px;" onclick="logout()">🚪 Выйти</button>
+        </div>
+        
+        <div class="card">
+          <h3>📊 Моя статистика</h3>
+          <div id="stats-container" class="stats-grid">
+            <div class="stat-card"><div class="stat-value">—</div><div class="stat-label">Загрузка...</div></div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h3>➕ Добавить тренировку</h3>
+          <input type="text" id="activity-link" placeholder="Вставьте ссылку на тренировку из Strava или Garmin">
+          <button onclick="addActivity()">📎 Добавить по ссылке</button>
+          <div id="activity-error" class="error"></div>
+          <div style="margin-top: 15px; font-size: 13px; color: #999; text-align: center;">
+            💡 Поддерживаются ссылки: strava.com/activities/... и connect.garmin.com/activity/...
+          </div>
+        </div>
+        
+        <div class="card">
+          <h3>📋 Мои тренировки</h3>
+          <div id="activities-list">⏳ Загрузка...</div>
+        </div>
+        
+        <div class="card">
+          <h3>🏆 Таблица лидеров</h3>
+          <div id="leaderboard-container">⏳ Загрузка...</div>
+        </div>
+      `;
+      
+      loadStats();
+      loadActivities();
+      loadLeaderboard();
+    }
+    
+    function render() {
+      if (currentUser && currentUser.token) {
+        renderDashboard();
+      } else {
+        renderAuth();
+      }
+    }
+    
+    // Проверяем сохранённого пользователя
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      currentUser = JSON.parse(savedUser);
+    }
+    render();
+  </script>
+</body>
+</html>
