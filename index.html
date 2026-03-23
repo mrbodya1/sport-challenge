@@ -45,7 +45,7 @@
     const SUPABASE_URL = 'https://idkghmydocvjhuwtgojh.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlka2dobXlkb2N2amh1d3Rnb2poIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNTU3NzgsImV4cCI6MjA4OTgzMTc3OH0.omQ4zi4gILIk8nQtbYPstcORhEyEhFvKDnFs5qwFlSM';
     
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
     let currentUser = null;
     
@@ -63,7 +63,7 @@
       
       errorDiv.innerHTML = '<span class="loader"></span> Регистрация...';
       
-      const { data, error } = await supabase.auth.signUp({
+      const { data, error } = await sb.auth.signUp({
         email: username + '@challenge.local',
         password: password,
         options: {
@@ -99,7 +99,7 @@
       
       errorDiv.innerHTML = '<span class="loader"></span> Вход...';
       
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await sb.auth.signInWithPassword({
         email: username + '@challenge.local',
         password: password
       });
@@ -113,7 +113,7 @@
     }
     
     async function logout() {
-      await supabase.auth.signOut();
+      await sb.auth.signOut();
       currentUser = null;
       render();
     }
@@ -130,7 +130,7 @@
       errorDiv.innerHTML = '<span class="loader"></span> Обработка...';
       
       // Вызываем Edge Function для парсинга
-      const { data: parsed, error: parseError } = await supabase.functions.invoke('parse-activity', {
+      const { data: parsed, error: parseError } = await sb.functions.invoke('parse-activity', {
         body: { url: link }
       });
       
@@ -140,7 +140,7 @@
       }
       
       // Сохраняем тренировку
-      const { error: insertError } = await supabase
+      const { error: insertError } = await sb
         .from('activities')
         .insert({
           user_id: currentUser.id,
@@ -169,7 +169,7 @@
     
     async function deleteActivity(activityId) {
       if (confirm('Удалить эту тренировку?')) {
-        const { error } = await supabase
+        const { error } = await sb
           .from('activities')
           .delete()
           .eq('id', activityId);
@@ -182,7 +182,7 @@
     }
     
     async function loadStats() {
-      const { data, error } = await supabase
+      const { data, error } = await sb
         .from('activities')
         .select('distance_km, duration_min')
         .eq('user_id', currentUser.id);
@@ -201,7 +201,7 @@
     }
     
     async function loadActivities() {
-      const { data, error } = await supabase
+      const { data, error } = await sb
         .from('activities')
         .select('*')
         .eq('user_id', currentUser.id)
@@ -228,7 +228,7 @@
     }
     
     async function loadLeaderboard() {
-      const { data, error } = await supabase
+      const { data, error } = await sb
         .from('leaderboard')
         .select('*')
         .limit(50);
@@ -242,19 +242,19 @@
       
       container.innerHTML = `
         <table>
-          <thead><tr><th>🥇 Место</th><th>Участник</th><th>🏃 Км</th><th>📊 Тренировок</th><th>⏱ Время</th></tr></thead>
+          <thead><tr><th>🥇 Место</th><th>Участник</th><th>🏃 Км</th><th>📊 Тренировок</th><th>⏱ Время</th> </thead>
           <tbody>
             ${data.map(item => `
               <tr>
-                <td><strong>${item.place}</strong></td>
+                <td><strong>${item.place}</strong> </td>
                 <td>${escapeHtml(item.participant || item.username)}</td>
                 <td><strong>${(item.total_km || 0).toFixed(2)}</strong></td>
                 <td>${item.activities_count || 0}</td>
                 <td>${Math.floor((item.total_time_min || 0) / 60)}ч ${(item.total_time_min || 0) % 60}мин</td>
-              </tr>
+               </tr>
             `).join('')}
           </tbody>
-        </table>
+         </table>
       `;
     }
     
@@ -302,7 +302,7 @@
     }
     
     async function renderDashboard() {
-      const { data: profile } = await supabase
+      const { data: profile } = await sb
         .from('profiles')
         .select('*')
         .eq('id', currentUser.id)
@@ -344,7 +344,7 @@
     }
     
     async function render() {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session } } = await sb.auth.getSession();
       
       if (session) {
         currentUser = session.user;
