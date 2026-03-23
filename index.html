@@ -293,17 +293,29 @@
     let currentUser = null;
     
     async function callApi(action, data) {
-      const formData = new FormData();
-      formData.append('action', action);
-      formData.append('data', JSON.stringify(data));
-      
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        body: formData
-      });
-      
-      return await response.json();
+  // Создаём URL с параметрами
+  const url = `${API_URL}?action=${action}&data=${encodeURIComponent(JSON.stringify(data))}`;
+  
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    
+    return await response.json();
+    
+  } catch (error) {
+    console.error('API Error:', error);
+    return { error: error.toString() };
+  }
+}
     
     async function login() {
       const username = document.getElementById('login-username').value;
