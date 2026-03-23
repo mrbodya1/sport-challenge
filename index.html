@@ -4,336 +4,50 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Спортивный челлендж</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      background: #f5f5f5;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    
-    .card {
-      background: white;
-      border-radius: 20px;
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-    
-    h1, h2, h3 {
-      color: #333;
-      margin-bottom: 20px;
-    }
-    
-    h1 {
-      font-size: 28px;
-      color: #FC4C02;
-    }
-    
-    h2 {
-      font-size: 22px;
-    }
-    
-    h3 {
-      font-size: 18px;
-      margin-bottom: 15px;
-    }
-    
-    .tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 25px;
-      border-bottom: 2px solid #eee;
-      padding-bottom: 10px;
-    }
-    
-    .tab {
-      padding: 8px 20px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      font-size: 16px;
-      font-weight: 500;
-      color: #666;
-      border-radius: 20px;
-      transition: all 0.2s;
-    }
-    
-    .tab:hover {
-      color: #FC4C02;
-    }
-    
-    .tab.active {
-      color: #FC4C02;
-      background: #fff0e6;
-    }
-    
-    .tab-content {
-      display: none;
-    }
-    
-    .tab-content.active {
-      display: block;
-    }
-    
-    .form-group {
-      margin-bottom: 18px;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      color: #333;
-      font-size: 14px;
-    }
-    
-    input, select {
-      width: 100%;
-      padding: 12px 15px;
-      border: 2px solid #e0e0e0;
-      border-radius: 12px;
-      font-size: 16px;
-      transition: border-color 0.2s;
-      font-family: inherit;
-    }
-    
-    input:focus, select:focus {
-      outline: none;
-      border-color: #FC4C02;
-    }
-    
-    button {
-      background: #FC4C02;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 40px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-      transition: background 0.2s;
-      font-family: inherit;
-    }
-    
-    button:hover {
-      background: #e34402;
-    }
-    
-    button.secondary {
-      background: #6c757d;
-    }
-    
-    button.secondary:hover {
-      background: #5a6268;
-    }
-    
-    button.small {
-      width: auto;
-      padding: 8px 16px;
-      font-size: 14px;
-    }
-    
-    .error {
-      color: #dc3545;
-      margin-top: 12px;
-      font-size: 14px;
-      text-align: center;
-    }
-    
-    .success {
-      color: #28a745;
-      margin-top: 12px;
-      font-size: 14px;
-      text-align: center;
-    }
-    
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-    
-    .stat-card {
-      background: #f8f9fa;
-      padding: 20px;
-      border-radius: 16px;
-      text-align: center;
-    }
-    
-    .stat-value {
-      font-size: 28px;
-      font-weight: bold;
-      color: #FC4C02;
-    }
-    
-    .stat-label {
-      font-size: 14px;
-      color: #666;
-      margin-top: 8px;
-    }
-    
-    .activity-item {
-      background: #f8f9fa;
-      padding: 15px;
-      border-radius: 12px;
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    
-    .activity-info {
-      flex: 1;
-    }
-    
-    .activity-name {
-      font-weight: 600;
-      margin-bottom: 5px;
-    }
-    
-    .activity-meta {
-      font-size: 13px;
-      color: #666;
-    }
-    
-    .delete-btn {
-      background: #dc3545;
-      padding: 6px 14px;
-      font-size: 12px;
-      width: auto;
-      margin: 0;
-    }
-    
-    .delete-btn:hover {
-      background: #c82333;
-    }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    
-    th, td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #eee;
-    }
-    
-    th {
-      background: #f8f9fa;
-      font-weight: 600;
-      color: #333;
-    }
-    
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-    
-    .user-info {
-      background: white;
-      padding: 12px 20px;
-      border-radius: 40px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    
-    .loading {
-      text-align: center;
-      padding: 40px;
-      color: #666;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    .loader {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #FC4C02;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-right: 10px;
-      vertical-align: middle;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    .card { background: white; border-radius: 20px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    h1, h2, h3 { color: #333; margin-bottom: 20px; }
+    h1 { color: #FC4C02; }
+    .tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+    .tab { padding: 8px 20px; cursor: pointer; background: none; border: none; font-size: 16px; font-weight: 500; color: #666; border-radius: 20px; }
+    .tab:hover { color: #FC4C02; }
+    .tab.active { color: #FC4C02; background: #fff0e6; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    input, select { width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 16px; margin-bottom: 15px; }
+    button { background: #FC4C02; color: white; border: none; padding: 12px 24px; border-radius: 40px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; }
+    button.secondary { background: #6c757d; width: auto; padding: 8px 16px; }
+    .error { color: #dc3545; margin-top: 12px; font-size: 14px; text-align: center; }
+    .success { color: #28a745; }
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+    .stat-card { background: #f8f9fa; padding: 20px; border-radius: 16px; text-align: center; }
+    .stat-value { font-size: 28px; font-weight: bold; color: #FC4C02; }
+    .activity-item { background: #f8f9fa; padding: 15px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .delete-btn { background: #dc3545; padding: 6px 14px; font-size: 12px; width: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+    th { background: #f8f9fa; }
+    .loader { display: inline-block; width: 20px; height: 20px; border: 3px solid #f3f3f3; border-top: 3px solid #FC4C02; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 10px; vertical-align: middle; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+    .user-info { background: white; padding: 12px 20px; border-radius: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
   </style>
 </head>
 <body>
-  <div class="container" id="app">
-    <div class="loading">⏳ Загрузка...</div>
-  </div>
+  <div class="container" id="app"></div>
 
   <script>
-    // 🔧 ЗАМЕНИТЕ ЭТОТ URL НА ВАШ GAS API
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwHny2VruV-2uCiopZVi24ffdKSiIGq0AdqhHHyOeu5nMfi56zUi5EYjimzBrkmfeWr/exec';
+    // 🔧 ЗАМЕНИТЕ НА ВАШИ ДАННЫЕ
+    const SUPABASE_URL = 'https://idkghmydocvjhuwtgojh.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlka2dobXlkb2N2amh1d3Rnb2poIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNTU3NzgsImV4cCI6MjA4OTgzMTc3OH0.omQ4zi4gILIk8nQtbYPstcORhEyEhFvKDnFs5qwFlSM';
+    
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
     let currentUser = null;
-    
-    async function callApi(action, data) {
-  // Создаём URL с параметрами
-  const url = `${API_URL}?action=${action}&data=${encodeURIComponent(JSON.stringify(data))}`;
-  
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    return await response.json();
-    
-  } catch (error) {
-    console.error('API Error:', error);
-    return { error: error.toString() };
-  }
-}
-    
-    async function login() {
-      const username = document.getElementById('login-username').value;
-      const password = document.getElementById('login-password').value;
-      const errorDiv = document.getElementById('login-error');
-      
-      errorDiv.innerHTML = '<span class="loader"></span> Вход...';
-      
-      const result = await callApi('login', { username, password });
-      
-      if (result.success) {
-        currentUser = result;
-        localStorage.setItem('user', JSON.stringify(result));
-        render();
-      } else {
-        errorDiv.innerHTML = '❌ ' + result.error;
-      }
-    }
     
     async function register() {
       const username = document.getElementById('reg-username').value;
@@ -349,20 +63,61 @@
       
       errorDiv.innerHTML = '<span class="loader"></span> Регистрация...';
       
-      const result = await callApi('register', { username, password, firstName, lastName });
+      // Регистрируем пользователя в Supabase Auth
+      const { data, error } = await supabase.auth.signUp({
+        email: username + '@challenge.local', // Supabase требует email
+        password: password,
+        options: {
+          data: {
+            username: username,
+            first_name: firstName,
+            last_name: lastName,
+            name_full: `${firstName} ${lastName}`
+          }
+        }
+      });
       
-      if (result.success) {
+      if (error) {
+        if (error.message.includes('already registered')) {
+          errorDiv.innerHTML = '❌ Логин уже занят';
+        } else {
+          errorDiv.innerHTML = '❌ ' + error.message;
+        }
+      } else {
         errorDiv.style.color = '#28a745';
         errorDiv.innerHTML = '✅ Регистрация успешна! Теперь войдите.';
         setTimeout(() => {
           switchTab('login');
-          document.getElementById('login-username').value = username;
           errorDiv.innerHTML = '';
         }, 1500);
-      } else {
-        errorDiv.style.color = '#dc3545';
-        errorDiv.innerHTML = '❌ ' + result.error;
       }
+    }
+    
+    async function login() {
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+      const errorDiv = document.getElementById('login-error');
+      
+      errorDiv.innerHTML = '<span class="loader"></span> Вход...';
+      
+      // Вход через email (username@challenge.local)
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: username + '@challenge.local',
+        password: password
+      });
+      
+      if (error) {
+        errorDiv.innerHTML = '❌ Неверный логин или пароль';
+      } else {
+        currentUser = data.user;
+        render();
+      }
+    }
+    
+    async function logout() {
+      await supabase.auth.signOut();
+      currentUser = null;
+      render();
     }
     
     async function addActivity() {
@@ -376,76 +131,88 @@
       
       errorDiv.innerHTML = '<span class="loader"></span> Обработка...';
       
-      const result = await callApi('processLink', { username: currentUser.username, link });
+      // Здесь нужно будет вызвать Edge Function для парсинга
+      // Пока добавляем тестовую тренировку
+      const { data, error } = await supabase
+        .from('activities')
+        .insert({
+          user_id: currentUser.id,
+          platform: 'manual',
+          activity_id: 'test_' + Date.now(),
+          name: 'Тестовая тренировка',
+          distance_km: 10,
+          duration_min: 55,
+          pace_min_per_km: '5:30',
+          activity_date: new Date().toISOString().split('T')[0],
+          url: link
+        });
       
-      if (result.success) {
+      if (error) {
+        errorDiv.innerHTML = '❌ ' + error.message;
+      } else {
         errorDiv.style.color = '#28a745';
-        errorDiv.innerHTML = '✅ Тренировка добавлена! ' + result.distance + ' км';
+        errorDiv.innerHTML = '✅ Тренировка добавлена!';
         document.getElementById('activity-link').value = '';
         loadActivities();
         loadStats();
-        loadLeaderboard();
         setTimeout(() => { errorDiv.innerHTML = ''; }, 3000);
-      } else {
-        errorDiv.style.color = '#dc3545';
-        errorDiv.innerHTML = '❌ ' + result.error;
       }
     }
     
     async function deleteActivity(activityId) {
       if (confirm('Удалить эту тренировку?')) {
-        await callApi('deleteActivity', { username: currentUser.username, activityId });
-        loadActivities();
-        loadStats();
-        loadLeaderboard();
+        const { error } = await supabase
+          .from('activities')
+          .delete()
+          .eq('id', activityId);
+        
+        if (!error) {
+          loadActivities();
+          loadStats();
+        }
       }
     }
     
     async function loadStats() {
-      const activities = await callApi('getActivities', { username: currentUser.username });
-      const totalKm = activities.reduce((sum, a) => sum + (a.distanceKm || 0), 0);
-      const totalActivities = activities.length;
+      const { data, error } = await supabase
+        .from('activities')
+        .select('distance_km, duration_min')
+        .eq('user_id', currentUser.id);
+      
+      if (error) return;
+      
+      const totalKm = data.reduce((sum, a) => sum + (a.distance_km || 0), 0);
+      const totalActivities = data.length;
       const avgDistance = totalActivities > 0 ? (totalKm / totalActivities).toFixed(2) : 0;
       
-      const container = document.getElementById('stats-container');
-      if (container) {
-        container.innerHTML = `
-          <div class="stat-card">
-            <div class="stat-value">${totalKm.toFixed(2)}</div>
-            <div class="stat-label">Всего км</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">${totalActivities}</div>
-            <div class="stat-label">Тренировок</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">${avgDistance}</div>
-            <div class="stat-label">Средняя км</div>
-          </div>
-        `;
-      }
+      document.getElementById('stats-container').innerHTML = `
+        <div class="stat-card"><div class="stat-value">${totalKm.toFixed(2)}</div><div class="stat-label">Всего км</div></div>
+        <div class="stat-card"><div class="stat-value">${totalActivities}</div><div class="stat-label">Тренировок</div></div>
+        <div class="stat-card"><div class="stat-value">${avgDistance}</div><div class="stat-label">Средняя км</div></div>
+      `;
     }
     
     async function loadActivities() {
-      const activities = await callApi('getActivities', { username: currentUser.username });
+      const { data, error } = await supabase
+        .from('activities')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .order('activity_date', { ascending: false });
+      
       const container = document.getElementById('activities-list');
       
-      if (!container) return;
-      
-      if (!activities || activities.length === 0) {
+      if (error || !data || data.length === 0) {
         container.innerHTML = '<div style="text-align:center; color:#999; padding:20px;">📭 Нет тренировок</div>';
         return;
       }
       
-      container.innerHTML = activities.map(a => `
+      container.innerHTML = data.map(a => `
         <div class="activity-item">
-          <div class="activity-info">
-            <div class="activity-name">${escapeHtml(a.name || 'Без названия')}</div>
-            <div class="activity-meta">
-              ${a.activityDate || '—'} | ${a.distanceKm || 0} км
-              ${a.durationMin ? ' | ' + Math.floor(a.durationMin/60) + 'ч ' + (a.durationMin%60) + 'мин' : ''}
-              ${a.paceMinPerKm ? ' | темп ' + a.paceMinPerKm : ''}
-            </div>
+          <div>
+            <strong>${a.name || 'Без названия'}</strong><br>
+            ${a.activity_date || '—'} | ${a.distance_km || 0} км
+            ${a.duration_min ? ' | ' + Math.floor(a.duration_min/60) + 'ч ' + (a.duration_min%60) + 'мин' : ''}
+            ${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}
           </div>
           <button class="delete-btn" onclick="deleteActivity('${a.id}')">Удалить</button>
         </div>
@@ -453,39 +220,34 @@
     }
     
     async function loadLeaderboard() {
-      const leaderboard = await callApi('getLeaderboard', {});
+      const { data, error } = await supabase
+        .from('leaderboard')
+        .select('*')
+        .limit(50);
+      
       const container = document.getElementById('leaderboard-container');
       
-      if (!container) return;
-      
-      if (!leaderboard || leaderboard.length === 0) {
+      if (error || !data || data.length === 0) {
         container.innerHTML = '<div style="text-align:center; color:#999; padding:20px;">🏆 Нет данных</div>';
         return;
       }
       
       container.innerHTML = `
         <table>
-          <thead>
-            <tr><th>🥇 Место</th><th>Участник</th><th>🏃 Км</th><th>📊 Тренировок</th></tr>
-          </thead>
+          <thead><tr><th>🥇 Место</th><th>Участник</th><th>🏃 Км</th><th>📊 Тренировок</th><th>⏱ Время</th></tr></thead>
           <tbody>
-            ${leaderboard.map((item, i) => `
+            ${data.map(item => `
               <tr>
-                <td><strong>${i+1}</strong></td>
-                <td>${escapeHtml(item.participant || '—')}</td>
-                <td><strong>${item.total_km || 0}</strong></td>
+                <td><strong>${item.place}</strong></td>
+                <td>${item.participant || item.username}</td>
+                <td><strong>${item.total_km?.toFixed(2) || 0}</strong></td>
                 <td>${item.activities_count || 0}</td>
+                <td>${Math.floor((item.total_time_min || 0) / 60)}ч ${(item.total_time_min || 0) % 60}мин</td>
               </tr>
             `).join('')}
           </tbody>
         </table>
       `;
-    }
-    
-    function logout() {
-      currentUser = null;
-      localStorage.removeItem('user');
-      render();
     }
     
     function switchTab(tab) {
@@ -495,56 +257,25 @@
       document.getElementById(tab + '-tab').classList.add('active');
     }
     
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-    
     function renderAuth() {
       document.getElementById('app').innerHTML = `
         <div class="card">
           <h1>🏃‍♂️ Спортивный челлендж</h1>
-          
           <div class="tabs">
             <button class="tab active" onclick="switchTab('login')">Вход</button>
             <button class="tab" onclick="switchTab('register')">Регистрация</button>
           </div>
-          
           <div id="login-tab" class="tab-content active">
-            <div class="form-group">
-              <label>Логин</label>
-              <input type="text" id="login-username" placeholder="Введите логин">
-            </div>
-            <div class="form-group">
-              <label>Пароль</label>
-              <input type="password" id="login-password" placeholder="Введите пароль">
-            </div>
+            <input type="text" id="login-username" placeholder="Логин">
+            <input type="password" id="login-password" placeholder="Пароль">
             <button onclick="login()">Войти</button>
             <div id="login-error" class="error"></div>
           </div>
-          
           <div id="register-tab" class="tab-content">
-            <div class="form-group">
-              <label>Логин</label>
-              <input type="text" id="reg-username" placeholder="Уникальный логин">
-            </div>
-            <div class="form-group">
-              <label>Имя</label>
-              <input type="text" id="reg-firstname" placeholder="Ваше имя">
-            </div>
-            <div class="form-group">
-              <label>Фамилия</label>
-              <input type="text" id="reg-lastname" placeholder="Ваша фамилия">
-            </div>
-            <div class="form-group">
-              <label>Пароль</label>
-              <input type="password" id="reg-password" placeholder="Придумайте пароль">
-            </div>
+            <input type="text" id="reg-username" placeholder="Логин">
+            <input type="text" id="reg-firstname" placeholder="Имя">
+            <input type="text" id="reg-lastname" placeholder="Фамилия">
+            <input type="password" id="reg-password" placeholder="Пароль">
             <button onclick="register()">Зарегистрироваться</button>
             <div id="register-error" class="error"></div>
           </div>
@@ -552,22 +283,25 @@
       `;
     }
     
-    function renderDashboard() {
+    async function renderDashboard() {
+      // Получаем профиль пользователя
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', currentUser.id)
+        .single();
+      
       document.getElementById('app').innerHTML = `
         <div class="header">
           <div class="user-info">
-            👋 <strong>${escapeHtml(currentUser.name)}</strong> (@${escapeHtml(currentUser.username)})
+            👋 <strong>${profile?.name_full || currentUser.email?.split('@')[0]}</strong>
           </div>
-          <button class="secondary" style="width: auto; padding: 10px 20px;" onclick="logout()">🚪 Выйти</button>
+          <button class="secondary" onclick="logout()">🚪 Выйти</button>
         </div>
-        
         <div class="card">
           <h3>📊 Моя статистика</h3>
-          <div id="stats-container" class="stats-grid">
-            <div class="stat-card"><div class="stat-value">—</div><div class="stat-label">Загрузка...</div></div>
-          </div>
+          <div id="stats-container" class="stats-grid">⏳ Загрузка...</div>
         </div>
-        
         <div class="card">
           <h3>➕ Добавить тренировку</h3>
           <input type="text" id="activity-link" placeholder="Вставьте ссылку на тренировку из Strava или Garmin">
@@ -577,12 +311,10 @@
             💡 Поддерживаются ссылки: strava.com/activities/... и connect.garmin.com/activity/...
           </div>
         </div>
-        
         <div class="card">
           <h3>📋 Мои тренировки</h3>
           <div id="activities-list">⏳ Загрузка...</div>
         </div>
-        
         <div class="card">
           <h3>🏆 Таблица лидеров</h3>
           <div id="leaderboard-container">⏳ Загрузка...</div>
@@ -594,19 +326,18 @@
       loadLeaderboard();
     }
     
-    function render() {
-      if (currentUser && currentUser.token) {
+    async function render() {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session) {
+        currentUser = session.user;
         renderDashboard();
       } else {
         renderAuth();
       }
     }
     
-    // Проверяем сохранённого пользователя
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      currentUser = JSON.parse(savedUser);
-    }
+    // Проверяем сессию при загрузке
     render();
   </script>
 </body>
