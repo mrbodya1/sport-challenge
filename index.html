@@ -131,18 +131,13 @@
   errorDiv.innerHTML = '<span class="loader"></span> Обработка...';
   
   try {
-    // Получаем текущую сессию с токеном
-    const { data: { session } } = await sb.auth.getSession();
-    const accessToken = session?.access_token;
-    
     console.log('Calling Edge Function with URL:', link);
     
-    // Вызываем Edge Function
+    // Вызываем Edge Function БЕЗ токена (функция публичная)
     const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': accessToken ? `Bearer ${accessToken}` : ''
       },
       body: JSON.stringify({ url: link })
     });
