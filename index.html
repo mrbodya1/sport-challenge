@@ -120,53 +120,75 @@
     }
     
     async function addActivity() {
-      const link = document.getElementById('activity-link').value;
-      const errorDiv = document.getElementById('activity-error');
-      
-      if (!link) {
-        errorDiv.innerHTML = '❌ Введите ссылку';
-        return;
-      }
-      
-      errorDiv.innerHTML = '<span class="loader"></span> Обработка...';
-      
-      // Вызываем Edge Function для парсинга
-      const { data: parsed, error: parseError } = await sb.functions.invoke('parse-activity', {
-        body: { url: link }
-      });
-      
-      if (parseError || !parsed?.success) {
-        errorDiv.innerHTML = '❌ ' + (parsed?.error || parseError?.message || 'Ошибка парсинга');
-        return;
-      }
-      
-      // Сохраняем тренировку
-      const { error: insertError } = await sb
-        .from('activities')
-        .insert({
-          user_id: currentUser.id,
-          platform: link.includes('strava.com') ? 'strava' : 'garmin',
-          activity_id: 'parsed_' + Date.now(),
-          name: parsed.name,
-          distance_km: parsed.distance,
-          duration_min: parsed.duration,
-          pace_min_per_km: parsed.pace,
-          activity_date: parsed.date || new Date().toISOString().split('T')[0],
-          url: link
-        });
-      
-      if (insertError) {
-        errorDiv.innerHTML = '❌ ' + insertError.message;
-      } else {
-        errorDiv.style.color = '#28a745';
-        errorDiv.innerHTML = `✅ Добавлено! ${parsed.distance} км — ${parsed.name}`;
-        document.getElementById('activity-link').value = '';
-        loadActivities();
-        loadStats();
-        loadLeaderboard();
-        setTimeout(() => { errorDiv.innerHTML = ''; }, 3000);
-      }
+  const link = document.getElementById('activity-link').value;
+  const errorDiv = document.getElementById('activity-error');
+  
+  if (!link) {
+    errorDiv.innerHTML = '❌ Введите ссылку';
+    return;
+  }
+  
+  errorDiv.innerHTML = '<span class="loader"></span> Обработка...';
+  
+  try {
+    // Получаем текущую сессию с токеном
+    const { data: { session } } = await sb.auth.getSession();
+    const accessToken = session?.access_token;
+    
+    console.log('Calling Edge Function with URL:', link);
+    
+    // Вызываем Edge Function
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': accessToken ? `Bearer ${accessToken}` : ''
+      },
+      body: JSON.stringify({ url: link })
+    });
+    
+    console.log('Response status:', response.status);
+    const parsed = await response.json();
+    console.log('Edge Function response:', parsed);
+    
+    if (!response.ok || !parsed.success) {
+      errorDiv.innerHTML = '❌ ' + (parsed.error || 'Ошибка парсинга');
+      return;
     }
+    
+    // Сохраняем тренировку в базу данных
+    const { error: insertError } = await sb
+      .from('activities')
+      .insert({
+        user_id: currentUser.id,
+        platform: link.includes('strava.com') ? 'strava' : 'garmin',
+        activity_id: 'parsed_' + Date.now(),
+        name: parsed.name,
+        distance_km: parsed.distance,
+        duration_min: parsed.duration,
+        pace_min_per_km: parsed.pace,
+        activity_date: parsed.date || new Date().toISOString().split('T')[0],
+        url: link
+      });
+    
+    if (insertError) {
+      console.error('Insert error:', insertError);
+      errorDiv.innerHTML = '❌ Ошибка сохранения: ' + insertError.message;
+    } else {
+      errorDiv.style.color = '#28a745';
+      errorDiv.innerHTML = `✅ Добавлено! ${parsed.distance} км — ${parsed.name}`;
+      document.getElementById('activity-link').value = '';
+      loadActivities();
+      loadStats();
+      loadLeaderboard();
+      setTimeout(() => { errorDiv.innerHTML = ''; }, 3000);
+    }
+    
+  } catch (error) {
+    console.error('Error:', error);
+    errorDiv.innerHTML = '❌ Ошибка: ' + error.message;
+  }
+}
     
     async function deleteActivity(activityId) {
       if (confirm('Удалить эту тренировку?')) {
