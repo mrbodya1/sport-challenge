@@ -41,7 +41,7 @@
   <div class="container" id="app"></div>
 
   <script>
-    // 🔧 ЗАМЕНИТЕ НА ВАШИ ДАННЫЕ
+    // 🔧 ЗАМЕНИТЕ НА ВАШИ ДАННЫЕ ИЗ SUPABASE
     const SUPABASE_URL = 'https://idkghmydocvjhuwtgojh.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlka2dobXlkb2N2amh1d3Rnb2poIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNTU3NzgsImV4cCI6MjA4OTgzMTc3OH0.omQ4zi4gILIk8nQtbYPstcORhEyEhFvKDnFs5qwFlSM';
     
@@ -63,9 +63,8 @@
       
       errorDiv.innerHTML = '<span class="loader"></span> Регистрация...';
       
-      // Регистрируем пользователя в Supabase Auth
       const { data, error } = await supabase.auth.signUp({
-        email: username + '@challenge.local', // Supabase требует email
+        email: username + '@challenge.local',
         password: password,
         options: {
           data: {
@@ -100,7 +99,6 @@
       
       errorDiv.innerHTML = '<span class="loader"></span> Вход...';
       
-      // Вход через email (username@challenge.local)
       const { data, error } = await supabase.auth.signInWithPassword({
         email: username + '@challenge.local',
         password: password
@@ -131,30 +129,40 @@
       
       errorDiv.innerHTML = '<span class="loader"></span> Обработка...';
       
-      // Здесь нужно будет вызвать Edge Function для парсинга
-      // Пока добавляем тестовую тренировку
-      const { data, error } = await supabase
+      // Вызываем Edge Function для парсинга
+      const { data: parsed, error: parseError } = await supabase.functions.invoke('parse-activity', {
+        body: { url: link }
+      });
+      
+      if (parseError || !parsed?.success) {
+        errorDiv.innerHTML = '❌ ' + (parsed?.error || parseError?.message || 'Ошибка парсинга');
+        return;
+      }
+      
+      // Сохраняем тренировку
+      const { error: insertError } = await supabase
         .from('activities')
         .insert({
           user_id: currentUser.id,
-          platform: 'manual',
-          activity_id: 'test_' + Date.now(),
-          name: 'Тестовая тренировка',
-          distance_km: 10,
-          duration_min: 55,
-          pace_min_per_km: '5:30',
-          activity_date: new Date().toISOString().split('T')[0],
+          platform: link.includes('strava.com') ? 'strava' : 'garmin',
+          activity_id: 'parsed_' + Date.now(),
+          name: parsed.name,
+          distance_km: parsed.distance,
+          duration_min: parsed.duration,
+          pace_min_per_km: parsed.pace,
+          activity_date: parsed.date || new Date().toISOString().split('T')[0],
           url: link
         });
       
-      if (error) {
-        errorDiv.innerHTML = '❌ ' + error.message;
+      if (insertError) {
+        errorDiv.innerHTML = '❌ ' + insertError.message;
       } else {
         errorDiv.style.color = '#28a745';
-        errorDiv.innerHTML = '✅ Тренировка добавлена!';
+        errorDiv.innerHTML = `✅ Добавлено! ${parsed.distance} км — ${parsed.name}`;
         document.getElementById('activity-link').value = '';
         loadActivities();
         loadStats();
+        loadLeaderboard();
         setTimeout(() => { errorDiv.innerHTML = ''; }, 3000);
       }
     }
@@ -209,7 +217,7 @@
       container.innerHTML = data.map(a => `
         <div class="activity-item">
           <div>
-            <strong>${a.name || 'Без названия'}</strong><br>
+            <strong>${escapeHtml(a.name || 'Без названия')}</strong><br>
             ${a.activity_date || '—'} | ${a.distance_km || 0} км
             ${a.duration_min ? ' | ' + Math.floor(a.duration_min/60) + 'ч ' + (a.duration_min%60) + 'мин' : ''}
             ${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}
@@ -239,8 +247,8 @@
             ${data.map(item => `
               <tr>
                 <td><strong>${item.place}</strong></td>
-                <td>${item.participant || item.username}</td>
-                <td><strong>${item.total_km?.toFixed(2) || 0}</strong></td>
+                <td>${escapeHtml(item.participant || item.username)}</td>
+                <td><strong>${(item.total_km || 0).toFixed(2)}</strong></td>
                 <td>${item.activities_count || 0}</td>
                 <td>${Math.floor((item.total_time_min || 0) / 60)}ч ${(item.total_time_min || 0) % 60}мин</td>
               </tr>
@@ -248,6 +256,16 @@
           </tbody>
         </table>
       `;
+    }
+    
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
     }
     
     function switchTab(tab) {
@@ -284,7 +302,6 @@
     }
     
     async function renderDashboard() {
-      // Получаем профиль пользователя
       const { data: profile } = await supabase
         .from('profiles')
         .select('*')
@@ -294,7 +311,7 @@
       document.getElementById('app').innerHTML = `
         <div class="header">
           <div class="user-info">
-            👋 <strong>${profile?.name_full || currentUser.email?.split('@')[0]}</strong>
+            👋 <strong>${escapeHtml(profile?.name_full || currentUser.email?.split('@')[0])}</strong>
           </div>
           <button class="secondary" onclick="logout()">🚪 Выйти</button>
         </div>
@@ -337,7 +354,6 @@
       }
     }
     
-    // Проверяем сессию при загрузке
     render();
   </script>
 </body>
