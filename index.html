@@ -45,6 +45,7 @@
     const SUPABASE_URL = 'https://idkghmydocvjhuwtgojh.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlka2dobXlkb2N2amh1d3Rnb2poIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNTU3NzgsImV4cCI6MjA4OTgzMTc3OH0.omQ4zi4gILIk8nQtbYPstcORhEyEhFvKDnFs5qwFlSM';
     
+    // Используем глобальный supabase из библиотеки
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
     let currentUser = null;
@@ -241,20 +242,22 @@
       }
       
       container.innerHTML = `
-        <table>
-          <thead><tr><th>🥇 Место</th><th>Участник</th><th>🏃 Км</th><th>📊 Тренировок</th><th>⏱ Время</th> </thead>
+        <table style="width:100%; border-collapse:collapse;">
+          <thead>
+            <tr style="background:#f8f9fa;"><th style="padding:12px; text-align:left;">🥇 Место</th><th style="padding:12px; text-align:left;">Участник</th><th style="padding:12px; text-align:left;">🏃 Км</th><th style="padding:12px; text-align:left;">📊 Тренировок</th><th style="padding:12px; text-align:left;">⏱ Время</th></tr>
+          </thead>
           <tbody>
             ${data.map(item => `
               <tr>
-                <td><strong>${item.place}</strong> </td>
-                <td>${escapeHtml(item.participant || item.username)}</td>
-                <td><strong>${(item.total_km || 0).toFixed(2)}</strong></td>
-                <td>${item.activities_count || 0}</td>
-                <td>${Math.floor((item.total_time_min || 0) / 60)}ч ${(item.total_time_min || 0) % 60}мин</td>
-               </tr>
+                <td style="padding:12px; border-bottom:1px solid #eee;"><strong>${item.place}</strong></td>
+                <td style="padding:12px; border-bottom:1px solid #eee;">${escapeHtml(item.participant || item.username)}</td>
+                <td style="padding:12px; border-bottom:1px solid #eee;"><strong>${(item.total_km || 0).toFixed(2)}</strong></td>
+                <td style="padding:12px; border-bottom:1px solid #eee;">${item.activities_count || 0}</td>
+                <td style="padding:12px; border-bottom:1px solid #eee;">${Math.floor((item.total_time_min || 0) / 60)}ч ${(item.total_time_min || 0) % 60}мин</td>
+              </tr>
             `).join('')}
           </tbody>
-         </table>
+        </table>
       `;
     }
     
