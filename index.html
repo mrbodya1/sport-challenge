@@ -734,15 +734,34 @@
     
     async function resolveStravaShortLink(shortUrl) {
   try {
-    // Делаем HEAD-запрос, чтобы получить реальный URL
-    const response = await fetch(shortUrl, { method: 'HEAD', redirect: 'follow' });
-    return response.url;
+    // Используем fetch с redirect: 'follow', чтобы получить финальный URL
+    const response = await fetch(shortUrl, { 
+      method: 'GET', 
+      redirect: 'follow',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+    
+    // Получаем финальный URL после всех редиректов
+    let finalUrl = response.url;
+    
+    // Если всё ещё короткая ссылка, пробуем HEAD-запрос
+    if (finalUrl.includes('strava.app.link')) {
+      const headResponse = await fetch(shortUrl, { 
+        method: 'HEAD', 
+        redirect: 'follow' 
+      });
+      finalUrl = headResponse.url;
+    }
+    
+    console.log('Resolved short link to:', finalUrl);
+    return finalUrl;
   } catch (error) {
     console.error('Failed to resolve short link:', error);
     return shortUrl;
   }
 }
-
 async function addByLink() {
   let link = document.getElementById('link-url').value;
   const errorDiv = document.getElementById('link-error');
@@ -756,7 +775,19 @@ async function addByLink() {
   
   // Если это короткая ссылка Strava, разворачиваем её
   if (link.includes('strava.app.link')) {
-    link = await resolveStravaShortLink(link);
+    try {
+      link = await resolveStravaShortLink(link);
+      console.log('Resolved link:', link);
+    } catch (err) {
+      errorDiv.innerHTML = '❌ Не удалось развернуть ссылку';
+      return;
+    }
+  }
+  
+  // Проверяем, что после разворачивания это ссылка на Strava
+  if (!link.includes('strava.com/activities/')) {
+    errorDiv.innerHTML = '❌ Ссылка должна вести на тренировку Strava';
+    return;
   }
   
   const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity`, {
