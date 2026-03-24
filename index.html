@@ -734,7 +734,9 @@
     
     async function resolveStravaShortLink(shortUrl) {
   try {
-    // Используем fetch с redirect: 'follow', чтобы получить финальный URL
+    console.log('Resolving short link:', shortUrl);
+    
+    // Используем fetch с redirect: 'follow'
     const response = await fetch(shortUrl, { 
       method: 'GET', 
       redirect: 'follow',
@@ -743,25 +745,29 @@
       }
     });
     
-    // Получаем финальный URL после всех редиректов
+    // Получаем финальный URL
     let finalUrl = response.url;
+    console.log('After redirect, URL:', finalUrl);
     
-    // Если всё ещё короткая ссылка, пробуем HEAD-запрос
-    if (finalUrl.includes('strava.app.link')) {
-      const headResponse = await fetch(shortUrl, { 
-        method: 'HEAD', 
-        redirect: 'follow' 
-      });
-      finalUrl = headResponse.url;
+    // Извлекаем ID тренировки (число после /activities/)
+    const match = finalUrl.match(/activities\/(\d+)/);
+    if (match) {
+      const activityId = match[1];
+      const cleanUrl = `https://www.strava.com/activities/${activityId}`;
+      console.log('Extracted activity ID:', activityId);
+      console.log('Clean URL:', cleanUrl);
+      return cleanUrl;
     }
     
-    console.log('Resolved short link to:', finalUrl);
+    console.log('No activity ID found in URL');
     return finalUrl;
+    
   } catch (error) {
     console.error('Failed to resolve short link:', error);
     return shortUrl;
   }
 }
+    
 async function addByLink() {
   let link = document.getElementById('link-url').value;
   const errorDiv = document.getElementById('link-error');
@@ -774,19 +780,20 @@ async function addByLink() {
   errorDiv.innerHTML = '<span class="loader"></span> Обработка...';
   
   // Если это короткая ссылка Strava, разворачиваем её
-  if (link.includes('strava.app.link')) {
+  if (link.includes('strava.app.link') || link.includes('app.link')) {
     try {
       link = await resolveStravaShortLink(link);
-      console.log('Resolved link:', link);
+      console.log('Final link after resolution:', link);
     } catch (err) {
+      console.error('Resolution error:', err);
       errorDiv.innerHTML = '❌ Не удалось развернуть ссылку';
       return;
     }
   }
   
-  // Проверяем, что после разворачивания это ссылка на Strava
-  if (!link.includes('strava.com/activities/')) {
-    errorDiv.innerHTML = '❌ Ссылка должна вести на тренировку Strava';
+  // Проверяем, что это ссылка на Strava с ID тренировки
+  if (!link.match(/strava\.com\/activities\/\d+/)) {
+    errorDiv.innerHTML = '❌ Ссылка должна вести на тренировку Strava (формат: https://www.strava.com/activities/1234567890)';
     return;
   }
   
