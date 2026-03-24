@@ -732,53 +732,69 @@
     
     // ============= ДОБАВЛЕНИЕ ТРЕНИРОВОК =============
     
-    async function addByLink() {
-      const link = document.getElementById('link-url').value;
-      const errorDiv = document.getElementById('link-error');
-      
-      if (!link) {
-        errorDiv.innerHTML = '❌ Введите ссылку';
-        return;
-      }
-      
-      errorDiv.innerHTML = '<span class="loader"></span> Обработка...';
-      
-      const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: link })
-      });
-      
-      const result = await response.json();
-      
-      if (!result.success) {
-        errorDiv.innerHTML = '❌ ' + (result.error || 'Ошибка парсинга');
-        return;
-      }
-      
-      const { error: insertError } = await sb
-        .from('activities')
-        .insert({
-          user_id: currentUser.id,
-          platform: 'strava',
-          activity_id: 'strava_' + Date.now(),
-          name: result.name,
-          distance_km: result.distance,
-          duration_min: result.duration,
-          pace_min_per_km: result.pace,
-          activity_date: result.date,
-          url: link
-        });
-      
-      if (insertError) {
-        errorDiv.innerHTML = '❌ ' + insertError.message;
-      } else {
-        navigateTo('trainings');
-        setTimeout(() => {
-          document.getElementById('link-url').value = '';
-        }, 500);
-      }
-    }
+    async function resolveStravaShortLink(shortUrl) {
+  try {
+    // Делаем HEAD-запрос, чтобы получить реальный URL
+    const response = await fetch(shortUrl, { method: 'HEAD', redirect: 'follow' });
+    return response.url;
+  } catch (error) {
+    console.error('Failed to resolve short link:', error);
+    return shortUrl;
+  }
+}
+
+async function addByLink() {
+  let link = document.getElementById('link-url').value;
+  const errorDiv = document.getElementById('link-error');
+  
+  if (!link) {
+    errorDiv.innerHTML = '❌ Введите ссылку';
+    return;
+  }
+  
+  errorDiv.innerHTML = '<span class="loader"></span> Обработка...';
+  
+  // Если это короткая ссылка Strava, разворачиваем её
+  if (link.includes('strava.app.link')) {
+    link = await resolveStravaShortLink(link);
+  }
+  
+  const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url: link })
+  });
+  
+  const result = await response.json();
+  
+  if (!result.success) {
+    errorDiv.innerHTML = '❌ ' + (result.error || 'Ошибка парсинга');
+    return;
+  }
+  
+  const { error: insertError } = await sb
+    .from('activities')
+    .insert({
+      user_id: currentUser.id,
+      platform: 'strava',
+      activity_id: 'strava_' + Date.now(),
+      name: result.name,
+      distance_km: result.distance,
+      duration_min: result.duration,
+      pace_min_per_km: result.pace,
+      activity_date: result.date,
+      url: link
+    });
+  
+  if (insertError) {
+    errorDiv.innerHTML = '❌ ' + insertError.message;
+  } else {
+    navigateTo('trainings');
+    setTimeout(() => {
+      document.getElementById('link-url').value = '';
+    }, 500);
+  }
+}
     
     async function addByScreenshot() {
       const fileInput = document.getElementById('screenshot-file');
@@ -1235,51 +1251,108 @@
       `).join('');
     }
     
-    async function loadFeed(genderFilter = 'all', ageFilter = 'all') {
-      let query = sb
-        .from('activities')
-        .select(`
-          *,
-          profiles:user_id (name_full, gender, birth_date)
-        `)
-        .order('activity_date', { ascending: false })
-        .limit(50);
-      
-      const { data, error } = await query;
-      let filtered = data || [];
-      
-      if (genderFilter !== 'all') {
-        filtered = filtered.filter(a => a.profiles?.gender === genderFilter);
-      }
-      if (ageFilter !== 'all') {
-        filtered = filtered.filter(a => {
-          const age = a.profiles?.birth_date ? Math.floor((new Date() - new Date(a.profiles.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : null;
-          return getAgeGroup(age) === ageFilter;
-        });
-      }
-      
-      const container = document.getElementById('feed-list');
-      if (!filtered.length) {
-        container.innerHTML = '<div style="text-align:center; color:#8ba0ae; padding:40px;">📭 Нет тренировок</div>';
-        return;
-      }
-      
-      container.innerHTML = filtered.map(a => `
-        <div class="activity-item">
-          <div class="activity-info">
-            <div class="activity-name" onclick="showUserProfile('${a.user_id}')">
-              <strong>${escapeHtml(a.profiles?.name_full || 'Пользователь')}</strong>
-            </div>
-            <div class="activity-meta">
-              ${formatDate(a.activity_date)} | ${a.distance_km || 0} км
-              ${a.duration_min ? ' | ' + formatDuration(a.duration_min) : ''}
-              ${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}
-              ${a.url ? `<br><a href="${escapeHtml(a.url)}" target="_blank" class="activity-link">🔗 открыть ссылку</a>` : ''}
-            </div>
+    let feedPage = 1;
+let feedLoading = false;
+let feedHasMore = true;
+
+async function loadFeed(genderFilter = 'all', ageFilter = 'all', dateFilter = '', loadMore = false) {
+  if (!loadMore) {
+    feedPage = 1;
+    feedHasMore = true;
+    document.getElementById('feed-list').innerHTML = '<div class="loader"></div> Загрузка...';
+  }
+  
+  if (feedLoading || !feedHasMore) return;
+  feedLoading = true;
+  
+  let query = sb
+    .from('activities')
+    .select(`
+      *,
+      profiles:user_id (name_full, gender, birth_date)
+    `)
+    .order('activity_date', { ascending: false })
+    .range((feedPage - 1) * 10, feedPage * 10 - 1);
+  
+  if (dateFilter) {
+    query = query.eq('activity_date', dateFilter);
+  }
+  
+  const { data, error } = await query;
+  
+  if (error) {
+    console.error('Feed error:', error);
+    feedLoading = false;
+    return;
+  }
+  
+  let filtered = data || [];
+  
+  if (genderFilter !== 'all') {
+    filtered = filtered.filter(a => a.profiles?.gender === genderFilter);
+  }
+  if (ageFilter !== 'all') {
+    filtered = filtered.filter(a => {
+      const age = a.profiles?.birth_date ? Math.floor((new Date() - new Date(a.profiles.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : null;
+      return getAgeGroup(age) === ageFilter;
+    });
+  }
+  
+  const container = document.getElementById('feed-list');
+  
+  if (loadMore) {
+    // Добавляем новые элементы
+    container.insertAdjacentHTML('beforeend', filtered.map(a => `
+      <div class="activity-item">
+        <div class="activity-info">
+          <div class="activity-name" onclick="showUserProfile('${a.user_id}')">
+            <strong>${escapeHtml(a.profiles?.name_full || 'Пользователь')}</strong>
+          </div>
+          <div class="activity-meta">
+            ${formatDate(a.activity_date)} | ${a.distance_km || 0} км
+            ${a.duration_min ? ' | ' + formatDuration(a.duration_min) : ''}
+            ${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}
+            ${a.url ? `<br><a href="${escapeHtml(a.url)}" target="_blank" class="activity-link">🔗 открыть ссылку</a>` : ''}
           </div>
         </div>
-      `).join('');
+      </div>
+    `).join(''));
+  } else {
+    container.innerHTML = filtered.map(a => `
+      <div class="activity-item">
+        <div class="activity-info">
+          <div class="activity-name" onclick="showUserProfile('${a.user_id}')">
+            <strong>${escapeHtml(a.profiles?.name_full || 'Пользователь')}</strong>
+          </div>
+          <div class="activity-meta">
+            ${formatDate(a.activity_date)} | ${a.distance_km || 0} км
+            ${a.duration_min ? ' | ' + formatDuration(a.duration_min) : ''}
+            ${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}
+            ${a.url ? `<br><a href="${escapeHtml(a.url)}" target="_blank" class="activity-link">🔗 открыть ссылку</a>` : ''}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  feedHasMore = (data || []).length === 10;
+  feedPage++;
+  feedLoading = false;
+  
+  // Добавляем кнопку "Загрузить ещё"
+  if (feedHasMore && !dateFilter) {
+    if (!document.getElementById('load-more-btn')) {
+      container.insertAdjacentHTML('afterend', '<button id="load-more-btn" class="show-all" onclick="loadFeed(document.getElementById(\'feed-gender-filter\').value, document.getElementById(\'feed-age-filter\').value, document.getElementById(\'feed-date-filter\').value, true)">Загрузить ещё ↓</button>');
     }
+  } else {
+    const btn = document.getElementById('load-more-btn');
+    if (btn) btn.remove();
+  }
+  
+  if (!filtered.length && !loadMore) {
+    container.innerHTML = '<div style="text-align:center; color:#8ba0ae; padding:40px;">📭 Нет тренировок</div>';
+  }
+}
     
     async function loadNominations(genderFilter = 'all') {
       await loadNominationTable('nomination-longest', 'nomination_longest_activity', genderFilter, 'distance_km', 'км');
@@ -1513,7 +1586,7 @@
               <input type="number" id="manual-distance" step="0.01" placeholder="Дистанция (км) *">
               <input type="number" id="manual-duration" placeholder="Время (минуты)">
               <input type="text" id="manual-pace" placeholder="Темп (мин/км) например 5:30">
-              <input type="date" id="manual-date">
+              <input type="date" id="manual-date"placeholder="Дата тренировки">
               <button onclick="addManually()">Добавить</button>
               <div id="manual-error" class="error"></div>
             </div>
@@ -1649,72 +1722,75 @@
     }
     
     async function renderFeedPage() {
-      const genderFilter = document.getElementById('feed-gender-filter')?.value || 'all';
-      const ageFilter = document.getElementById('feed-age-filter')?.value || 'all';
-      
-      document.getElementById('app').innerHTML = `
-        <div class="fixed-header">
-          <div class="user-info">
-            <div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div>
-          </div>
-          <div class="burger" onclick="openMenu()">
-            <span></span><span></span><span></span>
-          </div>
+  const genderFilter = document.getElementById('feed-gender-filter')?.value || 'all';
+  const ageFilter = document.getElementById('feed-age-filter')?.value || 'all';
+  const dateFilter = document.getElementById('feed-date-filter')?.value || '';
+  
+  document.getElementById('app').innerHTML = `
+    <div class="fixed-header">
+      <div class="user-info">
+        <div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div>
+      </div>
+      <div class="burger" onclick="openMenu()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    
+    <div class="container">
+      <div class="card">
+        <h2>📰 Лента тренировок</h2>
+        <div class="filter-bar">
+          <select id="feed-gender-filter" onchange="renderFeedPage()">
+            <option value="all">Все</option>
+            <option value="male">Мужчины</option>
+            <option value="female">Женщины</option>
+          </select>
+          <select id="feed-age-filter" onchange="renderFeedPage()">
+            <option value="all">Все возрастные</option>
+            <option value="18-24">18-24</option>
+            <option value="25-29">25-29</option>
+            <option value="30-34">30-34</option>
+            <option value="35-39">35-39</option>
+            <option value="40-44">40-44</option>
+            <option value="45-49">45-49</option>
+            <option value="50-54">50-54</option>
+            <option value="55-59">55-59</option>
+            <option value="60-64">60-64</option>
+            <option value="65-69">65-69</option>
+            <option value="70+">70+</option>
+          </select>
+          <input type="date" id="feed-date-filter" placeholder="Фильтр по дате" onchange="renderFeedPage()">
         </div>
-        
-        <div class="container">
-          <div class="card">
-            <h2>📰 Лента тренировок</h2>
-            <div class="filter-bar">
-              <select id="feed-gender-filter" onchange="renderFeedPage()">
-                <option value="all">Все</option>
-                <option value="male">Мужчины</option>
-                <option value="female">Женщины</option>
-              </select>
-              <select id="feed-age-filter" onchange="renderFeedPage()">
-                <option value="all">Все возрастные</option>
-                <option value="18-24">18-24</option>
-                <option value="25-29">25-29</option>
-                <option value="30-34">30-34</option>
-                <option value="35-39">35-39</option>
-                <option value="40-44">40-44</option>
-                <option value="45-49">45-49</option>
-                <option value="50-54">50-54</option>
-                <option value="55-59">55-59</option>
-                <option value="60-64">60-64</option>
-                <option value="65-69">65-69</option>
-                <option value="70+">70+</option>
-              </select>
-            </div>
-            <div id="feed-list" class="activities-list">⏳ Загрузка...</div>
-          </div>
-        </div>
-        
-        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
-        <div id="menu" class="menu">
-          <div class="menu-header"><strong>Меню</strong></div>
-          <div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div>
-          <div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div>
-          <div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div>
-          <div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div>
-          <div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div>
-          <div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div>
-          <div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div>
-          <div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div>
-          <div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div>
-          <div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div>
-          <div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div>
-        </div>
-        
-        <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
-      `;
-      
-      if (document.getElementById('feed-gender-filter')) {
-        document.getElementById('feed-gender-filter').value = genderFilter;
-        document.getElementById('feed-age-filter').value = ageFilter;
-      }
-      loadFeed(genderFilter, ageFilter);
-    }
+        <div id="feed-list" class="activities-list">⏳ Загрузка...</div>
+      </div>
+    </div>
+    
+    <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
+    <div id="menu" class="menu">
+      <div class="menu-header"><strong>Меню</strong></div>
+      <div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div>
+      <div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div>
+      <div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div>
+      <div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div>
+      <div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div>
+      <div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div>
+      <div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div>
+      <div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div>
+      <div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div>
+      <div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div>
+      <div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div>
+    </div>
+    
+    <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
+  `;
+  
+  if (document.getElementById('feed-gender-filter')) {
+    document.getElementById('feed-gender-filter').value = genderFilter;
+    document.getElementById('feed-age-filter').value = ageFilter;
+    document.getElementById('feed-date-filter').value = dateFilter;
+  }
+  loadFeed(genderFilter, ageFilter, dateFilter);
+}
     
     async function renderAbilitiesPage() {
       document.getElementById('app').innerHTML = `
