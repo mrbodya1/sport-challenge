@@ -1013,6 +1013,10 @@ async function addByLink() {
     }
     
     // ============= ЗАГРУЗКА ДАННЫХ =============
+
+    async function showUserProfile(userId) {
+      navigateTo('userProfile', userId);
+    }
     
     async function loadProfile() {
       const { data, error } = await sb
@@ -1404,10 +1408,7 @@ async function loadFeed(genderFilter = 'all', ageFilter = 'all', dateFilter = ''
         </div>
       `;
     }
-    
-    async function showUserProfile(userId) {
-      navigateTo('userProfile', userId);
-    }
+  
     
     // ============= ОТРИСОВКА СТРАНИЦ =============
     
@@ -1777,9 +1778,6 @@ async function loadHomeData() {
       loadLeaderboardFull();
     }
     
-    let feedPage = 1;
-let feedLoading = false;
-let feedHasMore = true;
 
 async function renderFeedPage() {
   const genderFilter = document.getElementById('feed-gender-filter')?.value || 'all';
