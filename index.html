@@ -292,7 +292,6 @@
       color: white;
       border: none;
       cursor: pointer;
-      margin-left: 8px;
     }
 
     .show-all {
@@ -334,6 +333,29 @@
     input:focus, select:focus {
       outline: none;
       border-color: #1e6f5c;
+    }
+
+    /* Стили для полей даты */
+    input[type="date"] {
+      position: relative;
+      color: #2c3e50;
+    }
+
+    input[type="date"]:before {
+      content: attr(placeholder);
+      position: absolute;
+      color: #8ba0ae;
+      background: white;
+      padding: 0 4px;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    input[type="date"]:focus:before,
+    input[type="date"]:valid:before {
+      display: none;
     }
 
     button {
@@ -406,43 +428,6 @@
       border-radius: 16px;
       margin-top: 12px;
       display: none;
-    }
-
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 300;
-    }
-
-    .modal-content {
-      background: white;
-      border-radius: 28px;
-      padding: 24px;
-      width: 280px;
-      text-align: center;
-    }
-
-    .modal-buttons {
-      display: flex;
-      gap: 12px;
-      margin-top: 20px;
-    }
-
-    .modal-buttons button {
-      flex: 1;
-      padding: 10px;
-    }
-
-    .modal-buttons button.cancel {
-      background: #e2e8f0;
-      color: #2c3e50;
     }
 
     .menu-overlay {
@@ -601,52 +586,52 @@
       return `${min}:${sec.toString().padStart(2, '0')}`;
     }
     
-    // ============= МАРШРУТИЗАЦИЯ =============
+    // ============= МАРШРУТИЗАЦИЯ (хэши) =============
     
     function navigateTo(page, userId = null) {
-      let url = '/sport-challenge/';
-      if (page === 'home') url = '/sport-challenge/';
-      else if (page === 'trainings') url = '/sport-challenge/activities';
-      else if (page === 'leaderboard') url = '/sport-challenge/leaderboard';
-      else if (page === 'add') url = '/sport-challenge/add';
-      else if (page === 'abilities') url = '/sport-challenge/abilities';
-      else if (page === 'settings') url = '/sport-challenge/settings';
-      else if (page === 'points') url = '/sport-challenge/points';
-      else if (page === 'achievements') url = '/sport-challenge/achievements';
-      else if (page === 'nominations') url = '/sport-challenge/nominations';
-      else if (page === 'feed') url = '/sport-challenge/feed';
-      else if (page === 'userProfile' && userId) url = `/sport-challenge/profile/${userId}`;
+      let hash = '#/';
+      if (page === 'home') hash = '#/';
+      else if (page === 'trainings') hash = '#/activities';
+      else if (page === 'leaderboard') hash = '#/leaderboard';
+      else if (page === 'add') hash = '#/add';
+      else if (page === 'abilities') hash = '#/abilities';
+      else if (page === 'settings') hash = '#/settings';
+      else if (page === 'points') hash = '#/points';
+      else if (page === 'achievements') hash = '#/achievements';
+      else if (page === 'nominations') hash = '#/nominations';
+      else if (page === 'feed') hash = '#/feed';
+      else if (page === 'userProfile' && userId) hash = `#/profile/${userId}`;
       
-      window.history.pushState({}, '', url);
+      window.location.hash = hash;
       currentPage = page;
       if (userId) viewedUserId = userId;
       render();
     }
     
     function handleRouting() {
-      const path = window.location.pathname;
+      const hash = window.location.hash.slice(2);
       
-      if (path.includes('/activities')) {
+      if (hash.startsWith('activities')) {
         currentPage = 'trainings';
-      } else if (path.includes('/leaderboard')) {
+      } else if (hash.startsWith('leaderboard')) {
         currentPage = 'leaderboard';
-      } else if (path.includes('/profile/')) {
-        const userId = path.split('/').pop();
+      } else if (hash.startsWith('profile/')) {
+        const userId = hash.split('/')[1];
         viewedUserId = userId;
         currentPage = 'userProfile';
-      } else if (path.includes('/add')) {
+      } else if (hash.startsWith('add')) {
         currentPage = 'add';
-      } else if (path.includes('/abilities')) {
+      } else if (hash.startsWith('abilities')) {
         currentPage = 'abilities';
-      } else if (path.includes('/settings')) {
+      } else if (hash.startsWith('settings')) {
         currentPage = 'settings';
-      } else if (path.includes('/points')) {
+      } else if (hash.startsWith('points')) {
         currentPage = 'points';
-      } else if (path.includes('/achievements')) {
+      } else if (hash.startsWith('achievements')) {
         currentPage = 'achievements';
-      } else if (path.includes('/nominations')) {
+      } else if (hash.startsWith('nominations')) {
         currentPage = 'nominations';
-      } else if (path.includes('/feed')) {
+      } else if (hash.startsWith('feed')) {
         currentPage = 'feed';
       } else {
         currentPage = 'home';
@@ -714,7 +699,7 @@
         errorDiv.style.color = '#1e6f5c';
         errorDiv.innerHTML = '✅ Регистрация успешна! Теперь войдите.';
         setTimeout(() => {
-          render();
+          navigateTo('home');
         }, 1500);
       }
     }
@@ -951,10 +936,24 @@
       }
     }
     
+    // ============= УДАЛЕНИЕ С ВОССТАНОВЛЕНИЕМ =============
+    
     async function softDeleteActivity(activityId, activityName) {
+      if (!confirm(`Удалить тренировку "${activityName}"?`)) {
+        return;
+      }
+      
       const deletedItem = document.getElementById(`activity-${activityId}`);
       if (deletedItem) {
         deletedItem.classList.add('deleted');
+        const buttonsDiv = deletedItem.querySelector('.activity-buttons');
+        if (buttonsDiv) {
+          buttonsDiv.innerHTML = `
+            <button class="restore-btn" onclick="restoreActivity('${activityId}')">
+              ↺ Восстановить
+            </button>
+          `;
+        }
       }
       
       const timeoutId = setTimeout(async () => {
@@ -986,6 +985,14 @@
       const deletedItem = document.getElementById(`activity-${activityId}`);
       if (deletedItem) {
         deletedItem.classList.remove('deleted');
+        const buttonsDiv = deletedItem.querySelector('.activity-buttons');
+        if (buttonsDiv) {
+          buttonsDiv.innerHTML = `
+            <button class="delete-btn" onclick="softDeleteActivity('${activityId}', '${escapeHtml('Тренировка').replace(/'/g, "\\'")}')">
+              🗑️
+            </button>
+          `;
+        }
       }
     }
     
@@ -1167,17 +1174,16 @@
                 ${a.url ? `<br><a href="${escapeHtml(a.url)}" target="_blank" class="activity-link">🔗 открыть ссылку</a>` : ''}
               </div>
             </div>
-            <div>
+            <div class="activity-buttons">
               ${!isDeleted ? `
                 <button class="delete-btn" onclick="softDeleteActivity('${a.id}', '${escapeHtml(a.name || 'Тренировка').replace(/'/g, "\\'")}')">
                   🗑️
                 </button>
-              ` : ''}
-              ${isDeleted ? `
+              ` : `
                 <button class="restore-btn" onclick="restoreActivity('${a.id}')">
                   ↺ Восстановить
                 </button>
-              ` : ''}
+              `}
             </div>
           </div>
         `;
@@ -1782,7 +1788,7 @@
               <option value="male">Мужчина</option>
               <option value="female">Женщина</option>
             </select>
-            <input type="date" id="settings-birthdate">
+            <input type="date" id="settings-birthdate" placeholder="Дата рождения">
             <input type="text" id="settings-city" placeholder="Город">
             <button onclick="saveSettings()">Сохранить изменения</button>
             <div id="settings-error" class="error"></div>
@@ -2155,50 +2161,12 @@
       }
     }
     
-    async function loadFeed(genderFilter = 'all', ageFilter = 'all') {
-      let query = sb
-        .from('activities')
-        .select(`
-          *,
-          profiles:user_id (name_full, gender, birth_date)
-        `)
-        .order('activity_date', { ascending: false })
-        .limit(50);
-      
-      const { data, error } = await query;
-      let filtered = data || [];
-      
-      if (genderFilter !== 'all') {
-        filtered = filtered.filter(a => a.profiles?.gender === genderFilter);
+    async function initSession() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        currentUser = session.user;
       }
-      if (ageFilter !== 'all') {
-        filtered = filtered.filter(a => {
-          const age = a.profiles?.birth_date ? Math.floor((new Date() - new Date(a.profiles.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : null;
-          return getAgeGroup(age) === ageFilter;
-        });
-      }
-      
-      const container = document.getElementById('feed-list');
-      if (!filtered.length) {
-        container.innerHTML = '<div style="text-align:center; color:#8ba0ae; padding:40px;">📭 Нет тренировок</div>';
-        return;
-      }
-      
-      container.innerHTML = filtered.map(a => `
-        <div class="activity-item">
-          <div class="activity-info">
-            <div class="activity-name" onclick="showUserProfile('${a.user_id}')">
-              <strong>${escapeHtml(a.profiles?.name_full || 'Пользователь')}</strong>
-            </div>
-            <div class="activity-meta">
-              ${formatDate(a.activity_date)} | ${a.distance_km || 0} км
-              ${a.duration_min ? ' | ' + formatDuration(a.duration_min) : ''}
-              ${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}
-              ${a.url ? `<br><a href="${escapeHtml(a.url)}" target="_blank" class="activity-link">🔗 открыть ссылку</a>` : ''}
-            </div>
-          </div>
-        </div>
-      `).join('');
+      handleRouting();
     }
     
     async function render() {
@@ -2235,7 +2203,7 @@
     }
     
     // Запуск
-    handleRouting();
+    initSession();
     window.addEventListener('popstate', () => handleRouting());
   </script>
 </body>
