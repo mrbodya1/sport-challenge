@@ -18,12 +18,13 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
       background: linear-gradient(135deg, #e8f4f8 0%, #d4e9f0 100%);
       min-height: 100vh;
-      padding: 20px;
+      padding-bottom: 20px;
     }
 
     .container {
       max-width: 700px;
       margin: 0 auto;
+      padding: 20px;
     }
 
     /* Карточки */
@@ -31,21 +32,15 @@
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       border-radius: 28px;
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.3);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
     }
 
     /* Заголовки */
     h1 {
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 700;
       background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
       -webkit-background-clip: text;
@@ -55,225 +50,270 @@
     }
 
     h2 {
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 600;
       color: #1e6f5c;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     h3 {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
       color: #2c3e50;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    /* Вкладки */
-    .tabs {
+    /* Кнопка добавления (плавающая) */
+    .fab {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
+      border-radius: 50%;
       display: flex;
-      gap: 12px;
-      margin-bottom: 28px;
-      background: rgba(255, 255, 255, 0.5);
-      padding: 6px;
-      border-radius: 60px;
-    }
-
-    .tab {
-      flex: 1;
-      padding: 12px 20px;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(30, 111, 92, 0.4);
       cursor: pointer;
-      background: transparent;
-      border: none;
-      font-size: 16px;
-      font-weight: 500;
-      color: #5a6e7a;
-      border-radius: 40px;
-      transition: all 0.3s ease;
-      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      z-index: 100;
     }
 
-    .tab:hover {
+    .fab:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(30, 111, 92, 0.5);
+    }
+
+    .fab:active {
+      transform: scale(0.95);
+    }
+
+    .fab span {
+      font-size: 32px;
+      font-weight: 300;
+      color: white;
+      line-height: 1;
+    }
+
+    /* Шапка с бургером */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .user-info {
+      background: white;
+      padding: 12px 20px;
+      border-radius: 40px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      flex: 1;
+    }
+
+    .user-name {
+      font-weight: 600;
       color: #1e6f5c;
     }
 
-    .tab.active {
-      background: #1e6f5c;
-      color: white;
-      box-shadow: 0 4px 12px rgba(30, 111, 92, 0.3);
-    }
-
-    .tab-content {
-      display: none;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Формы */
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      color: #2c3e50;
-      font-size: 14px;
-    }
-
-    input, textarea, select {
-      width: 100%;
-      padding: 14px 16px;
-      border: 2px solid #e2e8f0;
-      border-radius: 20px;
-      font-size: 16px;
-      transition: all 0.2s;
-      font-family: inherit;
+    .burger {
+      width: 44px;
+      height: 44px;
       background: white;
-    }
-
-    input:focus, textarea:focus, select:focus {
-      outline: none;
-      border-color: #1e6f5c;
-      box-shadow: 0 0 0 3px rgba(30, 111, 92, 0.1);
-    }
-
-    /* Кнопки */
-    button {
-      background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
-      color: white;
-      border: none;
-      padding: 14px 24px;
       border-radius: 40px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-      transition: all 0.2s;
-      font-family: inherit;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(30, 111, 92, 0.3);
-    }
-
-    button:active {
-      transform: translateY(0);
-    }
-
-    button.secondary {
-      background: linear-gradient(135deg, #4a6f7a 0%, #5c828f 100%);
-      width: auto;
-      padding: 10px 20px;
-    }
-
-    button.secondary:hover {
-      box-shadow: 0 4px 12px rgba(74, 111, 122, 0.3);
-    }
-
-    button.small {
-      width: auto;
-      padding: 8px 16px;
-      font-size: 13px;
-    }
-
-    .method-buttons {
       display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
-    .method-btn {
-      flex: 1;
-      background: #f1f5f9;
-      color: #2c3e50;
-      padding: 12px;
-      border-radius: 40px;
-      font-size: 14px;
+    .burger span {
+      width: 22px;
+      height: 2px;
+      background: #1e6f5c;
+      border-radius: 2px;
     }
 
-    .method-btn.active {
+    /* Меню */
+    .menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      display: none;
+    }
+
+    .menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 280px;
+      height: 100%;
+      background: white;
+      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+      z-index: 201;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu.open {
+      transform: translateX(0);
+    }
+
+    .menu-header {
+      padding: 24px 20px;
       background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
       color: white;
     }
 
-    .add-form {
-      display: none;
-      animation: fadeIn 0.3s ease;
+    .menu-item {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: background 0.2s;
     }
 
-    .add-form.active {
-      display: block;
+    .menu-item:hover {
+      background: #f5f5f5;
+    }
+
+    .menu-item span:first-child {
+      font-size: 20px;
     }
 
     /* Статистика */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .stat-card {
       background: white;
-      padding: 18px 12px;
-      border-radius: 24px;
+      padding: 16px;
+      border-radius: 20px;
       text-align: center;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
     .stat-value {
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 800;
-      background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      color: #1e6f5c;
     }
 
     .stat-label {
-      font-size: 13px;
+      font-size: 12px;
+      color: #6c7a89;
+      margin-top: 6px;
+    }
+
+    /* Места */
+    .places-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .place-card {
+      background: white;
+      padding: 12px;
+      border-radius: 20px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .place-title {
+      font-size: 12px;
+      color: #6c7a89;
+    }
+
+    .place-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e6f5c;
+    }
+
+    /* График */
+    .chart {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .chart-bars {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      height: 150px;
+      margin-top: 16px;
+    }
+
+    .bar-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 12%;
+    }
+
+    .bar {
+      width: 100%;
+      background: linear-gradient(180deg, #1e6f5c 0%, #289672 100%);
+      border-radius: 8px 8px 0 0;
+      transition: height 0.3s;
+      min-height: 4px;
+    }
+
+    .bar-label {
+      font-size: 10px;
       color: #6c7a89;
       margin-top: 8px;
     }
 
-    /* Список тренировок */
+    .bar-value {
+      font-size: 10px;
+      font-weight: 600;
+      color: #1e6f5c;
+      margin-bottom: 4px;
+    }
+
+    /* Тренировки */
     .activities-list {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      max-height: 400px;
-      overflow-y: auto;
     }
 
     .activity-item {
       background: #f8fafc;
-      padding: 16px;
+      padding: 14px;
       border-radius: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 12px;
-      transition: all 0.2s;
-    }
-
-    .activity-item:hover {
-      background: #f1f5f9;
-      transform: translateX(4px);
+      gap: 10px;
     }
 
     .activity-info {
@@ -283,23 +323,31 @@
     .activity-name {
       font-weight: 600;
       color: #1e6f5c;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .activity-meta {
-      font-size: 13px;
+      font-size: 12px;
       color: #6c7a89;
     }
 
     .delete-btn {
-      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+      background: #e74c3c;
       padding: 8px 16px;
       font-size: 12px;
-      width: auto;
+      border-radius: 30px;
+      color: white;
+      border: none;
+      cursor: pointer;
     }
 
-    .delete-btn:hover {
-      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+    .show-all {
+      text-align: center;
+      padding: 12px;
+      color: #1e6f5c;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 12px;
     }
 
     /* Таблица лидеров */
@@ -315,39 +363,101 @@
     }
 
     .leaderboard-table th {
-      background: #f8fafc;
       font-weight: 600;
       color: #1e6f5c;
-      border-radius: 16px 16px 0 0;
     }
 
-    .leaderboard-table tr:hover {
-      background: #f8fafc;
-    }
-
-    /* Шапка */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .user-info {
-      background: white;
-      padding: 12px 24px;
-      border-radius: 40px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      font-weight: 500;
-    }
-
-    .user-info strong {
+    .activity-link {
       color: #1e6f5c;
+      text-decoration: none;
+      font-size: 12px;
     }
 
-    /* Загрузка */
+    /* Формы */
+    input, select, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 20px;
+      font-size: 16px;
+      margin-bottom: 12px;
+      font-family: inherit;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #1e6f5c;
+    }
+
+    button {
+      background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 40px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button.secondary {
+      background: #e2e8f0;
+      color: #2c3e50;
+    }
+
+    .method-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .method-btn {
+      flex: 1;
+      background: #f1f5f9;
+      color: #2c3e50;
+      padding: 10px;
+      border-radius: 30px;
+      font-size: 13px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .method-btn.active {
+      background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
+      color: white;
+    }
+
+    .add-form {
+      display: none;
+    }
+
+    .add-form.active {
+      display: block;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .filter-bar select, .filter-bar input {
+      flex: 1;
+      min-width: 100px;
+      margin-bottom: 0;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    .error {
+      color: #e74c3c;
+      margin-top: 12px;
+      font-size: 14px;
+      text-align: center;
+    }
+
     .loader {
       display: inline-block;
       width: 20px;
@@ -364,55 +474,118 @@
       to { transform: rotate(360deg); }
     }
 
-    /* Предпросмотр скриншота */
     .screenshot-preview {
       max-width: 100%;
       border-radius: 16px;
       margin-top: 12px;
       display: none;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    /* Уведомления */
-    .error {
-      color: #e74c3c;
-      margin-top: 12px;
-      font-size: 14px;
+    /* Модальное окно подтверждения */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 28px;
+      padding: 24px;
+      width: 280px;
       text-align: center;
     }
 
-    .success {
-      color: #1e6f5c;
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
     }
 
-    /* Скролл */
-    .activities-list::-webkit-scrollbar {
-      width: 6px;
+    .modal-buttons button {
+      flex: 1;
+      padding: 10px;
     }
 
-    .activities-list::-webkit-scrollbar-track {
+    .modal-buttons button.cancel {
       background: #e2e8f0;
-      border-radius: 10px;
+      color: #2c3e50;
     }
 
-    .activities-list::-webkit-scrollbar-thumb {
-      background: #1e6f5c;
-      border-radius: 10px;
+    /* Страница добавления */
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .back-button {
+      background: none;
+      color: #1e6f5c;
+      font-size: 24px;
+      padding: 0;
+      width: auto;
+      margin-bottom: 20px;
+      text-align: left;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="app"></div>
+  <div id="app"></div>
 
   <script>
-    // 🔧 ЗАМЕНИТЕ НА ВАШИ ДАННЫЕ ИЗ SUPABASE
+    // Supabase конфигурация
     const SUPABASE_URL = 'https://idkghmydocvjhuwtgojh.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlka2dobXlkb2N2amh1d3Rnb2poIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNTU3NzgsImV4cCI6MjA4OTgzMTc3OH0.omQ4zi4gILIk8nQtbYPstcORhEyEhFvKDnFs5qwFlSM';
     
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
     let currentUser = null;
-    let allActivities = [];
+    let currentPage = 'home';
+    let menuOpen = false;
+    
+    // ============= ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =============
+    
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
+    }
+    
+    function showPage(page) {
+      currentPage = page;
+      closeMenu();
+      render();
+    }
+    
+    function closeMenu() {
+      menuOpen = false;
+      const menu = document.getElementById('menu');
+      const overlay = document.getElementById('menu-overlay');
+      if (menu) menu.classList.remove('open');
+      if (overlay) overlay.style.display = 'none';
+    }
+    
+    function openMenu() {
+      menuOpen = true;
+      const menu = document.getElementById('menu');
+      const overlay = document.getElementById('menu-overlay');
+      if (menu) menu.classList.add('open');
+      if (overlay) overlay.style.display = 'block';
+    }
     
     // ============= АВТОРИЗАЦИЯ =============
     
@@ -421,9 +594,11 @@
       const password = document.getElementById('reg-password').value;
       const firstName = document.getElementById('reg-firstname').value;
       const lastName = document.getElementById('reg-lastname').value;
+      const gender = document.getElementById('reg-gender').value;
+      const birthDate = document.getElementById('reg-birthdate').value;
       const errorDiv = document.getElementById('register-error');
       
-      if (!username || !password || !firstName || !lastName) {
+      if (!username || !password || !firstName || !lastName || !gender || !birthDate) {
         errorDiv.innerHTML = '❌ Заполните все поля';
         return;
       }
@@ -438,7 +613,9 @@
             username: username,
             first_name: firstName,
             last_name: lastName,
-            name_full: `${firstName} ${lastName}`
+            name_full: `${firstName} ${lastName}`,
+            gender: gender,
+            birth_date: birthDate
           }
         }
       });
@@ -449,9 +626,7 @@
         errorDiv.style.color = '#1e6f5c';
         errorDiv.innerHTML = '✅ Регистрация успешна! Теперь войдите.';
         setTimeout(() => {
-          switchTab('login');
-          document.getElementById('login-username').value = username;
-          errorDiv.innerHTML = '';
+          render();
         }, 1500);
       }
     }
@@ -479,6 +654,7 @@
     async function logout() {
       await sb.auth.signOut();
       currentUser = null;
+      currentPage = 'home';
       render();
     }
     
@@ -525,11 +701,11 @@
       if (insertError) {
         errorDiv.innerHTML = '❌ ' + insertError.message;
       } else {
-        errorDiv.style.color = '#1e6f5c';
-        errorDiv.innerHTML = `✅ Добавлено! ${result.distance} км — ${result.name}`;
-        document.getElementById('link-url').value = '';
-        loadData();
-        setTimeout(() => { errorDiv.innerHTML = ''; }, 3000);
+        showPage('trainings');
+        setTimeout(() => {
+          document.getElementById('link-url').value = '';
+          loadTrainings();
+        }, 500);
       }
     }
     
@@ -550,7 +726,6 @@
       
       reader.onload = async function(e) {
         try {
-          // Распознаём текст прямо в браузере
           const { data: { text } } = await Tesseract.recognize(
             e.target.result,
             'rus+eng',
@@ -581,12 +756,10 @@
           if (insertError) {
             errorDiv.innerHTML = '❌ ' + insertError.message;
           } else {
-            errorDiv.style.color = '#1e6f5c';
-            errorDiv.innerHTML = `✅ Добавлено! ${result.distance} км`;
+            showPage('trainings');
             fileInput.value = '';
             if (preview) preview.style.display = 'none';
-            loadData();
-            setTimeout(() => { errorDiv.innerHTML = ''; }, 3000);
+            loadTrainings();
           }
         } catch (err) {
           errorDiv.innerHTML = '❌ Ошибка распознавания: ' + err.message;
@@ -684,62 +857,212 @@
       if (insertError) {
         errorDiv.innerHTML = '❌ ' + insertError.message;
       } else {
-        errorDiv.style.color = '#1e6f5c';
-        errorDiv.innerHTML = '✅ Тренировка добавлена!';
+        showPage('trainings');
         document.getElementById('manual-name').value = '';
         document.getElementById('manual-distance').value = '';
         document.getElementById('manual-duration').value = '';
         document.getElementById('manual-pace').value = '';
         document.getElementById('manual-date').value = '';
-        loadData();
-        setTimeout(() => { errorDiv.innerHTML = ''; }, 3000);
+        loadTrainings();
       }
     }
     
-    async function deleteActivity(activityId) {
-      if (confirm('Удалить эту тренировку?')) {
+    async function deleteActivity(activityId, activityName) {
+      showConfirmDialog('Вы точно хотите удалить тренировку "' + activityName + '"?', async () => {
         const { error } = await sb
           .from('activities')
           .delete()
           .eq('id', activityId);
         
         if (!error) {
-          loadData();
+          if (currentPage === 'trainings') {
+            loadTrainings();
+          } else {
+            loadHomeData();
+          }
         }
-      }
+      });
+    }
+    
+    function showConfirmDialog(message, onConfirm) {
+      const modal = document.createElement('div');
+      modal.className = 'modal';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <p>${escapeHtml(message)}</p>
+          <div class="modal-buttons">
+            <button class="cancel" onclick="this.closest('.modal').remove()">Отмена</button>
+            <button onclick="this.closest('.modal').remove(); ${onConfirm.toString()}()">Удалить</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
     }
     
     // ============= ЗАГРУЗКА ДАННЫХ =============
     
+    async function loadProfile() {
+      const { data, error } = await sb
+        .from('profiles')
+        .select('*')
+        .eq('id', currentUser.id)
+        .single();
+      
+      return data;
+    }
+    
     async function loadStats() {
       const { data, error } = await sb
         .from('activities')
-        .select('distance_km, duration_min')
+        .select('distance_km, duration_min, pace_min_per_km')
         .eq('user_id', currentUser.id);
       
-      if (error) return;
+      if (error) return { totalKm: 0, totalTime: 0, avgPace: null, trainingsCount: 0 };
       
       const totalKm = data.reduce((sum, a) => sum + (a.distance_km || 0), 0);
-      const totalActivities = data.length;
-      const avgDistance = totalActivities > 0 ? (totalKm / totalActivities).toFixed(2) : 0;
+      const totalTime = data.reduce((sum, a) => sum + (a.duration_min || 0), 0);
+      const trainingsCount = data.length;
+      const avgDistance = trainingsCount > 0 ? (totalKm / trainingsCount).toFixed(2) : 0;
       
-      document.getElementById('stats-container').innerHTML = `
-        <div class="stat-card"><div class="stat-value">${totalKm.toFixed(2)}</div><div class="stat-label">Всего км</div></div>
-        <div class="stat-card"><div class="stat-value">${totalActivities}</div><div class="stat-label">Тренировок</div></div>
-        <div class="stat-card"><div class="stat-value">${avgDistance}</div><div class="stat-label">Средняя км</div></div>
-      `;
+      let avgPace = null;
+      const paces = data.filter(a => a.pace_min_per_km).map(a => {
+        const match = a.pace_min_per_km.match(/(\d+):(\d+)/);
+        if (match) return parseInt(match[1]) * 60 + parseInt(match[2]);
+        return null;
+      }).filter(p => p);
+      if (paces.length > 0) {
+        const avgSec = paces.reduce((s, p) => s + p, 0) / paces.length;
+        const min = Math.floor(avgSec / 60);
+        const sec = Math.round(avgSec % 60);
+        avgPace = `${min}:${sec.toString().padStart(2, '0')}`;
+      }
+      
+      return {
+        totalKm: totalKm.toFixed(2),
+        totalTime: Math.floor(totalTime / 60) + 'ч ' + (totalTime % 60) + 'мин',
+        avgPace: avgPace || '—',
+        trainingsCount: trainingsCount,
+        avgDistance: avgDistance
+      };
     }
     
-    async function loadActivities() {
+    async function loadPlaces(profile) {
+      const { data: leaderboard, error } = await sb
+        .from('leaderboard')
+        .select('*')
+        .order('total_km', { ascending: false });
+      
+      if (error) return { absolute: '—', gender: '—', age: '—' };
+      
+      let absolute = '—';
+      let genderPlace = '—';
+      let agePlace = '—';
+      
+      for (let i = 0; i < leaderboard.length; i++) {
+        if (leaderboard[i].user_id === currentUser.id) {
+          absolute = (i + 1).toString();
+          break;
+        }
+      }
+      
+      const genderLeaderboard = leaderboard.filter(l => l.gender === profile?.gender);
+      for (let i = 0; i < genderLeaderboard.length; i++) {
+        if (genderLeaderboard[i].user_id === currentUser.id) {
+          genderPlace = (i + 1).toString();
+          break;
+        }
+      }
+      
+      const age = profile?.birth_date ? Math.floor((new Date() - new Date(profile.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : null;
+      if (age) {
+        const ageGroup = getAgeGroup(age);
+        const ageLeaderboard = leaderboard.filter(l => l.age_group === ageGroup);
+        for (let i = 0; i < ageLeaderboard.length; i++) {
+          if (ageLeaderboard[i].user_id === currentUser.id) {
+            agePlace = (i + 1).toString();
+            break;
+          }
+        }
+      }
+      
+      return { absolute, gender: genderPlace, age: agePlace };
+    }
+    
+    function getAgeGroup(age) {
+      if (age >= 18 && age <= 24) return '18-24';
+      if (age >= 25 && age <= 29) return '25-29';
+      if (age >= 30 && age <= 34) return '30-34';
+      if (age >= 35 && age <= 39) return '35-39';
+      if (age >= 40 && age <= 44) return '40-44';
+      if (age >= 45 && age <= 49) return '45-49';
+      if (age >= 50 && age <= 54) return '50-54';
+      if (age >= 55 && age <= 59) return '55-59';
+      if (age >= 60 && age <= 64) return '60-64';
+      if (age >= 65 && age <= 69) return '65-69';
+      if (age >= 70) return '70+';
+      return '18-24';
+    }
+    
+    async function loadWeeklyChart() {
       const { data, error } = await sb
+        .from('activities')
+        .select('distance_km, activity_date')
+        .eq('user_id', currentUser.id)
+        .gte('activity_date', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
+      
+      if (error) return {};
+      
+      const days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+      const result = {};
+      days.forEach(d => result[d] = 0);
+      
+      data.forEach(a => {
+        const date = new Date(a.activity_date);
+        const dayIndex = date.getDay();
+        const dayName = days[(dayIndex + 6) % 7];
+        if (result[dayName] !== undefined) {
+          result[dayName] += a.distance_km || 0;
+        }
+      });
+      
+      return result;
+    }
+    
+    async function loadRecentTrainings() {
+      const { data, error } = await sb
+        .from('activities')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .order('activity_date', { ascending: false })
+        .limit(5);
+      
+      return data || [];
+    }
+    
+    async function loadTopLeaderboard() {
+      const { data, error } = await sb
+        .from('leaderboard')
+        .select('*')
+        .order('total_km', { ascending: false })
+        .limit(3);
+      
+      return data || [];
+    }
+    
+    async function loadTrainings(dateFilter = '') {
+      let query = sb
         .from('activities')
         .select('*')
         .eq('user_id', currentUser.id)
         .order('activity_date', { ascending: false });
       
-      const container = document.getElementById('activities-list');
-      allActivities = data || [];
+      if (dateFilter) {
+        query = query.eq('activity_date', dateFilter);
+      }
       
+      const { data, error } = await query;
+      
+      const container = document.getElementById('trainings-list');
       if (error || !data || data.length === 0) {
         container.innerHTML = '<div style="text-align:center; color:#8ba0ae; padding:40px;">📭 Нет тренировок</div>';
         return;
@@ -754,70 +1077,536 @@
               ${a.duration_min ? ' | ' + Math.floor(a.duration_min/60) + 'ч ' + (a.duration_min%60) + 'мин' : ''}
               ${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}
               ${a.platform === 'strava' ? ' 📎Strava' : a.platform === 'screenshot' ? ' 📸Скриншот' : ' ✏️Ручная'}
+              ${a.url ? `<br><a href="${escapeHtml(a.url)}" target="_blank" class="activity-link">🔗 открыть ссылку</a>` : ''}
             </div>
           </div>
-          <button class="delete-btn" onclick="deleteActivity('${a.id}')">Удалить</button>
+          <button class="delete-btn" onclick="deleteActivity('${a.id}', '${escapeHtml(a.name || 'Тренировка').replace(/'/g, "\\'")}')">Удалить</button>
         </div>
       `).join('');
     }
     
-    async function loadLeaderboard() {
-      const { data, error } = await sb
-        .from('leaderboard')
-        .select('*')
-        .limit(50);
+    async function loadLeaderboardFull(genderFilter = 'all', ageFilter = 'all', sortBy = 'km') {
+      let query = sb.from('leaderboard').select('*');
       
-      const container = document.getElementById('leaderboard-container');
+      if (genderFilter !== 'all') {
+        query = query.eq('gender', genderFilter);
+      }
+      if (ageFilter !== 'all') {
+        query = query.eq('age_group', ageFilter);
+      }
       
+      if (sortBy === 'km') {
+        query = query.order('total_km', { ascending: false });
+      } else if (sortBy === 'time') {
+        query = query.order('total_time_min', { ascending: false });
+      } else if (sortBy === 'pace') {
+        query = query.order('avg_pace_seconds', { ascending: true });
+      } else if (sortBy === 'trainings') {
+        query = query.order('activities_count', { ascending: false });
+      }
+      
+      const { data, error } = await query;
+      
+      const container = document.getElementById('leaderboard-full-list');
       if (error || !data || data.length === 0) {
         container.innerHTML = '<div style="text-align:center; color:#8ba0ae; padding:40px;">🏆 Нет данных</div>';
         return;
       }
       
-      container.innerHTML = `
-        <table class="leaderboard-table">
-          <thead>
-            <tr><th>🥇 Место</th><th>Участник</th><th>🏃 Км</th><th>📊 Тренировок</th><th>⏱ Время</th></tr>
-          </thead>
-          <tbody>
-            ${data.map(item => `
-              <tr>
-                <td><strong>${item.place}</strong></td>
-                <td>${escapeHtml(item.participant || item.username)}</td>
-                <td><strong>${(item.total_km || 0).toFixed(2)}</strong></td>
-                <td>${item.activities_count || 0}</td>
-                <td>${Math.floor((item.total_time_min || 0) / 60)}ч ${(item.total_time_min || 0) % 60}мин</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
+      container.innerHTML = data.map((item, idx) => `
+        <div class="activity-item" style="flex-direction:column; align-items:flex-start;">
+          <div style="display:flex; justify-content:space-between; width:100%;">
+            <div>
+              <strong>${idx + 1}. ${escapeHtml(item.participant)}</strong>
+              <div style="font-size:12px; color:#6c7a89;">${item.gender === 'male' ? '🧑' : '👩'} ${item.age_group || '—'}</div>
+            </div>
+            <div style="text-align:right;">
+              <div><strong>${item.total_km.toFixed(2)} км</strong></div>
+              <div style="font-size:12px;">${item.activities_count} тренировок</div>
+            </div>
+          </div>
+          ${item.avg_pace_seconds ? `<div style="font-size:12px; margin-top:8px;">⏱ темп: ${formatPaceFromSeconds(item.avg_pace_seconds)}</div>` : ''}
+        </div>
+      `).join('');
+    }
+    
+    function formatPaceFromSeconds(seconds) {
+      const min = Math.floor(seconds / 60);
+      const sec = Math.round(seconds % 60);
+      return `${min}:${sec.toString().padStart(2, '0')}`;
+    }
+    
+    // ============= ОТРИСОВКА СТРАНИЦ =============
+    
+    function renderAuth() {
+      document.getElementById('app').innerHTML = `
+        <div class="container">
+          <div class="card">
+            <h1>🏃‍♂️ Спортивный челлендж</h1>
+            <p style="color: #6c7a89; margin-bottom: 24px;">Добавляйте тренировки, следите за прогрессом и соревнуйтесь с друзьями</p>
+            <div class="tabs" style="display:flex; gap:12px; margin-bottom:24px;">
+              <button class="method-btn active" onclick="document.getElementById('login-form').style.display='block'; document.getElementById('register-form').style.display='none'; this.classList.add('active'); this.nextElementSibling.classList.remove('active')">Вход</button>
+              <button class="method-btn" onclick="document.getElementById('register-form').style.display='block'; document.getElementById('login-form').style.display='none'; this.classList.add('active'); this.previousElementSibling.classList.remove('active')">Регистрация</button>
+            </div>
+            <div id="login-form">
+              <input type="text" id="login-username" placeholder="Логин">
+              <input type="password" id="login-password" placeholder="Пароль">
+              <button onclick="login()">Войти</button>
+              <div id="login-error" class="error"></div>
+            </div>
+            <div id="register-form" style="display:none;">
+              <input type="text" id="reg-username" placeholder="Логин">
+              <input type="text" id="reg-firstname" placeholder="Имя">
+              <input type="text" id="reg-lastname" placeholder="Фамилия">
+              <select id="reg-gender">
+                <option value="">Пол</option>
+                <option value="male">Мужчина</option>
+                <option value="female">Женщина</option>
+              </select>
+              <input type="date" id="reg-birthdate" placeholder="Дата рождения">
+              <input type="password" id="reg-password" placeholder="Пароль">
+              <button onclick="register()">Зарегистрироваться</button>
+              <div id="register-error" class="error"></div>
+            </div>
+          </div>
+        </div>
       `;
     }
     
-    function loadData() {
-      if (!currentUser) return;
-      loadStats();
-      loadActivities();
-      loadLeaderboard();
+    async function renderHome() {
+      const profile = await loadProfile();
+      const stats = await loadStats();
+      const places = await loadPlaces(profile);
+      const weeklyChart = await loadWeeklyChart();
+      const recentTrainings = await loadRecentTrainings();
+      const topLeaderboard = await loadTopLeaderboard();
+      
+      const days = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+      const maxKm = Math.max(...Object.values(weeklyChart), 1);
+      
+      document.getElementById('app').innerHTML = `
+        <div class="container">
+          <div class="header">
+            <div class="user-info">
+              <div class="user-name">${escapeHtml(profile?.name_full || currentUser.email?.split('@')[0])}</div>
+              <div style="font-size: 12px; color: #6c7a89;">
+                ${profile?.gender === 'male' ? 'Мужчина' : 'Женщина'}, 
+                ${profile?.birth_date ? Math.floor((new Date() - new Date(profile.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : '—'} лет
+              </div>
+            </div>
+            <div class="burger" onclick="openMenu()">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="stats-grid">
+              <div class="stat-card"><div class="stat-value">${stats.totalKm}</div><div class="stat-label">км</div></div>
+              <div class="stat-card"><div class="stat-value">${stats.totalTime}</div><div class="stat-label">время</div></div>
+              <div class="stat-card"><div class="stat-value">${stats.avgPace}</div><div class="stat-label">темп</div></div>
+              <div class="stat-card"><div class="stat-value">${stats.trainingsCount}</div><div class="stat-label">тренировок</div></div>
+            </div>
+            
+            <div class="places-grid">
+              <div class="place-card" onclick="showPage('leaderboard')"><div class="place-title">Абсолют</div><div class="place-value">${places.absolute} место</div></div>
+              <div class="place-card" onclick="showPage('leaderboard')"><div class="place-title">Среди ${profile?.gender === 'male' ? 'мужчин' : 'женщин'}</div><div class="place-value">${places.gender} место</div></div>
+              <div class="place-card" onclick="showPage('leaderboard')"><div class="place-title">Возрастная группа</div><div class="place-value">${places.age} место</div></div>
+            </div>
+          </div>
+          
+          <div class="chart">
+            <h3>📈 Недельная динамика</h3>
+            <div class="chart-bars">
+              ${days.map(day => `
+                <div class="bar-container">
+                  <div class="bar-value">${weeklyChart[day] || 0}</div>
+                  <div class="bar" style="height: ${Math.max(4, (weeklyChart[day] / maxKm) * 100)}px"></div>
+                  <div class="bar-label">${day}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          
+          <div class="card">
+            <h3>📋 Мои тренировки (последние 5)</h3>
+            <div class="activities-list">
+              ${recentTrainings.map(a => `
+                <div class="activity-item">
+                  <div class="activity-info">
+                    <div class="activity-name">${escapeHtml(a.name || 'Без названия')}</div>
+                    <div class="activity-meta">${a.activity_date} | ${a.distance_km} км | темп ${a.pace_min_per_km || '—'}</div>
+                  </div>
+                  <button class="delete-btn" onclick="deleteActivity('${a.id}', '${escapeHtml(a.name || 'Тренировка').replace(/'/g, "\\'")}')">Удалить</button>
+                </div>
+              `).join('') || '<div style="text-align:center; color:#8ba0ae; padding:20px;">Нет тренировок</div>'}
+            </div>
+            <div class="show-all" onclick="showPage('trainings')">Показать все тренировки →</div>
+          </div>
+          
+          <div class="card">
+            <h3>🏆 Лидеры</h3>
+            ${topLeaderboard.map((item, idx) => `
+              <div class="activity-item" style="justify-content:space-between;">
+                <div>
+                  <strong>${idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'} ${escapeHtml(item.participant)}</strong>
+                </div>
+                <div><strong>${item.total_km.toFixed(2)} км</strong></div>
+              </div>
+            `).join('') || '<div style="text-align:center; color:#8ba0ae; padding:20px;">Нет данных</div>'}
+            <div class="show-all" onclick="showPage('leaderboard')">Вся таблица →</div>
+          </div>
+        </div>
+        
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
+        <div id="menu" class="menu">
+          <div class="menu-header"><strong>Меню</strong></div>
+          <div class="menu-item" onclick="showPage('home')"><span>🏠</span><span>Главная</span></div>
+          <div class="menu-item" onclick="showPage('abilities')"><span>⚡</span><span>Способности</span></div>
+          <div class="menu-item" onclick="showPage('trainings')"><span>📋</span><span>Мои тренировки</span></div>
+          <div class="menu-item" onclick="showPage('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div>
+          <div class="menu-item" onclick="showPage('settings')"><span>⚙️</span><span>Настройки</span></div>
+          <div class="menu-item" onclick="showPage('points')"><span>⭐</span><span>Баллы</span></div>
+          <div class="menu-item" onclick="showPage('achievements')"><span>🏅</span><span>Ачивки</span></div>
+          <div class="menu-item" onclick="showPage('nominations')"><span>🎯</span><span>Номинации</span></div>
+          <div class="menu-item" onclick="showPage('add')"><span>➕</span><span>Добавить тренировку</span></div>
+          <div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div>
+        </div>
+        
+        <div class="fab" onclick="showPage('add')"><span>+</span></div>
+      `;
     }
     
-    // ============= ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =============
-    
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-      });
+    function renderAddPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="container">
+          <button class="back-button" onclick="showPage('home')">← Назад</button>
+          <div class="card">
+            <h2>➕ Добавить тренировку</h2>
+            <div class="method-buttons">
+              <div class="method-btn active" onclick="switchMethod('link')">📎 По ссылке</div>
+              <div class="method-btn" onclick="switchMethod('screenshot')">📸 Скриншот</div>
+              <div class="method-btn" onclick="switchMethod('manual')">✏️ Вручную</div>
+            </div>
+            
+            <div id="link-form" class="add-form active">
+              <input type="text" id="link-url" placeholder="https://www.strava.com/activities/...">
+              <button onclick="addByLink()">Добавить</button>
+              <div id="link-error" class="error"></div>
+            </div>
+            
+            <div id="screenshot-form" class="add-form">
+              <input type="file" id="screenshot-file" accept="image/*" onchange="previewScreenshot(this)">
+              <img id="screenshot-preview" class="screenshot-preview">
+              <button onclick="addByScreenshot()">Распознать и добавить</button>
+              <div id="screenshot-error" class="error"></div>
+            </div>
+            
+            <div id="manual-form" class="add-form">
+              <input type="text" id="manual-name" placeholder="Название (опционально)">
+              <input type="number" id="manual-distance" step="0.01" placeholder="Дистанция (км) *">
+              <input type="number" id="manual-duration" placeholder="Время (минуты)">
+              <input type="text" id="manual-pace" placeholder="Темп (мин/км) например 5:30">
+              <input type="date" id="manual-date">
+              <button onclick="addManually()">Добавить</button>
+              <div id="manual-error" class="error"></div>
+            </div>
+          </div>
+        </div>
+      `;
     }
     
-    function switchTab(tab) {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      event.target.classList.add('active');
-      document.getElementById(tab + '-tab').classList.add('active');
+    function renderTrainingsPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="container">
+          <button class="back-button" onclick="showPage('home')">← Назад</button>
+          <div class="card">
+            <h2>📋 Мои тренировки</h2>
+            <div class="filter-bar">
+              <input type="date" id="trainings-date-filter" placeholder="Фильтр по дате" onchange="loadTrainings(this.value)">
+            </div>
+            <div id="trainings-list" class="activities-list">⏳ Загрузка...</div>
+          </div>
+        </div>
+      `;
+      loadTrainings();
+    }
+    
+    function renderLeaderboardPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="container">
+          <button class="back-button" onclick="showPage('home')">← Назад</button>
+          <div class="card">
+            <h2>🏆 Таблица лидеров</h2>
+            <div class="filter-bar">
+              <select id="leaderboard-gender-filter" onchange="loadLeaderboardFull(this.value, document.getElementById('leaderboard-age-filter').value, document.getElementById('leaderboard-sort').value)">
+                <option value="all">Все</option>
+                <option value="male">Мужчины</option>
+                <option value="female">Женщины</option>
+              </select>
+              <select id="leaderboard-age-filter" onchange="loadLeaderboardFull(document.getElementById('leaderboard-gender-filter').value, this.value, document.getElementById('leaderboard-sort').value)">
+                <option value="all">Все возрастные</option>
+                <option value="18-24">18-24</option>
+                <option value="25-29">25-29</option>
+                <option value="30-34">30-34</option>
+                <option value="35-39">35-39</option>
+                <option value="40-44">40-44</option>
+                <option value="45-49">45-49</option>
+                <option value="50-54">50-54</option>
+                <option value="55-59">55-59</option>
+                <option value="60-64">60-64</option>
+                <option value="65-69">65-69</option>
+                <option value="70+">70+</option>
+              </select>
+              <select id="leaderboard-sort" onchange="loadLeaderboardFull(document.getElementById('leaderboard-gender-filter').value, document.getElementById('leaderboard-age-filter').value, this.value)">
+                <option value="km">По километрам</option>
+                <option value="time">По времени</option>
+                <option value="pace">По темпу</option>
+                <option value="trainings">По тренировкам</option>
+              </select>
+            </div>
+            <div id="leaderboard-full-list" class="activities-list">⏳ Загрузка...</div>
+          </div>
+        </div>
+      `;
+      loadLeaderboardFull();
+    }
+    
+    function renderAbilitiesPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="container">
+          <button class="back-button" onclick="showPage('home')">← Назад</button>
+          <div class="card">
+            <h2>⚡ Способности</h2>
+            <div class="activity-item" style="flex-direction:column;">
+              <div><strong>🔄 Удвоение</strong> - Удваивает километры за одну тренировку</div>
+              <button style="margin-top:12px;">Использовать (осталось: 2)</button>
+            </div>
+            <div class="activity-item" style="flex-direction:column; margin-top:12px;">
+              <div><strong>❄️ Заморозка</strong> - Замораживает прогресс конкурента на 3 дня</div>
+              <button style="margin-top:12px;">Использовать (осталось: 1)</button>
+            </div>
+            <div class="activity-item" style="flex-direction:column; margin-top:12px;">
+              <div><strong>🧹 Обнуление</strong> - Обнуляет километры конкурента за одну тренировку</div>
+              <button style="margin-top:12px;">Использовать (осталось: 1)</button>
+            </div>
+            <div class="activity-item" style="flex-direction:column; margin-top:12px;">
+              <div><strong>🌊 Лавина</strong> - Снимает 10% километров у всех конкурентов</div>
+              <button style="margin-top:12px;">Использовать (осталось: 1)</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function renderSettingsPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="container">
+          <button class="back-button" onclick="showPage('home')">← Назад</button>
+          <div class="card">
+            <h2>⚙️ Настройки</h2>
+            <input type="text" id="settings-name" placeholder="Имя">
+            <select id="settings-gender">
+              <option value="male">Мужчина</option>
+              <option value="female">Женщина</option>
+            </select>
+            <input type="date" id="settings-birthdate">
+            <input type="text" id="settings-city" placeholder="Город">
+            <button onclick="saveSettings()">Сохранить изменения</button>
+            <div id="settings-error" class="error"></div>
+          </div>
+        </div>
+      `;
+      loadSettings();
+    }
+    
+    async function loadSettings() {
+      const { data, error } = await sb
+        .from('profiles')
+        .select('*')
+        .eq('id', currentUser.id)
+        .single();
+      
+      if (data) {
+        document.getElementById('settings-name').value = data.name_full || '';
+        document.getElementById('settings-gender').value = data.gender || 'male';
+        document.getElementById('settings-birthdate').value = data.birth_date || '';
+        document.getElementById('settings-city').value = data.city || '';
+      }
+    }
+    
+    async function saveSettings() {
+      const name = document.getElementById('settings-name').value;
+      const gender = document.getElementById('settings-gender').value;
+      const birthDate = document.getElementById('settings-birthdate').value;
+      const city = document.getElementById('settings-city').value;
+      const errorDiv = document.getElementById('settings-error');
+      
+      const { error } = await sb
+        .from('profiles')
+        .update({
+          name_full: name,
+          gender: gender,
+          birth_date: birthDate,
+          city: city
+        })
+        .eq('id', currentUser.id);
+      
+      if (error) {
+        errorDiv.innerHTML = '❌ ' + error.message;
+      } else {
+        errorDiv.style.color = '#1e6f5c';
+        errorDiv.innerHTML = '✅ Настройки сохранены';
+        setTimeout(() => { errorDiv.innerHTML = ''; }, 2000);
+      }
+    }
+    
+    function renderPointsPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="container">
+          <button class="back-button" onclick="showPage('home')">← Назад</button>
+          <div class="card">
+            <h2>⭐ Баллы</h2>
+            <div style="text-align:center; padding:20px;">
+              <div style="font-size:48px; font-weight:800; color:#1e6f5c;">450</div>
+              <div>текущий баланс</div>
+            </div>
+            <h3>📜 История начислений</h3>
+            <div class="activity-item">+50  15.03.2026  За тренировку 12.5 км</div>
+            <div class="activity-item">+40  14.03.2026  За тренировку 10.2 км</div>
+            <div class="activity-item">+100 10.03.2026  За достижение "Первые 100 км"</div>
+            <h3 style="margin-top:20px;">🛒 Магазин способностей</h3>
+            <div class="activity-item" style="justify-content:space-between;"><span>🔄 Удвоение</span><span>100 баллов <button style="width:auto; padding:8px 16px;">Купить</button></span></div>
+            <div class="activity-item" style="justify-content:space-between;"><span>❄️ Заморозка</span><span>150 баллов <button style="width:auto; padding:8px 16px;">Купить</button></span></div>
+            <div class="activity-item" style="justify-content:space-between;"><span>🧹 Обнуление</span><span>200 баллов <button style="width:auto; padding:8px 16px;">Купить</button></span></div>
+            <div class="activity-item" style="justify-content:space-between;"><span>🌊 Лавина</span><span>300 баллов <button style="width:auto; padding:8px 16px;">Купить</button></span></div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function renderAchievementsPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="container">
+          <button class="back-button" onclick="showPage('home')">← Назад</button>
+          <div class="card">
+            <h2>🏅 Ачивки</h2>
+            <div class="activity-item"><strong>✅ Новичок</strong> - Первые 10 км <span style="margin-left:auto;">+10 баллов</span></div>
+            <div class="activity-item"><strong>🏃 Марафонец</strong> - 42.2 км <progress value="50" max="42.2"></progress> +100 баллов</div>
+            <div class="activity-item"><strong>⚡ Любитель скорости</strong> - Темп < 4:00 <progress value="0" max="1"></progress> +50 баллов</div>
+            <div class="activity-item"><strong>💯 Стольник</strong> - 100 км всего <progress value="128" max="100"></progress> +100 баллов</div>
+            <div class="activity-item"><strong>📊 Трудоголик</strong> - 50 тренировок <progress value="12" max="50"></progress> +200 баллов</div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function renderNominationsPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="container">
+          <button class="back-button" onclick="showPage('home')">← Назад</button>
+          <div class="card">
+            <h2>🎯 Номинации</h2>
+            <div class="filter-bar">
+              <select id="nomination-gender-filter" onchange="loadNominations()">
+                <option value="all">Все</option>
+                <option value="male">Мужчины</option>
+                <option value="female">Женщины</option>
+              </select>
+              <select id="nomination-age-filter" onchange="loadNominations()">
+                <option value="all">Все возрастные</option>
+                <option value="18-24">18-24</option>
+                <option value="25-29">25-29</option>
+                <option value="30-34">30-34</option>
+                <option value="35-39">35-39</option>
+                <option value="40-44">40-44</option>
+                <option value="45-49">45-49</option>
+                <option value="50-54">50-54</option>
+                <option value="55-59">55-59</option>
+                <option value="60-64">60-64</option>
+                <option value="65-69">65-69</option>
+                <option value="70+">70+</option>
+              </select>
+            </div>
+            <h3>🏆 Самая длинная тренировка</h3>
+            <div id="nomination-longest" class="activities-list">⏳ Загрузка...</div>
+            <h3>⚡ Самая быстрая тренировка</h3>
+            <div id="nomination-fastest" class="activities-list">⏳ Загрузка...</div>
+            <h3>⏱️ Самая долгая тренировка</h3>
+            <div id="nomination-longest-duration" class="activities-list">⏳ Загрузка...</div>
+            <h3>📊 Больше всего тренировок</h3>
+            <div id="nomination-most-activities" class="activities-list">⏳ Загрузка...</div>
+          </div>
+        </div>
+      `;
+      loadNominations();
+    }
+    
+    async function loadNominations() {
+      const genderFilter = document.getElementById('nomination-gender-filter')?.value || 'all';
+      const ageFilter = document.getElementById('nomination-age-filter')?.value || 'all';
+      
+      await loadNominationTable('nomination-longest', 'nomination_longest_activity', genderFilter, ageFilter);
+      await loadNominationTable('nomination-fastest', 'nomination_fastest_activity', genderFilter, ageFilter);
+      await loadNominationTable('nomination-longest-duration', 'nomination_longest_duration', genderFilter, ageFilter);
+      await loadNominationTable('nomination-most-activities', 'nomination_most_activities', genderFilter, ageFilter);
+    }
+    
+    async function loadNominationTable(containerId, tableName, genderFilter, ageFilter) {
+      let query = sb.from(tableName).select('*').limit(3);
+      
+      if (genderFilter !== 'all') {
+        query = query.eq('gender', genderFilter);
+      }
+      if (ageFilter !== 'all') {
+        query = query.eq('age_group', ageFilter);
+      }
+      
+      const { data, error } = await query;
+      
+      const container = document.getElementById(containerId);
+      if (error || !data || data.length === 0) {
+        container.innerHTML = '<div style="text-align:center; color:#8ba0ae; padding:20px;">Нет данных</div>';
+        return;
+      }
+      
+      container.innerHTML = data.map((item, idx) => `
+        <div class="activity-item">
+          <div>
+            <strong>${idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'} ${escapeHtml(item.participant_name)}</strong>
+            <div style="font-size:12px;">${item.activity_name || '—'} | ${item.activity_date || '—'}</div>
+          </div>
+          <div><strong>${item.distance_km?.toFixed(2) || item.pace_min_per_km || item.duration_min?.toFixed(0) || item.activities_count} ${item.distance_km ? 'км' : item.pace_min_per_km ? 'темп' : item.duration_min ? 'мин' : 'тренировок'}</strong></div>
+        </div>
+      `).join('');
+    }
+    
+    function render() {
+      if (!currentUser) {
+        renderAuth();
+        return;
+      }
+      
+      if (currentPage === 'home') {
+        renderHome();
+      } else if (currentPage === 'add') {
+        renderAddPage();
+      } else if (currentPage === 'trainings') {
+        renderTrainingsPage();
+      } else if (currentPage === 'leaderboard') {
+        renderLeaderboardPage();
+      } else if (currentPage === 'abilities') {
+        renderAbilitiesPage();
+      } else if (currentPage === 'settings') {
+        renderSettingsPage();
+      } else if (currentPage === 'points') {
+        renderPointsPage();
+      } else if (currentPage === 'achievements') {
+        renderAchievementsPage();
+      } else if (currentPage === 'nominations') {
+        renderNominationsPage();
+      } else {
+        renderHome();
+      }
     }
     
     function switchMethod(method) {
@@ -836,111 +1625,6 @@
           preview.style.display = 'block';
         };
         reader.readAsDataURL(input.files[0]);
-      }
-    }
-    
-    // ============= ОТРИСОВКА ИНТЕРФЕЙСА =============
-    
-    function renderAuth() {
-      document.getElementById('app').innerHTML = `
-        <div class="card">
-          <h1>🏃‍♂️ Спортивный челлендж</h1>
-          <p style="color: #6c7a89; margin-bottom: 24px;">Добавляйте тренировки, следите за прогрессом и соревнуйтесь с друзьями</p>
-          <div class="tabs">
-            <button class="tab active" onclick="switchTab('login')">Вход</button>
-            <button class="tab" onclick="switchTab('register')">Регистрация</button>
-          </div>
-          <div id="login-tab" class="tab-content active">
-            <div class="form-group"><input type="text" id="login-username" placeholder="Логин"></div>
-            <div class="form-group"><input type="password" id="login-password" placeholder="Пароль"></div>
-            <button onclick="login()">Войти</button>
-            <div id="login-error" class="error"></div>
-          </div>
-          <div id="register-tab" class="tab-content">
-            <div class="form-group"><input type="text" id="reg-username" placeholder="Логин"></div>
-            <div class="form-group"><input type="text" id="reg-firstname" placeholder="Имя"></div>
-            <div class="form-group"><input type="text" id="reg-lastname" placeholder="Фамилия"></div>
-            <div class="form-group"><input type="password" id="reg-password" placeholder="Пароль"></div>
-            <button onclick="register()">Зарегистрироваться</button>
-            <div id="register-error" class="error"></div>
-          </div>
-        </div>
-      `;
-    }
-    
-    async function renderDashboard() {
-      const { data: profile } = await sb
-        .from('profiles')
-        .select('*')
-        .eq('id', currentUser.id)
-        .single();
-      
-      document.getElementById('app').innerHTML = `
-        <div class="header">
-          <div class="user-info">👋 <strong>${escapeHtml(profile?.name_full || currentUser.email?.split('@')[0])}</strong></div>
-          <button class="secondary" onclick="logout()">🚪 Выйти</button>
-        </div>
-        
-        <div class="card">
-          <h3>📊 Моя статистика</h3>
-          <div id="stats-container" class="stats-grid">⏳ Загрузка...</div>
-        </div>
-        
-        <div class="card">
-          <h3>➕ Добавить тренировку</h3>
-          <div class="method-buttons">
-            <button class="method-btn active" onclick="switchMethod('link')">📎 По ссылке</button>
-            <button class="method-btn" onclick="switchMethod('screenshot')">📸 По скриншоту</button>
-            <button class="method-btn" onclick="switchMethod('manual')">✏️ Вручную</button>
-          </div>
-          
-          <div id="link-form" class="add-form active">
-            <input type="text" id="link-url" placeholder="https://www.strava.com/activities/...">
-            <button onclick="addByLink()">Добавить</button>
-            <div id="link-error" class="error"></div>
-          </div>
-          
-          <div id="screenshot-form" class="add-form">
-            <input type="file" id="screenshot-file" accept="image/*" onchange="previewScreenshot(this)">
-            <img id="screenshot-preview" class="screenshot-preview">
-            <button onclick="addByScreenshot()">Распознать и добавить</button>
-            <div id="screenshot-error" class="error"></div>
-          </div>
-          
-          <div id="manual-form" class="add-form">
-            <input type="text" id="manual-name" placeholder="Название (опционально)">
-            <input type="number" id="manual-distance" step="0.01" placeholder="Дистанция (км) *">
-            <input type="number" id="manual-duration" placeholder="Время (минуты)">
-            <input type="text" id="manual-pace" placeholder="Темп (мин/км) например 5:30">
-            <input type="date" id="manual-date">
-            <button onclick="addManually()">Добавить</button>
-            <div id="manual-error" class="error"></div>
-          </div>
-          <p style="font-size: 12px; color: #8ba0ae; margin-top: 16px; text-align: center;">💡 Поддерживаются ссылки Strava и скриншоты из любых приложений</p>
-        </div>
-        
-        <div class="card">
-          <h3>📋 Мои тренировки</h3>
-          <div id="activities-list" class="activities-list">⏳ Загрузка...</div>
-        </div>
-        
-        <div class="card">
-          <h3>🏆 Таблица лидеров</h3>
-          <div id="leaderboard-container">⏳ Загрузка...</div>
-        </div>
-      `;
-      
-      loadData();
-    }
-    
-    async function render() {
-      const { data: { session } } = await sb.auth.getSession();
-      
-      if (session) {
-        currentUser = session.user;
-        renderDashboard();
-      } else {
-        renderAuth();
       }
     }
     
