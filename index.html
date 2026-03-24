@@ -736,7 +736,6 @@
   try {
     console.log('Resolving short link:', shortUrl);
     
-    // Используем fetch с redirect: 'follow'
     const response = await fetch(shortUrl, { 
       method: 'GET', 
       redirect: 'follow',
@@ -745,21 +744,21 @@
       }
     });
     
-    // Получаем финальный URL
     let finalUrl = response.url;
     console.log('After redirect, URL:', finalUrl);
     
-    // Извлекаем ID тренировки (число после /activities/)
+    // Извлекаем ID тренировки
     const match = finalUrl.match(/activities\/(\d+)/);
+    console.log('Match result:', match);
+    
     if (match) {
       const activityId = match[1];
       const cleanUrl = `https://www.strava.com/activities/${activityId}`;
-      console.log('Extracted activity ID:', activityId);
-      console.log('Clean URL:', cleanUrl);
+      console.log('Returning clean URL:', cleanUrl);
       return cleanUrl;
     }
     
-    console.log('No activity ID found in URL');
+    console.log('No activity ID found, returning original:', finalUrl);
     return finalUrl;
     
   } catch (error) {
@@ -779,11 +778,13 @@ async function addByLink() {
   
   errorDiv.innerHTML = '<span class="loader"></span> Обработка...';
   
+  console.log('Original link:', link);
+  
   // Если это короткая ссылка Strava, разворачиваем её
   if (link.includes('strava.app.link') || link.includes('app.link')) {
     try {
       link = await resolveStravaShortLink(link);
-      console.log('Final link after resolution:', link);
+      console.log('After resolveStravaShortLink, link:', link);
     } catch (err) {
       console.error('Resolution error:', err);
       errorDiv.innerHTML = '❌ Не удалось развернуть ссылку';
@@ -792,15 +793,23 @@ async function addByLink() {
   }
   
   // Проверяем, что это ссылка на Strava с ID тренировки
-  if (!link.match(/strava\.com\/activities\/\d+/)) {
+  const pattern = /strava\.com\/activities\/(\d+)/;
+  const match = link.match(pattern);
+  console.log('Pattern match:', match);
+  
+  if (!match) {
     errorDiv.innerHTML = '❌ Ссылка должна вести на тренировку Strava (формат: https://www.strava.com/activities/1234567890)';
     return;
   }
   
+  // Убеждаемся, что ссылка чистая
+  const cleanLink = `https://www.strava.com/activities/${match[1]}`;
+  console.log('Clean link for API:', cleanLink);
+  
   const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url: link })
+    body: JSON.stringify({ url: cleanLink })
   });
   
   const result = await response.json();
@@ -821,7 +830,7 @@ async function addByLink() {
       duration_min: result.duration,
       pace_min_per_km: result.pace,
       activity_date: result.date,
-      url: link
+      url: cleanLink
     });
   
   if (insertError) {
