@@ -743,24 +743,28 @@ async function addByLink() {
   
   errorDiv.innerHTML = '<span class="loader"></span> Обработка...';
   
-  // Проверяем, что это ссылка на Strava (может быть как короткая, так и полная)
-  if (!link.includes('strava.com') && !link.includes('strava.app.link')) {
-    errorDiv.innerHTML = '❌ Ссылка должна быть с strava.com или strava.app.link';
-    return;
-  }
+  console.log('=== addByLink START ===');
+  console.log('Link:', link);
+  console.log('SUPABASE_URL:', SUPABASE_URL);
   
-  const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url: link })
-  });
+  const url = `${SUPABASE_URL}/functions/v1/parse-activity`;
+  console.log('Fetch URL:', url);
   
-  const result = await response.json();
-  
-  if (!result.success) {
-    errorDiv.innerHTML = '❌ ' + (result.error || 'Ошибка парсинга');
-    return;
-  }
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: link })
+    });
+    
+    console.log('Response status:', response.status);
+    const result = await response.json();
+    console.log('Result:', result);
+    
+    if (!result.success) {
+      errorDiv.innerHTML = '❌ ' + (result.error || 'Ошибка парсинга');
+      return;
+    }
   
   const { error: insertError } = await sb
     .from('activities')
@@ -784,6 +788,11 @@ async function addByLink() {
       document.getElementById('link-url').value = '';
     }, 500);
   }
+   } catch (err) {
+      console.error('Fetch error:', err);
+      errorDiv.innerHTML = '❌ Ошибка соединения: ' + err.message;
+    }
+  }   
 }
     
     async function addByScreenshot() {
