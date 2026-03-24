@@ -18,16 +18,68 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
       background: linear-gradient(135deg, #e8f4f8 0%, #d4e9f0 100%);
       min-height: 100vh;
+      padding-top: 80px;
       padding-bottom: 20px;
+    }
+
+    /* Фиксированная шапка */
+    .fixed-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .user-info {
+      flex: 1;
+    }
+
+    .user-name {
+      font-weight: 600;
+      color: #1e6f5c;
+      font-size: 18px;
+    }
+
+    .user-details {
+      font-size: 12px;
+      color: #6c7a89;
+    }
+
+    .burger {
+      width: 44px;
+      height: 44px;
+      background: white;
+      border-radius: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .burger span {
+      width: 22px;
+      height: 2px;
+      background: #1e6f5c;
+      border-radius: 2px;
     }
 
     .container {
       max-width: 700px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 0 20px;
     }
 
-    /* Карточки */
     .card {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
@@ -38,7 +90,6 @@
       border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
-    /* Заголовки */
     h1 {
       font-size: 28px;
       font-weight: 700;
@@ -66,7 +117,6 @@
       gap: 8px;
     }
 
-    /* Кнопка добавления (плавающая) */
     .fab {
       position: fixed;
       bottom: 24px;
@@ -86,120 +136,14 @@
 
     .fab:hover {
       transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(30, 111, 92, 0.5);
-    }
-
-    .fab:active {
-      transform: scale(0.95);
     }
 
     .fab span {
       font-size: 32px;
       font-weight: 300;
       color: white;
-      line-height: 1;
     }
 
-    /* Шапка с бургером */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .user-info {
-      background: white;
-      padding: 12px 20px;
-      border-radius: 40px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      flex: 1;
-    }
-
-    .user-name {
-      font-weight: 600;
-      color: #1e6f5c;
-    }
-
-    .burger {
-      width: 44px;
-      height: 44px;
-      background: white;
-      border-radius: 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .burger span {
-      width: 22px;
-      height: 2px;
-      background: #1e6f5c;
-      border-radius: 2px;
-    }
-
-    /* Меню */
-    .menu-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 200;
-      display: none;
-    }
-
-    .menu {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 280px;
-      height: 100%;
-      background: white;
-      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
-      z-index: 201;
-      transform: translateX(100%);
-      transition: transform 0.3s ease;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .menu.open {
-      transform: translateX(0);
-    }
-
-    .menu-header {
-      padding: 24px 20px;
-      background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
-      color: white;
-    }
-
-    .menu-item {
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border-bottom: 1px solid #f0f0f0;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .menu-item:hover {
-      background: #f5f5f5;
-    }
-
-    .menu-item span:first-child {
-      font-size: 20px;
-    }
-
-    /* Статистика */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -227,7 +171,6 @@
       margin-top: 6px;
     }
 
-    /* Места */
     .places-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -254,7 +197,6 @@
       color: #1e6f5c;
     }
 
-    /* График */
     .chart {
       background: white;
       border-radius: 20px;
@@ -298,7 +240,6 @@
       margin-bottom: 4px;
     }
 
-    /* Тренировки */
     .activities-list {
       display: flex;
       flex-direction: column;
@@ -314,6 +255,11 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 10px;
+    }
+
+    .activity-item.deleted {
+      opacity: 0.5;
+      background: #e2e8f0;
     }
 
     .activity-info {
@@ -339,6 +285,20 @@
       color: white;
       border: none;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .restore-btn {
+      background: #289672;
+      padding: 6px 12px;
+      font-size: 11px;
+      border-radius: 20px;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-left: 8px;
     }
 
     .show-all {
@@ -350,7 +310,6 @@
       margin-top: 12px;
     }
 
-    /* Таблица лидеров */
     .leaderboard-table {
       width: 100%;
       border-collapse: collapse;
@@ -373,7 +332,6 @@
       font-size: 12px;
     }
 
-    /* Формы */
     input, select, textarea {
       width: 100%;
       padding: 14px 16px;
@@ -481,7 +439,6 @@
       display: none;
     }
 
-    /* Модальное окно подтверждения */
     .modal {
       position: fixed;
       top: 0;
@@ -519,7 +476,6 @@
       color: #2c3e50;
     }
 
-    /* Страница добавления */
     .page {
       display: none;
     }
@@ -537,13 +493,58 @@
       margin-bottom: 20px;
       text-align: left;
     }
+
+    .nomination-card {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .nomination-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e6f5c;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nomination-winners {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nomination-winner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .winner-place {
+      font-weight: 700;
+      width: 40px;
+    }
+
+    .winner-name {
+      flex: 1;
+    }
+
+    .winner-value {
+      font-weight: 600;
+      color: #1e6f5c;
+    }
   </style>
 </head>
 <body>
   <div id="app"></div>
 
   <script>
-    // Supabase конфигурация
     const SUPABASE_URL = 'https://idkghmydocvjhuwtgojh.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlka2dobXlkb2N2amh1d3Rnb2poIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNTU3NzgsImV4cCI6MjA4OTgzMTc3OH0.omQ4zi4gILIk8nQtbYPstcORhEyEhFvKDnFs5qwFlSM';
     
@@ -552,6 +553,7 @@
     let currentUser = null;
     let currentPage = 'home';
     let menuOpen = false;
+    let deletedActivities = new Map(); // хранение удалённых тренировок (id -> timeout)
     
     // ============= ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =============
     
@@ -563,6 +565,19 @@
         if (m === '>') return '&gt;';
         return m;
       });
+    }
+    
+    function formatDuration(minutes) {
+      if (!minutes) return '—';
+      const hrs = Math.floor(minutes / 60);
+      const mins = Math.round(minutes % 60);
+      return hrs > 0 ? `${hrs}ч ${mins}мин` : `${mins}мин`;
+    }
+    
+    function formatDate(dateStr) {
+      if (!dateStr) return '—';
+      const d = new Date(dateStr);
+      return `${d.getDate().toString().padStart(2, '0')}.${(d.getMonth() + 1).toString().padStart(2, '0')}.${d.getFullYear()}`;
     }
     
     function showPage(page) {
@@ -656,6 +671,63 @@
       currentUser = null;
       currentPage = 'home';
       render();
+    }
+    
+    // ============= УДАЛЕНИЕ С ВОССТАНОВЛЕНИЕМ =============
+    
+    async function softDeleteActivity(activityId, activityName) {
+      // Помечаем тренировку как удалённую в локальном состоянии
+      const deletedItem = document.getElementById(`activity-${activityId}`);
+      if (deletedItem) {
+        deletedItem.classList.add('deleted');
+      }
+      
+      // Устанавливаем таймер на 5 минут для полного удаления
+      const timeoutId = setTimeout(async () => {
+        // Полное удаление из базы
+        const { error } = await sb
+          .from('activities')
+          .delete()
+          .eq('id', activityId);
+        
+        if (!error) {
+          deletedActivities.delete(activityId);
+          // Обновляем отображение
+          if (currentPage === 'trainings') {
+            loadTrainings();
+          } else {
+            render();
+          }
+        }
+      }, 5 * 60 * 1000);
+      
+      deletedActivities.set(activityId, timeoutId);
+      
+      // Обновляем кнопку на "Восстановить"
+      const restoreBtn = document.getElementById(`restore-${activityId}`);
+      if (restoreBtn) {
+        restoreBtn.style.display = 'inline-block';
+      }
+    }
+    
+    async function restoreActivity(activityId) {
+      const timeoutId = deletedActivities.get(activityId);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        deletedActivities.delete(activityId);
+      }
+      
+      // Убираем класс deleted
+      const deletedItem = document.getElementById(`activity-${activityId}`);
+      if (deletedItem) {
+        deletedItem.classList.remove('deleted');
+      }
+      
+      // Скрываем кнопку восстановления
+      const restoreBtn = document.getElementById(`restore-${activityId}`);
+      if (restoreBtn) {
+        restoreBtn.style.display = 'none';
+      }
     }
     
     // ============= ДОБАВЛЕНИЕ ТРЕНИРОВОК =============
@@ -867,38 +939,6 @@
       }
     }
     
-    async function deleteActivity(activityId, activityName) {
-      showConfirmDialog('Вы точно хотите удалить тренировку "' + activityName + '"?', async () => {
-        const { error } = await sb
-          .from('activities')
-          .delete()
-          .eq('id', activityId);
-        
-        if (!error) {
-          if (currentPage === 'trainings') {
-            loadTrainings();
-          } else {
-            loadHomeData();
-          }
-        }
-      });
-    }
-    
-    function showConfirmDialog(message, onConfirm) {
-      const modal = document.createElement('div');
-      modal.className = 'modal';
-      modal.innerHTML = `
-        <div class="modal-content">
-          <p>${escapeHtml(message)}</p>
-          <div class="modal-buttons">
-            <button class="cancel" onclick="this.closest('.modal').remove()">Отмена</button>
-            <button onclick="this.closest('.modal').remove(); ${onConfirm.toString()}()">Удалить</button>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(modal);
-    }
-    
     // ============= ЗАГРУЗКА ДАННЫХ =============
     
     async function loadProfile() {
@@ -907,7 +947,6 @@
         .select('*')
         .eq('id', currentUser.id)
         .single();
-      
       return data;
     }
     
@@ -939,7 +978,7 @@
       
       return {
         totalKm: totalKm.toFixed(2),
-        totalTime: Math.floor(totalTime / 60) + 'ч ' + (totalTime % 60) + 'мин',
+        totalTime: formatDuration(totalTime),
         avgPace: avgPace || '—',
         trainingsCount: trainingsCount,
         avgDistance: avgDistance
@@ -1004,11 +1043,18 @@
     }
     
     async function loadWeeklyChart() {
+      // Получаем начало текущей недели (понедельник)
+      const today = new Date();
+      const startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1));
+      startOfWeek.setHours(0, 0, 0, 0);
+      const startOfWeekStr = startOfWeek.toISOString().split('T')[0];
+      
       const { data, error } = await sb
         .from('activities')
         .select('distance_km, activity_date')
         .eq('user_id', currentUser.id)
-        .gte('activity_date', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
+        .gte('activity_date', startOfWeekStr);
       
       if (error) return {};
       
@@ -1068,21 +1114,35 @@
         return;
       }
       
-      container.innerHTML = data.map(a => `
-        <div class="activity-item">
-          <div class="activity-info">
-            <div class="activity-name">${escapeHtml(a.name || 'Без названия')}</div>
-            <div class="activity-meta">
-              ${a.activity_date || '—'} | ${a.distance_km || 0} км
-              ${a.duration_min ? ' | ' + Math.floor(a.duration_min/60) + 'ч ' + (a.duration_min%60) + 'мин' : ''}
-              ${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}
-              ${a.platform === 'strava' ? ' 📎Strava' : a.platform === 'screenshot' ? ' 📸Скриншот' : ' ✏️Ручная'}
-              ${a.url ? `<br><a href="${escapeHtml(a.url)}" target="_blank" class="activity-link">🔗 открыть ссылку</a>` : ''}
+      container.innerHTML = data.map(a => {
+        const isDeleted = deletedActivities.has(a.id);
+        return `
+          <div id="activity-${a.id}" class="activity-item ${isDeleted ? 'deleted' : ''}">
+            <div class="activity-info">
+              <div class="activity-name">${escapeHtml(a.name || 'Без названия')}</div>
+              <div class="activity-meta">
+                ${formatDate(a.activity_date)} | ${a.distance_km || 0} км
+                ${a.duration_min ? ' | ' + formatDuration(a.duration_min) : ''}
+                ${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}
+                ${a.platform === 'strava' ? ' 📎Strava' : a.platform === 'screenshot' ? ' 📸Скриншот' : ' ✏️Ручная'}
+                ${a.url ? `<br><a href="${escapeHtml(a.url)}" target="_blank" class="activity-link">🔗 открыть ссылку</a>` : ''}
+              </div>
+            </div>
+            <div>
+              ${!isDeleted ? `
+                <button class="delete-btn" onclick="softDeleteActivity('${a.id}', '${escapeHtml(a.name || 'Тренировка').replace(/'/g, "\\'")}')">
+                  🗑️
+                </button>
+              ` : ''}
+              ${isDeleted ? `
+                <button id="restore-${a.id}" class="restore-btn" onclick="restoreActivity('${a.id}')">
+                  ↺ Восстановить
+                </button>
+              ` : ''}
             </div>
           </div>
-          <button class="delete-btn" onclick="deleteActivity('${a.id}', '${escapeHtml(a.name || 'Тренировка').replace(/'/g, "\\'")}')">Удалить</button>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
     
     async function loadLeaderboardFull(genderFilter = 'all', ageFilter = 'all', sortBy = 'km') {
@@ -1136,6 +1196,65 @@
       return `${min}:${sec.toString().padStart(2, '0')}`;
     }
     
+    // ============= НОМИНАЦИИ =============
+    
+    async function loadNominations() {
+      const genderFilter = document.getElementById('nomination-gender-filter')?.value || 'all';
+      const ageFilter = document.getElementById('nomination-age-filter')?.value || 'all';
+      
+      await loadNominationTable('nomination-longest', 'nomination_longest_activity', genderFilter, ageFilter, 'distance_km', 'км');
+      await loadNominationTable('nomination-fastest', 'nomination_fastest_activity', genderFilter, ageFilter, 'pace_min_per_km', 'темп');
+      await loadNominationTable('nomination-longest-duration', 'nomination_longest_duration', genderFilter, ageFilter, 'duration_min', 'мин');
+      await loadNominationTable('nomination-most-activities', 'nomination_most_activities', genderFilter, ageFilter, 'activities_count', 'тренировок');
+    }
+    
+    async function loadNominationTable(containerId, tableName, genderFilter, ageFilter, valueField, unit) {
+      let query = sb.from(tableName).select('*').limit(3);
+      
+      if (genderFilter !== 'all') {
+        query = query.eq('gender', genderFilter);
+      }
+      if (ageFilter !== 'all') {
+        query = query.eq('age_group', ageFilter);
+      }
+      
+      const { data, error } = await query;
+      
+      const container = document.getElementById(containerId);
+      if (error || !data || data.length === 0) {
+        container.innerHTML = '<div style="text-align:center; color:#8ba0ae; padding:20px;">Нет данных</div>';
+        return;
+      }
+      
+      let title = '';
+      if (containerId === 'nomination-longest') title = '🏆 Самая длинная тренировка';
+      if (containerId === 'nomination-fastest') title = '⚡ Самая быстрая тренировка';
+      if (containerId === 'nomination-longest-duration') title = '⏱️ Самая долгая тренировка';
+      if (containerId === 'nomination-most-activities') title = '📊 Больше всего тренировок';
+      
+      container.innerHTML = `
+        <div class="nomination-card">
+          <div class="nomination-title">${title}</div>
+          <div class="nomination-winners">
+            ${data.map((item, idx) => {
+              let value = '';
+              if (valueField === 'distance_km') value = `${item.distance_km?.toFixed(2)} ${unit}`;
+              else if (valueField === 'pace_min_per_km') value = `${item.pace_min_per_km}`;
+              else if (valueField === 'duration_min') value = `${Math.round(item.duration_min)} ${unit}`;
+              else if (valueField === 'activities_count') value = `${item.activities_count} ${unit}`;
+              return `
+                <div class="nomination-winner">
+                  <div class="winner-place">${idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}</div>
+                  <div class="winner-name">${escapeHtml(item.participant_name)}</div>
+                  <div class="winner-value">${value}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+    
     // ============= ОТРИСОВКА СТРАНИЦ =============
     
     function renderAuth() {
@@ -1144,9 +1263,9 @@
           <div class="card">
             <h1>🏃‍♂️ Спортивный челлендж</h1>
             <p style="color: #6c7a89; margin-bottom: 24px;">Добавляйте тренировки, следите за прогрессом и соревнуйтесь с друзьями</p>
-            <div class="tabs" style="display:flex; gap:12px; margin-bottom:24px;">
-              <button class="method-btn active" onclick="document.getElementById('login-form').style.display='block'; document.getElementById('register-form').style.display='none'; this.classList.add('active'); this.nextElementSibling.classList.remove('active')">Вход</button>
-              <button class="method-btn" onclick="document.getElementById('register-form').style.display='block'; document.getElementById('login-form').style.display='none'; this.classList.add('active'); this.previousElementSibling.classList.remove('active')">Регистрация</button>
+            <div class="method-buttons" style="margin-bottom:24px;">
+              <div class="method-btn active" onclick="document.getElementById('login-form').style.display='block'; document.getElementById('register-form').style.display='none'; this.classList.add('active'); this.nextElementSibling.classList.remove('active')">Вход</div>
+              <div class="method-btn" onclick="document.getElementById('register-form').style.display='block'; document.getElementById('login-form').style.display='none'; this.classList.add('active'); this.previousElementSibling.classList.remove('active')">Регистрация</div>
             </div>
             <div id="login-form">
               <input type="text" id="login-username" placeholder="Логин">
@@ -1185,20 +1304,20 @@
       const maxKm = Math.max(...Object.values(weeklyChart), 1);
       
       document.getElementById('app').innerHTML = `
-        <div class="container">
-          <div class="header">
-            <div class="user-info">
-              <div class="user-name">${escapeHtml(profile?.name_full || currentUser.email?.split('@')[0])}</div>
-              <div style="font-size: 12px; color: #6c7a89;">
-                ${profile?.gender === 'male' ? 'Мужчина' : 'Женщина'}, 
-                ${profile?.birth_date ? Math.floor((new Date() - new Date(profile.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : '—'} лет
-              </div>
-            </div>
-            <div class="burger" onclick="openMenu()">
-              <span></span><span></span><span></span>
+        <div class="fixed-header">
+          <div class="user-info">
+            <div class="user-name">${escapeHtml(profile?.name_full || currentUser.email?.split('@')[0])}</div>
+            <div class="user-details">
+              ${profile?.gender === 'male' ? 'Мужчина' : 'Женщина'}, 
+              ${profile?.birth_date ? Math.floor((new Date() - new Date(profile.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : '—'} лет
             </div>
           </div>
-          
+          <div class="burger" onclick="openMenu()">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        
+        <div class="container">
           <div class="card">
             <div class="stats-grid">
               <div class="stat-card"><div class="stat-value">${stats.totalKm}</div><div class="stat-label">км</div></div>
@@ -1234,9 +1353,8 @@
                 <div class="activity-item">
                   <div class="activity-info">
                     <div class="activity-name">${escapeHtml(a.name || 'Без названия')}</div>
-                    <div class="activity-meta">${a.activity_date} | ${a.distance_km} км | темп ${a.pace_min_per_km || '—'}</div>
+                    <div class="activity-meta">${formatDate(a.activity_date)} | ${a.distance_km} км | темп ${a.pace_min_per_km || '—'}</div>
                   </div>
-                  <button class="delete-btn" onclick="deleteActivity('${a.id}', '${escapeHtml(a.name || 'Тренировка').replace(/'/g, "\\'")}')">Удалить</button>
                 </div>
               `).join('') || '<div style="text-align:center; color:#8ba0ae; padding:20px;">Нет тренировок</div>'}
             </div>
@@ -1278,8 +1396,16 @@
     
     function renderAddPage() {
       document.getElementById('app').innerHTML = `
+        <div class="fixed-header">
+          <div class="user-info">
+            <div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div>
+          </div>
+          <div class="burger" onclick="openMenu()">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        
         <div class="container">
-          <button class="back-button" onclick="showPage('home')">← Назад</button>
           <div class="card">
             <h2>➕ Добавить тренировку</h2>
             <div class="method-buttons">
@@ -1312,13 +1438,38 @@
             </div>
           </div>
         </div>
+        
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
+        <div id="menu" class="menu">
+          <div class="menu-header"><strong>Меню</strong></div>
+          <div class="menu-item" onclick="showPage('home')"><span>🏠</span><span>Главная</span></div>
+          <div class="menu-item" onclick="showPage('abilities')"><span>⚡</span><span>Способности</span></div>
+          <div class="menu-item" onclick="showPage('trainings')"><span>📋</span><span>Мои тренировки</span></div>
+          <div class="menu-item" onclick="showPage('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div>
+          <div class="menu-item" onclick="showPage('settings')"><span>⚙️</span><span>Настройки</span></div>
+          <div class="menu-item" onclick="showPage('points')"><span>⭐</span><span>Баллы</span></div>
+          <div class="menu-item" onclick="showPage('achievements')"><span>🏅</span><span>Ачивки</span></div>
+          <div class="menu-item" onclick="showPage('nominations')"><span>🎯</span><span>Номинации</span></div>
+          <div class="menu-item" onclick="showPage('add')"><span>➕</span><span>Добавить тренировку</span></div>
+          <div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div>
+        </div>
+        
+        <div class="fab" onclick="showPage('add')"><span>+</span></div>
       `;
     }
     
     function renderTrainingsPage() {
       document.getElementById('app').innerHTML = `
+        <div class="fixed-header">
+          <div class="user-info">
+            <div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div>
+          </div>
+          <div class="burger" onclick="openMenu()">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        
         <div class="container">
-          <button class="back-button" onclick="showPage('home')">← Назад</button>
           <div class="card">
             <h2>📋 Мои тренировки</h2>
             <div class="filter-bar">
@@ -1327,14 +1478,39 @@
             <div id="trainings-list" class="activities-list">⏳ Загрузка...</div>
           </div>
         </div>
+        
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
+        <div id="menu" class="menu">
+          <div class="menu-header"><strong>Меню</strong></div>
+          <div class="menu-item" onclick="showPage('home')"><span>🏠</span><span>Главная</span></div>
+          <div class="menu-item" onclick="showPage('abilities')"><span>⚡</span><span>Способности</span></div>
+          <div class="menu-item" onclick="showPage('trainings')"><span>📋</span><span>Мои тренировки</span></div>
+          <div class="menu-item" onclick="showPage('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div>
+          <div class="menu-item" onclick="showPage('settings')"><span>⚙️</span><span>Настройки</span></div>
+          <div class="menu-item" onclick="showPage('points')"><span>⭐</span><span>Баллы</span></div>
+          <div class="menu-item" onclick="showPage('achievements')"><span>🏅</span><span>Ачивки</span></div>
+          <div class="menu-item" onclick="showPage('nominations')"><span>🎯</span><span>Номинации</span></div>
+          <div class="menu-item" onclick="showPage('add')"><span>➕</span><span>Добавить тренировку</span></div>
+          <div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div>
+        </div>
+        
+        <div class="fab" onclick="showPage('add')"><span>+</span></div>
       `;
       loadTrainings();
     }
     
     function renderLeaderboardPage() {
       document.getElementById('app').innerHTML = `
+        <div class="fixed-header">
+          <div class="user-info">
+            <div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div>
+          </div>
+          <div class="burger" onclick="openMenu()">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        
         <div class="container">
-          <button class="back-button" onclick="showPage('home')">← Назад</button>
           <div class="card">
             <h2>🏆 Таблица лидеров</h2>
             <div class="filter-bar">
@@ -1367,14 +1543,39 @@
             <div id="leaderboard-full-list" class="activities-list">⏳ Загрузка...</div>
           </div>
         </div>
+        
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
+        <div id="menu" class="menu">
+          <div class="menu-header"><strong>Меню</strong></div>
+          <div class="menu-item" onclick="showPage('home')"><span>🏠</span><span>Главная</span></div>
+          <div class="menu-item" onclick="showPage('abilities')"><span>⚡</span><span>Способности</span></div>
+          <div class="menu-item" onclick="showPage('trainings')"><span>📋</span><span>Мои тренировки</span></div>
+          <div class="menu-item" onclick="showPage('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div>
+          <div class="menu-item" onclick="showPage('settings')"><span>⚙️</span><span>Настройки</span></div>
+          <div class="menu-item" onclick="showPage('points')"><span>⭐</span><span>Баллы</span></div>
+          <div class="menu-item" onclick="showPage('achievements')"><span>🏅</span><span>Ачивки</span></div>
+          <div class="menu-item" onclick="showPage('nominations')"><span>🎯</span><span>Номинации</span></div>
+          <div class="menu-item" onclick="showPage('add')"><span>➕</span><span>Добавить тренировку</span></div>
+          <div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div>
+        </div>
+        
+        <div class="fab" onclick="showPage('add')"><span>+</span></div>
       `;
       loadLeaderboardFull();
     }
     
     function renderAbilitiesPage() {
       document.getElementById('app').innerHTML = `
+        <div class="fixed-header">
+          <div class="user-info">
+            <div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div>
+          </div>
+          <div class="burger" onclick="openMenu()">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        
         <div class="container">
-          <button class="back-button" onclick="showPage('home')">← Назад</button>
           <div class="card">
             <h2>⚡ Способности</h2>
             <div class="activity-item" style="flex-direction:column;">
@@ -1395,13 +1596,38 @@
             </div>
           </div>
         </div>
+        
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
+        <div id="menu" class="menu">
+          <div class="menu-header"><strong>Меню</strong></div>
+          <div class="menu-item" onclick="showPage('home')"><span>🏠</span><span>Главная</span></div>
+          <div class="menu-item" onclick="showPage('abilities')"><span>⚡</span><span>Способности</span></div>
+          <div class="menu-item" onclick="showPage('trainings')"><span>📋</span><span>Мои тренировки</span></div>
+          <div class="menu-item" onclick="showPage('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div>
+          <div class="menu-item" onclick="showPage('settings')"><span>⚙️</span><span>Настройки</span></div>
+          <div class="menu-item" onclick="showPage('points')"><span>⭐</span><span>Баллы</span></div>
+          <div class="menu-item" onclick="showPage('achievements')"><span>🏅</span><span>Ачивки</span></div>
+          <div class="menu-item" onclick="showPage('nominations')"><span>🎯</span><span>Номинации</span></div>
+          <div class="menu-item" onclick="showPage('add')"><span>➕</span><span>Добавить тренировку</span></div>
+          <div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div>
+        </div>
+        
+        <div class="fab" onclick="showPage('add')"><span>+</span></div>
       `;
     }
     
     function renderSettingsPage() {
       document.getElementById('app').innerHTML = `
+        <div class="fixed-header">
+          <div class="user-info">
+            <div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div>
+          </div>
+          <div class="burger" onclick="openMenu()">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        
         <div class="container">
-          <button class="back-button" onclick="showPage('home')">← Назад</button>
           <div class="card">
             <h2>⚙️ Настройки</h2>
             <input type="text" id="settings-name" placeholder="Имя">
@@ -1415,6 +1641,23 @@
             <div id="settings-error" class="error"></div>
           </div>
         </div>
+        
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
+        <div id="menu" class="menu">
+          <div class="menu-header"><strong>Меню</strong></div>
+          <div class="menu-item" onclick="showPage('home')"><span>🏠</span><span>Главная</span></div>
+          <div class="menu-item" onclick="showPage('abilities')"><span>⚡</span><span>Способности</span></div>
+          <div class="menu-item" onclick="showPage('trainings')"><span>📋</span><span>Мои тренировки</span></div>
+          <div class="menu-item" onclick="showPage('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div>
+          <div class="menu-item" onclick="showPage('settings')"><span>⚙️</span><span>Настройки</span></div>
+          <div class="menu-item" onclick="showPage('points')"><span>⭐</span><span>Баллы</span></div>
+          <div class="menu-item" onclick="showPage('achievements')"><span>🏅</span><span>Ачивки</span></div>
+          <div class="menu-item" onclick="showPage('nominations')"><span>🎯</span><span>Номинации</span></div>
+          <div class="menu-item" onclick="showPage('add')"><span>➕</span><span>Добавить тренировку</span></div>
+          <div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div>
+        </div>
+        
+        <div class="fab" onclick="showPage('add')"><span>+</span></div>
       `;
       loadSettings();
     }
@@ -1462,8 +1705,16 @@
     
     function renderPointsPage() {
       document.getElementById('app').innerHTML = `
+        <div class="fixed-header">
+          <div class="user-info">
+            <div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div>
+          </div>
+          <div class="burger" onclick="openMenu()">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        
         <div class="container">
-          <button class="back-button" onclick="showPage('home')">← Назад</button>
           <div class="card">
             <h2>⭐ Баллы</h2>
             <div style="text-align:center; padding:20px;">
@@ -1481,13 +1732,38 @@
             <div class="activity-item" style="justify-content:space-between;"><span>🌊 Лавина</span><span>300 баллов <button style="width:auto; padding:8px 16px;">Купить</button></span></div>
           </div>
         </div>
+        
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
+        <div id="menu" class="menu">
+          <div class="menu-header"><strong>Меню</strong></div>
+          <div class="menu-item" onclick="showPage('home')"><span>🏠</span><span>Главная</span></div>
+          <div class="menu-item" onclick="showPage('abilities')"><span>⚡</span><span>Способности</span></div>
+          <div class="menu-item" onclick="showPage('trainings')"><span>📋</span><span>Мои тренировки</span></div>
+          <div class="menu-item" onclick="showPage('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div>
+          <div class="menu-item" onclick="showPage('settings')"><span>⚙️</span><span>Настройки</span></div>
+          <div class="menu-item" onclick="showPage('points')"><span>⭐</span><span>Баллы</span></div>
+          <div class="menu-item" onclick="showPage('achievements')"><span>🏅</span><span>Ачивки</span></div>
+          <div class="menu-item" onclick="showPage('nominations')"><span>🎯</span><span>Номинации</span></div>
+          <div class="menu-item" onclick="showPage('add')"><span>➕</span><span>Добавить тренировку</span></div>
+          <div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div>
+        </div>
+        
+        <div class="fab" onclick="showPage('add')"><span>+</span></div>
       `;
     }
     
     function renderAchievementsPage() {
       document.getElementById('app').innerHTML = `
+        <div class="fixed-header">
+          <div class="user-info">
+            <div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div>
+          </div>
+          <div class="burger" onclick="openMenu()">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        
         <div class="container">
-          <button class="back-button" onclick="showPage('home')">← Назад</button>
           <div class="card">
             <h2>🏅 Ачивки</h2>
             <div class="activity-item"><strong>✅ Новичок</strong> - Первые 10 км <span style="margin-left:auto;">+10 баллов</span></div>
@@ -1497,13 +1773,38 @@
             <div class="activity-item"><strong>📊 Трудоголик</strong> - 50 тренировок <progress value="12" max="50"></progress> +200 баллов</div>
           </div>
         </div>
+        
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
+        <div id="menu" class="menu">
+          <div class="menu-header"><strong>Меню</strong></div>
+          <div class="menu-item" onclick="showPage('home')"><span>🏠</span><span>Главная</span></div>
+          <div class="menu-item" onclick="showPage('abilities')"><span>⚡</span><span>Способности</span></div>
+          <div class="menu-item" onclick="showPage('trainings')"><span>📋</span><span>Мои тренировки</span></div>
+          <div class="menu-item" onclick="showPage('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div>
+          <div class="menu-item" onclick="showPage('settings')"><span>⚙️</span><span>Настройки</span></div>
+          <div class="menu-item" onclick="showPage('points')"><span>⭐</span><span>Баллы</span></div>
+          <div class="menu-item" onclick="showPage('achievements')"><span>🏅</span><span>Ачивки</span></div>
+          <div class="menu-item" onclick="showPage('nominations')"><span>🎯</span><span>Номинации</span></div>
+          <div class="menu-item" onclick="showPage('add')"><span>➕</span><span>Добавить тренировку</span></div>
+          <div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div>
+        </div>
+        
+        <div class="fab" onclick="showPage('add')"><span>+</span></div>
       `;
     }
     
     function renderNominationsPage() {
       document.getElementById('app').innerHTML = `
+        <div class="fixed-header">
+          <div class="user-info">
+            <div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div>
+          </div>
+          <div class="burger" onclick="openMenu()">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        
         <div class="container">
-          <button class="back-button" onclick="showPage('home')">← Назад</button>
           <div class="card">
             <h2>🎯 Номинации</h2>
             <div class="filter-bar">
@@ -1527,57 +1828,50 @@
                 <option value="70+">70+</option>
               </select>
             </div>
-            <h3>🏆 Самая длинная тренировка</h3>
-            <div id="nomination-longest" class="activities-list">⏳ Загрузка...</div>
-            <h3>⚡ Самая быстрая тренировка</h3>
-            <div id="nomination-fastest" class="activities-list">⏳ Загрузка...</div>
-            <h3>⏱️ Самая долгая тренировка</h3>
-            <div id="nomination-longest-duration" class="activities-list">⏳ Загрузка...</div>
-            <h3>📊 Больше всего тренировок</h3>
-            <div id="nomination-most-activities" class="activities-list">⏳ Загрузка...</div>
+            <div id="nomination-longest"></div>
+            <div id="nomination-fastest"></div>
+            <div id="nomination-longest-duration"></div>
+            <div id="nomination-most-activities"></div>
           </div>
         </div>
+        
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
+        <div id="menu" class="menu">
+          <div class="menu-header"><strong>Меню</strong></div>
+          <div class="menu-item" onclick="showPage('home')"><span>🏠</span><span>Главная</span></div>
+          <div class="menu-item" onclick="showPage('abilities')"><span>⚡</span><span>Способности</span></div>
+          <div class="menu-item" onclick="showPage('trainings')"><span>📋</span><span>Мои тренировки</span></div>
+          <div class="menu-item" onclick="showPage('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div>
+          <div class="menu-item" onclick="showPage('settings')"><span>⚙️</span><span>Настройки</span></div>
+          <div class="menu-item" onclick="showPage('points')"><span>⭐</span><span>Баллы</span></div>
+          <div class="menu-item" onclick="showPage('achievements')"><span>🏅</span><span>Ачивки</span></div>
+          <div class="menu-item" onclick="showPage('nominations')"><span>🎯</span><span>Номинации</span></div>
+          <div class="menu-item" onclick="showPage('add')"><span>➕</span><span>Добавить тренировку</span></div>
+          <div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div>
+        </div>
+        
+        <div class="fab" onclick="showPage('add')"><span>+</span></div>
       `;
       loadNominations();
     }
     
-    async function loadNominations() {
-      const genderFilter = document.getElementById('nomination-gender-filter')?.value || 'all';
-      const ageFilter = document.getElementById('nomination-age-filter')?.value || 'all';
-      
-      await loadNominationTable('nomination-longest', 'nomination_longest_activity', genderFilter, ageFilter);
-      await loadNominationTable('nomination-fastest', 'nomination_fastest_activity', genderFilter, ageFilter);
-      await loadNominationTable('nomination-longest-duration', 'nomination_longest_duration', genderFilter, ageFilter);
-      await loadNominationTable('nomination-most-activities', 'nomination_most_activities', genderFilter, ageFilter);
+    function switchMethod(method) {
+      document.querySelectorAll('.method-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.add-form').forEach(form => form.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(method + '-form').classList.add('active');
     }
     
-    async function loadNominationTable(containerId, tableName, genderFilter, ageFilter) {
-      let query = sb.from(tableName).select('*').limit(3);
-      
-      if (genderFilter !== 'all') {
-        query = query.eq('gender', genderFilter);
+    function previewScreenshot(input) {
+      const preview = document.getElementById('screenshot-preview');
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
       }
-      if (ageFilter !== 'all') {
-        query = query.eq('age_group', ageFilter);
-      }
-      
-      const { data, error } = await query;
-      
-      const container = document.getElementById(containerId);
-      if (error || !data || data.length === 0) {
-        container.innerHTML = '<div style="text-align:center; color:#8ba0ae; padding:20px;">Нет данных</div>';
-        return;
-      }
-      
-      container.innerHTML = data.map((item, idx) => `
-        <div class="activity-item">
-          <div>
-            <strong>${idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'} ${escapeHtml(item.participant_name)}</strong>
-            <div style="font-size:12px;">${item.activity_name || '—'} | ${item.activity_date || '—'}</div>
-          </div>
-          <div><strong>${item.distance_km?.toFixed(2) || item.pace_min_per_km || item.duration_min?.toFixed(0) || item.activities_count} ${item.distance_km ? 'км' : item.pace_min_per_km ? 'темп' : item.duration_min ? 'мин' : 'тренировок'}</strong></div>
-        </div>
-      `).join('');
     }
     
     function render() {
@@ -1606,25 +1900,6 @@
         renderNominationsPage();
       } else {
         renderHome();
-      }
-    }
-    
-    function switchMethod(method) {
-      document.querySelectorAll('.method-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.add-form').forEach(form => form.classList.remove('active'));
-      event.target.classList.add('active');
-      document.getElementById(method + '-form').classList.add('active');
-    }
-    
-    function previewScreenshot(input) {
-      const preview = document.getElementById('screenshot-preview');
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          preview.src = e.target.result;
-          preview.style.display = 'block';
-        };
-        reader.readAsDataURL(input.files[0]);
       }
     }
     
