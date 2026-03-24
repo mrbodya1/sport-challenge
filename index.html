@@ -730,45 +730,10 @@
       navigateTo('home');
     }
     
-    // ============= ДОБАВЛЕНИЕ ТРЕНИРОВОК =============
-    
-    async function resolveStravaShortLink(shortUrl) {
-  try {
-    console.log('Resolving short link:', shortUrl);
-    
-    const response = await fetch(shortUrl, { 
-      method: 'GET', 
-      redirect: 'follow',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-      }
-    });
-    
-    let finalUrl = response.url;
-    console.log('After redirect, URL:', finalUrl);
-    
-    // Извлекаем ID тренировки
-    const match = finalUrl.match(/activities\/(\d+)/);
-    console.log('Match result:', match);
-    
-    if (match) {
-      const activityId = match[1];
-      const cleanUrl = `https://www.strava.com/activities/${activityId}`;
-      console.log('Returning clean URL:', cleanUrl);
-      return cleanUrl;
-    }
-    
-    console.log('No activity ID found, returning original:', finalUrl);
-    return finalUrl;
-    
-  } catch (error) {
-    console.error('Failed to resolve short link:', error);
-    return shortUrl;
-  }
-}
+    // ============= ДОБАВЛЕНИЕ ТРЕНИРОВОК ============
     
 async function addByLink() {
-  let link = document.getElementById('link-url').value;
+  const link = document.getElementById('link-url').value;
   const errorDiv = document.getElementById('link-error');
   
   if (!link) {
@@ -778,38 +743,16 @@ async function addByLink() {
   
   errorDiv.innerHTML = '<span class="loader"></span> Обработка...';
   
-  console.log('Original link:', link);
-  
-  // Если это короткая ссылка Strava, разворачиваем её
-  if (link.includes('strava.app.link') || link.includes('app.link')) {
-    try {
-      link = await resolveStravaShortLink(link);
-      console.log('After resolveStravaShortLink, link:', link);
-    } catch (err) {
-      console.error('Resolution error:', err);
-      errorDiv.innerHTML = '❌ Не удалось развернуть ссылку';
-      return;
-    }
-  }
-  
-  // Проверяем, что это ссылка на Strava с ID тренировки
-  const pattern = /strava\.com\/activities\/(\d+)/;
-  const match = link.match(pattern);
-  console.log('Pattern match:', match);
-  
-  if (!match) {
-    errorDiv.innerHTML = '❌ Ссылка должна вести на тренировку Strava (формат: https://www.strava.com/activities/1234567890)';
+  // Проверяем, что это ссылка на Strava (может быть как короткая, так и полная)
+  if (!link.includes('strava.com') && !link.includes('strava.app.link')) {
+    errorDiv.innerHTML = '❌ Ссылка должна быть с strava.com или strava.app.link';
     return;
   }
-  
-  // Убеждаемся, что ссылка чистая
-  const cleanLink = `https://www.strava.com/activities/${match[1]}`;
-  console.log('Clean link for API:', cleanLink);
   
   const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url: cleanLink })
+    body: JSON.stringify({ url: link })
   });
   
   const result = await response.json();
@@ -830,7 +773,7 @@ async function addByLink() {
       duration_min: result.duration,
       pace_min_per_km: result.pace,
       activity_date: result.date,
-      url: cleanLink
+      url: result.url || link
     });
   
   if (insertError) {
