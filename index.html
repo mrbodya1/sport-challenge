@@ -133,8 +133,7 @@
   try {
     console.log('Calling Edge Function with URL:', link);
     
-    // Вызываем Edge Function БЕЗ токена (функция публичная)
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity`, {
+    const response = await fetch('https://idkghmydocvjhuwtgojh.supabase.co/functions/v1/parse-activity', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -142,12 +141,11 @@
       body: JSON.stringify({ url: link })
     });
     
-    console.log('Response status:', response.status);
-    const parsed = await response.json();
-    console.log('Edge Function response:', parsed);
+    const result = await response.json();
+    console.log('Edge Function response:', result);
     
-    if (!response.ok || !parsed.success) {
-      errorDiv.innerHTML = '❌ ' + (parsed.error || 'Ошибка парсинга');
+    if (!result.success) {
+      errorDiv.innerHTML = '❌ ' + (result.error || 'Ошибка парсинга');
       return;
     }
     
@@ -158,20 +156,19 @@
         user_id: currentUser.id,
         platform: link.includes('strava.com') ? 'strava' : 'garmin',
         activity_id: 'parsed_' + Date.now(),
-        name: parsed.name,
-        distance_km: parsed.distance,
-        duration_min: parsed.duration,
-        pace_min_per_km: parsed.pace,
-        activity_date: parsed.date || new Date().toISOString().split('T')[0],
+        name: result.name,
+        distance_km: result.distance,
+        duration_min: result.duration,
+        pace_min_per_km: result.pace,
+        activity_date: result.date || new Date().toISOString().split('T')[0],
         url: link
       });
     
     if (insertError) {
-      console.error('Insert error:', insertError);
       errorDiv.innerHTML = '❌ Ошибка сохранения: ' + insertError.message;
     } else {
       errorDiv.style.color = '#28a745';
-      errorDiv.innerHTML = `✅ Добавлено! ${parsed.distance} км — ${parsed.name}`;
+      errorDiv.innerHTML = `✅ Добавлено! ${result.distance} км — ${result.name}`;
       document.getElementById('activity-link').value = '';
       loadActivities();
       loadStats();
