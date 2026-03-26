@@ -976,4 +976,408 @@
               </div>
             </div>
             <div class="activity-buttons">
-              ${!isDeleted ? `<button class="delete-btn" onclick="softDeleteActivity('${a.id}', '${escapeHtml(a.name || 'Тренировка').replace(/'/
+              ${!isDeleted ? `<button class="delete-btn" onclick="softDeleteActivity('${a.id}', '${escapeHtml(a.name || 'Тренировка').replace(/'/g, "\\'")}')">🗑️</button>` : `<button class="restore-btn" onclick="restoreActivity('${a.id}')">↺ Восстановить</button>`}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    async function loadLeaderboardFull(genderFilter = 'all', ageFilter = 'all', sortBy = 'km') {
+      let query = sb.from('leaderboard').select('*');
+      if (genderFilter !== 'all') query = query.eq('gender', genderFilter);
+      if (ageFilter !== 'all') query = query.eq('age_group', ageFilter);
+      if (sortBy === 'km') query = query.order('total_km', { ascending: false });
+      else if (sortBy === 'time') query = query.order('total_time_min', { ascending: false });
+      else if (sortBy === 'pace') query = query.order('avg_pace_seconds', { ascending: true });
+      else if (sortBy === 'trainings') query = query.order('activities_count', { ascending: false });
+      const { data, error } = await query;
+      const container = document.getElementById('leaderboard-full-list');
+      if (error || !data || data.length === 0) { container.innerHTML = '<div style="text-align:center; color:#8ba0ae; padding:40px;">🏆 Нет данных</div>'; return; }
+      container.innerHTML = data.map((item, idx) => `
+        <div class="activity-item" style="flex-direction:column; align-items:flex-start;">
+          <div style="display:flex; justify-content:space-between; width:100%;">
+            <div><strong>${idx + 1}. ${escapeHtml(item.participant)}</strong><div style="font-size:12px; color:#6c7a89;">${item.gender === 'male' ? '🧑' : '👩'} ${item.age_group || '—'}</div></div>
+            <div style="text-align:right;"><div><strong>${item.total_km.toFixed(2)} км</strong></div><div style="font-size:12px;">${item.activities_count} тренировок</div></div>
+          </div>
+          ${item.avg_pace_seconds ? `<div style="font-size:12px; margin-top:8px;">⏱ темп: ${formatPaceFromSeconds(item.avg_pace_seconds)}</div>` : ''}
+        </div>
+      `).join('');
+    }
+    
+    async function loadFeed(genderFilter = 'all', ageFilter = 'all', dateFilter = '', loadMore = false) {
+      if (!loadMore) { feedPage = 1; feedHasMore = true; document.getElementById('feed-list').innerHTML = '<div class="loader"></div> Загрузка...'; }
+      if (feedLoading || !feedHasMore) return;
+      feedLoading = true;
+      let query = sb.from('activities').select(`*, profiles:user_id (name_full, gender, birth_date)`).order('activity_date', { ascending: false }).range((feedPage - 1) * 10, feedPage * 10 - 1);
+      if (dateFilter) query = query.eq('activity_date', dateFilter);
+      const { data, error } = await query;
+      if (error) { console.error('Feed error:', error); feedLoading = false; return; }
+      let filtered = data || [];
+      if (genderFilter !== 'all') filtered = filtered.filter(a => a.profiles?.gender === genderFilter);
+      if (ageFilter !== 'all') filtered = filtered.filter(a => { const age = a.profiles?.birth_date ? Math.floor((new Date() - new Date(a.profiles.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : null; return getAgeGroup(age) === ageFilter; });
+      const container = document.getElementById('feed-list');
+      if (loadMore) {
+        container.insertAdjacentHTML('beforeend', filtered.map(a => `
+          <div class="activity-item">
+            <div class="activity-info">
+              <div class="activity-name" onclick="showUserProfile('${a.user_id}')"><strong>${escapeHtml(a.profiles?.name_full || 'Пользователь')}</strong></div>
+              <div class="activity-meta">${formatDate(a.activity_date)} | ${a.distance_km || 0} км${a.duration_min ? ' | ' + formatDuration(a.duration_min) : ''}${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}${a.url ? `<br><a href="${escapeHtml(a.url)}" target="_blank" class="activity-link">🔗 открыть ссылку</a>` : ''}</div>
+            </div>
+          </div>
+        `).join(''));
+      } else {
+        container.innerHTML = filtered.map(a => `
+          <div class="activity-item">
+            <div class="activity-info">
+              <div class="activity-name" onclick="showUserProfile('${a.user_id}')"><strong>${escapeHtml(a.profiles?.name_full || 'Пользователь')}</strong></div>
+              <div class="activity-meta">${formatDate(a.activity_date)} | ${a.distance_km || 0} км${a.duration_min ? ' | ' + formatDuration(a.duration_min) : ''}${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}${a.url ? `<br><a href="${escapeHtml(a.url)}" target="_blank" class="activity-link">🔗 открыть ссылку</a>` : ''}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+      feedHasMore = (data || []).length === 10;
+      feedPage++;
+      feedLoading = false;
+      const existingBtn = document.getElementById('load-more-btn');
+      if (existingBtn) existingBtn.remove();
+      if (feedHasMore && !dateFilter && container) {
+        container.insertAdjacentHTML('afterend', '<button id="load-more-btn" class="show-all" onclick="loadFeed(document.getElementById(\'feed-gender-filter\').value, document.getElementById(\'feed-age-filter\').value, document.getElementById(\'feed-date-filter\').value, true)">Загрузить ещё ↓</button>');
+      }
+      if (!filtered.length && !loadMore && container) container.innerHTML = '<div style="text-align:center; color:#8ba0ae; padding:40px;">📭 Нет тренировок</div>';
+    }
+    
+    async function loadNominations(genderFilter = 'all') {
+      await loadNominationTable('nomination-longest', 'nomination_longest_activity', genderFilter, 'distance_km', 'км');
+      await loadNominationTable('nomination-fastest', 'nomination_fastest_activity', genderFilter, 'pace_min_per_km', 'темп');
+      await loadNominationTable('nomination-longest-duration', 'nomination_longest_duration', genderFilter, 'duration_min', 'мин');
+      await loadNominationTable('nomination-most-activities', 'nomination_most_activities', genderFilter, 'activities_count', 'тренировок');
+    }
+    
+    async function loadNominationTable(containerId, tableName, genderFilter, valueField, unit) {
+      let query = sb.from(tableName).select('*').limit(3);
+      if (genderFilter !== 'all') query = query.eq('gender', genderFilter);
+      const { data, error } = await query;
+      const container = document.getElementById(containerId);
+      if (error || !data || data.length === 0) { container.innerHTML = '<div style="text-align:center; color:#8ba0ae; padding:20px;">Нет данных</div>'; return; }
+      let title = '';
+      if (containerId === 'nomination-longest') title = '🏆 Самая длинная тренировка';
+      if (containerId === 'nomination-fastest') title = '⚡ Самая быстрая тренировка';
+      if (containerId === 'nomination-longest-duration') title = '⏱️ Самая долгая тренировка';
+      if (containerId === 'nomination-most-activities') title = '📊 Больше всего тренировок';
+      container.innerHTML = `
+        <div class="nomination-card">
+          <div class="nomination-title">${title}</div>
+          <div class="nomination-winners">
+            ${data.map((item, idx) => {
+              let value = '';
+              if (valueField === 'distance_km') value = `${item.distance_km?.toFixed(2)} ${unit}`;
+              else if (valueField === 'pace_min_per_km') value = `${item.pace_min_per_km}`;
+              else if (valueField === 'duration_min') value = `${Math.round(item.duration_min)} ${unit}`;
+              else if (valueField === 'activities_count') value = `${item.activities_count} ${unit}`;
+              return `<div class="nomination-winner"><div class="winner-place">${idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}</div><div class="winner-name">${escapeHtml(item.participant_name)}</div><div class="winner-value">${value}</div></div>`;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+    
+    async function showUserProfile(userId) { navigateTo('userProfile', userId); }
+    
+    // ============= ФУНКЦИИ ДЛЯ РАБОТЫ С КЛУБОМ =============
+    
+    async function loadClubActivities() {
+      const clubId = '2034009'
+      const container = document.getElementById('club-activities')
+      
+      if (!container) return
+      
+      container.innerHTML = '<div class="loader"></div> Загрузка...'
+      
+      try {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/club/activities?club_id=${clubId}`)
+        const activities = await response.json()
+        
+        if (!activities || activities.length === 0) {
+          container.innerHTML = '<div style="text-align:center; color:#8ba0ae; padding:20px;">Нет активностей в клубе</div>'
+          return
+        }
+        
+        container.innerHTML = `
+          <div style="margin-top: 15px;">
+            <h4>📊 Последние активности клуба</h4>
+            <div class="activities-list">
+              ${activities.slice(0, 5).map(a => `
+                <div class="activity-item">
+                  <div class="activity-info">
+                    <div class="activity-name"><strong>${escapeHtml(a.athlete?.firstname || '')} ${escapeHtml(a.athlete?.lastname || '')}</strong></div>
+                    <div class="activity-meta">
+                      ${formatDate(a.start_date)} | ${(a.distance / 1000).toFixed(2)} км
+                      ${a.moving_time ? ' | ' + formatDuration(a.moving_time / 60) : ''}
+                      <a href="https://www.strava.com/activities/${a.id}" target="_blank">🔗</a>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+            ${activities.length > 5 ? '<div class="show-all" onclick="alert(\'Полный список в разработке\')">Показать ещё →</div>' : ''}
+          </div>
+        `
+        
+      } catch (error) {
+        console.error('Error loading club activities:', error)
+        container.innerHTML = '<div style="color:#e74c3c; padding:20px;">❌ Ошибка загрузки</div>'
+      }
+    }
+    
+    // ============= ОТРИСОВКА СТРАНИЦ =============
+    
+    function renderAuth() {
+      document.getElementById('app').innerHTML = `
+        <div class="container">
+          <div class="card">
+            <h1>🏃‍♂️ Спортивный челлендж</h1>
+            <p style="color: #6c7a89; margin-bottom: 24px;">Добавляйте тренировки, следите за прогрессом и соревнуйтесь с друзьями</p>
+            <div class="method-buttons" style="margin-bottom:24px;">
+              <div class="method-btn active" onclick="document.getElementById('login-form').style.display='block'; document.getElementById('register-form').style.display='none'; this.classList.add('active'); this.nextElementSibling.classList.remove('active')">Вход</div>
+              <div class="method-btn" onclick="document.getElementById('register-form').style.display='block'; document.getElementById('login-form').style.display='none'; this.classList.add('active'); this.previousElementSibling.classList.remove('active')">Регистрация</div>
+            </div>
+            <div id="login-form">
+              <input type="text" id="login-username" placeholder="Логин">
+              <input type="password" id="login-password" placeholder="Пароль">
+              <button onclick="login()">Войти</button>
+              <div id="login-error" class="error"></div>
+            </div>
+            <div id="register-form" style="display:none;">
+              <input type="text" id="reg-username" placeholder="Логин">
+              <input type="text" id="reg-firstname" placeholder="Имя">
+              <input type="text" id="reg-lastname" placeholder="Фамилия">
+              <select id="reg-gender"><option value="">Пол</option><option value="male">Мужчина</option><option value="female">Женщина</option></select>
+              <input type="date" id="reg-birthdate" placeholder="Дата рождения">
+              <input type="password" id="reg-password" placeholder="Пароль">
+              <button onclick="register()">Зарегистрироваться</button>
+              <div id="register-error" class="error"></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    async function renderHome() {
+      document.getElementById('app').innerHTML = `
+        <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div><div class="user-details">Загрузка...</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
+        <div class="container">
+          <div class="card"><div class="stats-grid"><div class="stat-card"><div class="stat-value">—</div><div class="stat-label">км</div></div><div class="stat-card"><div class="stat-value">—</div><div class="stat-label">время</div></div><div class="stat-card"><div class="stat-value">—</div><div class="stat-label">темп</div></div><div class="stat-card"><div class="stat-value">—</div><div class="stat-label">тренировок</div></div></div><div class="places-grid"><div class="place-card"><div class="place-title">Абсолют</div><div class="place-value">—</div></div><div class="place-card"><div class="place-title">Среди мужчин/женщин</div><div class="place-value">—</div></div><div class="place-card"><div class="place-title">Возрастная группа</div><div class="place-value">—</div></div></div></div>
+          
+          <div class="card">
+            <h3>🏆 YANAO-UGRA-BATTLE</h3>
+            <p>Присоединяйтесь к клубу Strava, чтобы ваши тренировки автоматически учитывались в челлендже!</p>
+            <a href="https://www.strava.com/clubs/2034009" target="_blank" style="display: inline-block; background: #FC4C02; color: white; padding: 12px 24px; border-radius: 40px; text-decoration: none; margin: 10px 0;">
+              Вступить в клуб
+            </a>
+            <button id="load-club-btn" style="background: #1e6f5c; margin-top: 10px;">Загрузить активности клуба</button>
+            <div id="club-activities"></div>
+          </div>
+          
+          <div class="chart"><h3>📈 Недельная динамика</h3><div class="chart-bars">${['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map(day => `<div class="bar-container"><div class="bar-value">—</div><div class="bar" style="height: 4px"></div><div class="bar-label">${day}</div></div>`).join('')}</div></div>
+          <div class="card"><h3>📋 Мои тренировки (последние 5)</h3><div id="home-recent-trainings" class="activities-list"><div class="loader"></div> Загрузка...</div><div class="show-all" onclick="navigateTo('trainings')">Показать все тренировки →</div></div>
+          <div class="card"><h3>🏆 Лидеры</h3><div id="home-leaderboard" class="activities-list"><div class="loader"></div> Загрузка...</div><div class="show-all" onclick="navigateTo('leaderboard')">Вся таблица →</div></div>
+        </div>
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div><div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div><div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div><div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div><div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div><div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div><div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div><div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div><div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div><div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div><div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div><div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div></div>
+        <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
+      `;
+      
+      const loadBtn = document.getElementById('load-club-btn');
+      if (loadBtn) {
+        loadBtn.onclick = () => loadClubActivities();
+      }
+      
+      loadHomeData();
+    }
+    
+    async function loadHomeData() {
+      try {
+        const profile = await loadProfile();
+        document.querySelector('.user-name').innerHTML = escapeHtml(profile?.name_full || currentUser.email?.split('@')[0]);
+        document.querySelector('.user-details').innerHTML = `${profile?.gender === 'male' ? 'Мужчина' : 'Женщина'}, ${profile?.birth_date ? Math.floor((new Date() - new Date(profile.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : '—'} лет`;
+        const [stats, places, weeklyData, recentTrainings, topLeaderboard] = await Promise.all([loadStats(), loadPlaces(profile), loadWeeklyChart(), loadRecentTrainings(), loadTopLeaderboard()]);
+        const maxKm = Math.max(...weeklyData.map(d => d.km), 1);
+        document.querySelector('.stats-grid').innerHTML = `<div class="stat-card"><div class="stat-value">${stats.totalKm}</div><div class="stat-label">км</div></div><div class="stat-card"><div class="stat-value">${stats.totalTime}</div><div class="stat-label">время</div></div><div class="stat-card"><div class="stat-value">${stats.avgPace}</div><div class="stat-label">темп</div></div><div class="stat-card"><div class="stat-value">${stats.trainingsCount}</div><div class="stat-label">тренировок</div></div>`;
+        document.querySelector('.places-grid').innerHTML = `<div class="place-card" onclick="navigateTo('leaderboard')"><div class="place-title">Абсолют</div><div class="place-value">${places.absolute} место</div></div><div class="place-card" onclick="navigateTo('leaderboard')"><div class="place-title">Среди ${profile?.gender === 'male' ? 'мужчин' : 'женщин'}</div><div class="place-value">${places.gender} место</div></div><div class="place-card" onclick="navigateTo('leaderboard')"><div class="place-title">Возрастная группа</div><div class="place-value">${places.age} место</div></div>`;
+        const chartBars = document.querySelector('.chart-bars');
+        if (chartBars) chartBars.innerHTML = weeklyData.map(day => `<div class="bar-container"><div class="bar-value">${day.km}</div><div class="bar" style="height: ${Math.max(4, (day.km / maxKm) * 100)}px"></div><div class="bar-label">${day.name}<br>${day.date.slice(5)}</div></div>`).join('');
+        const trainingsContainer = document.getElementById('home-recent-trainings');
+        if (trainingsContainer) trainingsContainer.innerHTML = recentTrainings.map(a => `<div class="activity-item"><div class="activity-info"><div class="activity-name">${escapeHtml(a.name || 'Без названия')}</div><div class="activity-meta">${formatDate(a.activity_date)} | ${a.distance_km} км | темп ${a.pace_min_per_km || '—'}</div></div></div>`).join('') || '<div style="text-align:center; color:#8ba0ae; padding:20px;">Нет тренировок</div>';
+        const leaderboardContainer = document.getElementById('home-leaderboard');
+        if (leaderboardContainer) leaderboardContainer.innerHTML = topLeaderboard.map((item, idx) => `<div class="activity-item" style="justify-content:space-between;"><div><strong>${idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'} ${escapeHtml(item.participant)}</strong></div><div><strong>${item.total_km.toFixed(2)} км</strong></div></div>`).join('') || '<div style="text-align:center; color:#8ba0ae; padding:20px;">Нет данных</div>';
+      } catch (error) { console.error('Error loading home data:', error); const trainingsContainer = document.getElementById('home-recent-trainings'); if (trainingsContainer) trainingsContainer.innerHTML = '<div style="text-align:center; color:#e74c3c; padding:20px;">❌ Ошибка загрузки. Проверьте интернет.</div>'; }
+    }
+    
+    async function renderAddPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
+        <div class="container"><div class="card"><h2>➕ Добавить тренировку</h2><div class="method-buttons"><div class="method-btn active" onclick="switchMethod('link')">📎 По ссылке</div><div class="method-btn" onclick="switchMethod('screenshot')">📸 Скриншот</div><div class="method-btn" onclick="switchMethod('manual')">✏️ Вручную</div></div>
+        <div id="link-form" class="add-form active"><input type="text" id="link-url" placeholder="https://www.strava.com/activities/..."><button onclick="addByLink()">Добавить</button><div id="link-error" class="error"></div></div>
+        <div id="screenshot-form" class="add-form"><input type="file" id="screenshot-file" accept="image/*" onchange="previewScreenshot(this)"><img id="screenshot-preview" class="screenshot-preview"><button onclick="addByScreenshot()">Распознать и добавить</button><div id="screenshot-error" class="error"></div></div>
+        <div id="manual-form" class="add-form"><input type="text" id="manual-name" placeholder="Название (опционально)"><input type="number" id="manual-distance" step="0.01" placeholder="Дистанция (км) *"><input type="number" id="manual-duration" placeholder="Время (минуты)"><input type="text" id="manual-pace" placeholder="Темп (мин/км) например 5:30"><input type="date" id="manual-date" placeholder="Дата тренировки"><button onclick="addManually()">Добавить</button><div id="manual-error" class="error"></div></div></div></div>
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div><div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div><div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div><div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div><div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div><div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div><div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div><div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div><div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div><div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div><div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div><div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div></div>
+        <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
+      `;
+    }
+    
+    async function renderTrainingsPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
+        <div class="container"><div class="card"><h2>📋 Мои тренировки</h2><div class="filter-bar"><input type="date" id="trainings-date-filter" placeholder="Фильтр по дате" onchange="loadTrainings(this.value)"></div><div id="trainings-list" class="activities-list">⏳ Загрузка...</div></div></div>
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div><div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div><div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div><div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div><div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div><div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div><div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div><div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div><div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div><div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div><div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div><div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div></div>
+        <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
+      `;
+      loadTrainings();
+    }
+    
+    async function renderLeaderboardPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
+        <div class="container"><div class="card"><h2>🏆 Таблица лидеров</h2><div class="filter-bar"><select id="leaderboard-gender-filter" onchange="loadLeaderboardFull(this.value, document.getElementById('leaderboard-age-filter').value, document.getElementById('leaderboard-sort').value)"><option value="all">Все</option><option value="male">Мужчины</option><option value="female">Женщины</option></select><select id="leaderboard-age-filter" onchange="loadLeaderboardFull(document.getElementById('leaderboard-gender-filter').value, this.value, document.getElementById('leaderboard-sort').value)"><option value="all">Все возрастные</option><option value="18-24">18-24</option><option value="25-29">25-29</option><option value="30-34">30-34</option><option value="35-39">35-39</option><option value="40-44">40-44</option><option value="45-49">45-49</option><option value="50-54">50-54</option><option value="55-59">55-59</option><option value="60-64">60-64</option><option value="65-69">65-69</option><option value="70+">70+</option></select><select id="leaderboard-sort" onchange="loadLeaderboardFull(document.getElementById('leaderboard-gender-filter').value, document.getElementById('leaderboard-age-filter').value, this.value)"><option value="km">По километрам</option><option value="time">По времени</option><option value="pace">По темпу</option><option value="trainings">По тренировкам</option></select></div><div id="leaderboard-full-list" class="activities-list">⏳ Загрузка...</div></div></div>
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div><div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div><div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div><div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div><div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div><div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div><div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div><div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div><div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div><div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div><div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div><div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div></div>
+        <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
+      `;
+      loadLeaderboardFull();
+    }
+    
+    async function renderFeedPage() {
+      const genderFilter = document.getElementById('feed-gender-filter')?.value || 'all';
+      const ageFilter = document.getElementById('feed-age-filter')?.value || 'all';
+      const dateFilter = document.getElementById('feed-date-filter')?.value || '';
+      document.getElementById('app').innerHTML = `
+        <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
+        <div class="container"><div class="card"><h2>📰 Лента тренировок</h2><div class="filter-bar"><select id="feed-gender-filter" onchange="renderFeedPage()"><option value="all">Все</option><option value="male">Мужчины</option><option value="female">Женщины</option></select><select id="feed-age-filter" onchange="renderFeedPage()"><option value="all">Все возрастные</option><option value="18-24">18-24</option><option value="25-29">25-29</option><option value="30-34">30-34</option><option value="35-39">35-39</option><option value="40-44">40-44</option><option value="45-49">45-49</option><option value="50-54">50-54</option><option value="55-59">55-59</option><option value="60-64">60-64</option><option value="65-69">65-69</option><option value="70+">70+</option></select><input type="date" id="feed-date-filter" placeholder="Фильтр по дате" onchange="renderFeedPage()"></div><div id="feed-list" class="activities-list"><div class="loader"></div> Загрузка...</div></div></div>
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div><div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div><div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div><div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div><div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div><div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div><div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div><div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div><div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div><div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div><div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div><div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div></div>
+        <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
+      `;
+      if (document.getElementById('feed-gender-filter')) { document.getElementById('feed-gender-filter').value = genderFilter; document.getElementById('feed-age-filter').value = ageFilter; document.getElementById('feed-date-filter').value = dateFilter; }
+      await loadFeed(genderFilter, ageFilter, dateFilter);
+    }
+    
+    async function renderAbilitiesPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
+        <div class="container"><div class="card"><h2>⚡ Способности</h2><div class="activity-item" style="flex-direction:column;"><div><strong>🔄 Удвоение</strong> - Удваивает километры за одну тренировку</div><button style="margin-top:12px;">Использовать (осталось: 2)</button></div><div class="activity-item" style="flex-direction:column; margin-top:12px;"><div><strong>❄️ Заморозка</strong> - Замораживает прогресс конкурента на 3 дня</div><button style="margin-top:12px;">Использовать (осталось: 1)</button></div><div class="activity-item" style="flex-direction:column; margin-top:12px;"><div><strong>🧹 Обнуление</strong> - Обнуляет километры конкурента за одну тренировку</div><button style="margin-top:12px;">Использовать (осталось: 1)</button></div><div class="activity-item" style="flex-direction:column; margin-top:12px;"><div><strong>🌊 Лавина</strong> - Снимает 10% километров у всех конкурентов</div><button style="margin-top:12px;">Использовать (осталось: 1)</button></div></div></div>
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div><div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div><div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div><div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div><div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div><div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div><div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div><div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div><div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div><div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div><div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div><div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div></div>
+        <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
+      `;
+    }
+    
+    async function renderSettingsPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
+        <div class="container">
+          <div class="card">
+            <h2>⚙️ Настройки</h2>
+            <input type="text" id="settings-name" placeholder="Имя">
+            <select id="settings-gender">
+              <option value="male">Мужчина</option>
+              <option value="female">Женщина</option>
+            </select>
+            <input type="date" id="settings-birthdate" placeholder="Дата рождения">
+            <input type="text" id="settings-city" placeholder="Город">
+            <button onclick="saveSettings()">Сохранить изменения</button>
+            <div id="settings-error" class="error"></div>
+          </div>
+        </div>
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div><div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div><div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div><div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div><div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div><div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div><div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div><div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div><div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div><div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div><div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div><div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div></div>
+        <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
+      `;
+      await loadSettings();
+    }
+    
+    async function loadSettings() {
+      const { data, error } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+      if (data) { document.getElementById('settings-name').value = data.name_full || ''; document.getElementById('settings-gender').value = data.gender || 'male'; document.getElementById('settings-birthdate').value = data.birth_date || ''; document.getElementById('settings-city').value = data.city || ''; }
+    }
+    
+    async function saveSettings() {
+      const name = document.getElementById('settings-name').value;
+      const gender = document.getElementById('settings-gender').value;
+      const birthDate = document.getElementById('settings-birthdate').value;
+      const city = document.getElementById('settings-city').value;
+      const errorDiv = document.getElementById('settings-error');
+      const { error } = await sb.from('profiles').update({ name_full: name, gender, birth_date: birthDate, city }).eq('id', currentUser.id);
+      if (error) errorDiv.innerHTML = '❌ ' + error.message;
+      else { errorDiv.style.color = '#1e6f5c'; errorDiv.innerHTML = '✅ Настройки сохранены'; setTimeout(() => { errorDiv.innerHTML = ''; }, 2000); }
+    }
+    
+    async function renderPointsPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
+        <div class="container"><div class="card"><h2>⭐ Баллы</h2><div style="text-align:center; padding:20px;"><div style="font-size:48px; font-weight:800; color:#1e6f5c;">450</div><div>текущий баланс</div></div><h3>📜 История начислений</h3><div class="activity-item">+50  15.03.2026  За тренировку 12.5 км</div><div class="activity-item">+40  14.03.2026  За тренировку 10.2 км</div><div class="activity-item">+100 10.03.2026  За достижение "Первые 100 км"</div><h3 style="margin-top:20px;">🛒 Магазин способностей</h3><div class="activity-item" style="justify-content:space-between;"><span>🔄 Удвоение</span><span>100 баллов <button style="width:auto; padding:8px 16px;">Купить</button></span></div><div class="activity-item" style="justify-content:space-between;"><span>❄️ Заморозка</span><span>150 баллов <button style="width:auto; padding:8px 16px;">Купить</button></span></div><div class="activity-item" style="justify-content:space-between;"><span>🧹 Обнуление</span><span>200 баллов <button style="width:auto; padding:8px 16px;">Купить</button></span></div><div class="activity-item" style="justify-content:space-between;"><span>🌊 Лавина</span><span>300 баллов <button style="width:auto; padding:8px 16px;">Купить</button></span></div></div></div>
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div><div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div><div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div><div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div><div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div><div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div><div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div><div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div><div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div><div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div><div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div><div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div></div>
+        <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
+      `;
+    }
+    
+    async function renderAchievementsPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
+        <div class="container"><div class="card"><h2>🏅 Ачивки</h2><div style="display:flex; flex-direction:column; gap:16px;"><div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:12px; background:#f8fafc; border-radius:20px;"><div style="font-size:32px;">✅</div><div style="flex:1;"><div><strong>Новичок</strong></div><div style="font-size:12px; color:#6c7a89;">Первые 10 км</div><progress value="128" max="10" style="width:100%; height:8px; border-radius:4px;"></progress></div><div style="font-weight:600; color:#1e6f5c;">+10 баллов</div><div style="background:#1e6f5c; color:white; padding:4px 12px; border-radius:20px; font-size:12px;">Получено</div></div><div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:12px; background:#f8fafc; border-radius:20px;"><div style="font-size:32px;">🏃</div><div style="flex:1;"><div><strong>Марафонец</strong></div><div style="font-size:12px; color:#6c7a89;">42.2 км за одну тренировку</div><progress value="21.1" max="42.2" style="width:100%; height:8px; border-radius:4px;"></progress></div><div style="font-weight:600; color:#1e6f5c;">+100 баллов</div><div style="background:#e2e8f0; color:#6c7a89; padding:4px 12px; border-radius:20px; font-size:12px;">В процессе</div></div><div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:12px; background:#f8fafc; border-radius:20px;"><div style="font-size:32px;">⚡</div><div style="flex:1;"><div><strong>Любитель скорости</strong></div><div style="font-size:12px; color:#6c7a89;">Темп &lt; 4:00</div><progress value="0" max="1" style="width:100%; height:8px; border-radius:4px;"></progress></div><div style="font-weight:600; color:#1e6f5c;">+50 баллов</div><div style="background:#e2e8f0; color:#6c7a89; padding:4px 12px; border-radius:20px; font-size:12px;">Не получено</div></div><div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:12px; background:#f8fafc; border-radius:20px;"><div style="font-size:32px;">💯</div><div style="flex:1;"><div><strong>Стольник</strong></div><div style="font-size:12px; color:#6c7a89;">100 км всего</div><progress value="128" max="100" style="width:100%; height:8px; border-radius:4px;"></progress></div><div style="font-weight:600; color:#1e6f5c;">+100 баллов</div><div style="background:#1e6f5c; color:white; padding:4px 12px; border-radius:20px; font-size:12px;">Получено</div></div><div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:12px; background:#f8fafc; border-radius:20px;"><div style="font-size:32px;">📊</div><div style="flex:1;"><div><strong>Трудоголик</strong></div><div style="font-size:12px; color:#6c7a89;">50 тренировок</div><progress value="12" max="50" style="width:100%; height:8px; border-radius:4px;"></progress></div><div style="font-weight:600; color:#1e6f5c;">+200 баллов</div><div style="background:#e2e8f0; color:#6c7a89; padding:4px 12px; border-radius:20px; font-size:12px;">В процессе</div></div></div></div></div>
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div><div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div><div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div><div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div><div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div><div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div><div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div><div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div><div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div><div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div><div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div><div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div></div>
+        <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
+      `;
+    }
+    
+    async function renderNominationsPage() {
+      const genderFilter = document.getElementById('nomination-gender-filter')?.value || 'all';
+      document.getElementById('app').innerHTML = `
+        <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
+        <div class="container"><div class="card"><h2>🎯 Номинации</h2><div class="filter-bar"><select id="nomination-gender-filter" onchange="renderNominationsPage()"><option value="all">Все</option><option value="male">Мужчины</option><option value="female">Женщины</option></select></div><div id="nomination-longest"></div><div id="nomination-fastest"></div><div id="nomination-longest-duration"></div><div id="nomination-most-activities"></div></div></div>
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div><div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div><div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div><div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div><div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div><div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div><div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div><div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div><div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div><div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div><div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div><div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div></div>
+        <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
+      `;
+      if (document.getElementById('nomination-gender-filter')) document.getElementById('nomination-gender-filter').value = genderFilter;
+      loadNominations(genderFilter);
+    }
+    
+    async function renderUserProfile() {
+      const { data: profile, error } = await sb.from('profiles').select('*').eq('id', viewedUserId).single();
+      if (error || !profile) { navigateTo('home'); return; }
+      const { data: activities } = await sb.from('activities').select('*').eq('user_id', viewedUserId).order('activity_date', { ascending: false }).limit(10);
+      const totalKm = (activities || []).reduce((s, a) => s + (a.distance_km || 0), 0).toFixed(2);
+      const trainingsCount = (activities || []).length;
+      const avgDistance = trainingsCount > 0 ? (totalKm / trainingsCount).toFixed(2) : 0;
+      document.getElementById('app').innerHTML = `
+        <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(profile.name_full)}</div><div class="user-details">${profile.gender === 'male' ? 'Мужчина' : 'Женщина'}, ${profile.birth_date ? Math.floor((new Date() - new Date(profile.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : '—'} лет</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
+        <div class="container"><div class="card"><div class="stats-grid"><div class="stat-card"><div class="stat-value">${totalKm}</div><div class="stat-label">км</div></div><div class="stat-card"><div class="stat-value">${trainingsCount}</div><div class="stat-label">тренировок</div></div><div class="stat-card"><div class="stat-value">${avgDistance}</div><div class="stat-label">средняя км</div></div></div></div>
+        <div class="card"><h3>📋 Последние тренировки</h3><div class="activities-list">${(activities || []).map(a => `<div class="activity-item"><div class="activity-info"><div class="activity-name">${escapeHtml(a.name || 'Без названия')}</div><div class="activity-meta">${formatDate(a.activity_date)} | ${a.distance_km || 0} км${a.duration_min ? ' | ' + formatDuration(a.duration_min) : ''}${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}${a.url ? `<br><a href="${escapeHtml(a.url)}" target="_blank" class="activity-link">🔗 открыть ссылку</a>` : ''}</div></div></div>`).join('') || '<div style="text-align:center; color:#8ba0ae; padding:20px;">Нет тренировок</div>'}</div><div class="show-all" onclick="navigateTo('home')">← Назад на главную</div></div></div>
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div><div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div><div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div><div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div><div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div><div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div><div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div><div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div><div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div><div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div><div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div><div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div></div>
+        <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
+      `;
+    }
+    
+    function switchMethod(method) { document.querySelectorAll('.method-btn').forEach(btn => btn.classList.remove('active')); document.querySelectorAll('.add-form').forEach(form => form.classList.remove('active')); event.target.classList.add('active'); document.getElementById(method + '-form').classList.add('active'); }
+    function previewScreenshot(input) { const preview = document.getElementById('screenshot-preview'); if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = function(e) { preview.src = e.target.result; preview.style.display = 'block'; }; reader.readAsDataURL(input.files[0]); } }
+    
+    async function initSession() { const { data: { session } } = await sb.auth.getSession(); if (session) currentUser = session.user; handleRouting(); }
+    
+    async function render() {
+      if (!currentUser) { renderAuth(); return; }
+      switch (currentPage) {
+        case 'home': await renderHome(); break;
+        case 'add': await renderAddPage(); break;
+        case 'trainings': await renderTrainingsPage(); break;
+        case 'leaderboard': await renderLeaderboardPage(); break;
+        case 'feed': await renderFeedPage(); break;
+        case 'abilities': await renderAbilitiesPage(); break;
+        case 'settings': await renderSettingsPage(); break;
+        case 'points': await renderPointsPage(); break;
+        case 'achievements': await renderAchievementsPage(); break;
+        case 'nominations': await renderNominationsPage(); break;
+        case 'userProfile': await renderUserProfile(); break;
+        default: await renderHome();
+      }
+    }
+    
+    initSession();
+    window.addEventListener('popstate', () => handleRouting());
+  </script>
+</body>
+</html>
