@@ -485,6 +485,9 @@
       margin-top: 12px;
       font-size: 14px;
       text-align: center;
+      padding: 12px;
+      border-radius: 20px;
+      background: #f8fafc;
     }
 
     .club-link {
@@ -554,6 +557,15 @@
       color: #5a3a1a;
     }
 
+    .info-text {
+      font-size: 12px;
+      color: #6c7a89;
+      margin-top: 8px;
+      padding: 8px;
+      background: #f8fafc;
+      border-radius: 12px;
+    }
+
     @media (max-width: 600px) {
       .stats-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -593,6 +605,7 @@
     let viewedUserId = null;
     let leaderboardSort = 'total_km';
     let leaderboardOrder = 'desc';
+    let isAdmin = false;
     
     // ============= ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =============
     
@@ -662,6 +675,7 @@
       if (page === 'home') hash = '#/';
       else if (page === 'leaderboard') hash = '#/leaderboard';
       else if (page === 'settings') hash = '#/settings';
+      else if (page === 'sync') hash = '#/sync';
       else if (page === 'userProfile' && userId) hash = `#/profile/${userId}`;
       
       window.location.hash = hash;
@@ -681,6 +695,8 @@
         currentPage = 'userProfile';
       } else if (hash.startsWith('settings')) {
         currentPage = 'settings';
+      } else if (hash.startsWith('sync')) {
+        currentPage = 'sync';
       } else {
         currentPage = 'home';
       }
@@ -770,6 +786,7 @@
         errorDiv.innerHTML = '❌ Неверный логин или пароль';
       } else {
         currentUser = data.user;
+        await checkAdminStatus();
         showToast(`Добро пожаловать, ${username}!`, 3000);
         navigateTo('home');
       }
@@ -778,48 +795,51 @@
     async function logout() {
       await sb.auth.signOut();
       currentUser = null;
+      isAdmin = false;
       showToast('Вы вышли из системы', 2000);
       navigateTo('home');
     }
     
+    async function checkAdminStatus() {
+      if (!currentUser) return false;
+      
+      const { data: profile } = await sb
+        .from('profiles')
+        .select('is_admin, role')
+        .eq('id', currentUser.id)
+        .single();
+      
+      isAdmin = profile?.is_admin === true || profile?.role === 'admin' || currentUser.email === 'admin@challenge.local';
+      return isAdmin;
+    }
+    
     // ============= СИНХРОНИЗАЦИЯ С КЛУБОМ =============
     
-    async function syncClubActivities() {
+    async function syncClubActivities(customDate = null) {
       const syncBtn = document.getElementById('sync-btn');
+      const syncCustomBtn = document.getElementById('sync-custom-btn');
       const statusDiv = document.getElementById('sync-status');
       
       if (!statusDiv) return;
       
-      if (syncBtn) {
-        syncBtn.disabled = true;
-        syncBtn.textContent = '🔄 Синхронизация...';
-      }
+      if (syncBtn) syncBtn.disabled = true;
+      if (syncCustomBtn) syncCustomBtn.disabled = true;
       
       statusDiv.innerHTML = '<div class="loader"></div> Синхронизация с клубом Strava...';
       
       try {
-        // Используем RPC вызов для безопасности (если настроено)
-        // Или прямой запрос с проверкой прав администратора
-        const { data: profile } = await sb
-          .from('profiles')
-          .select('is_admin')
-          .eq('id', currentUser.id)
-          .single();
-        
-        // Проверяем, имеет ли пользователь права администратора
-        // Для тестирования можно временно разрешить всем, но лучше настроить is_admin
-        const isAdmin = profile?.is_admin === true || currentUser.email === 'admin@challenge.local';
-        
         if (!isAdmin) {
           throw new Error('У вас нет прав для синхронизации. Только администраторы могут выполнять эту операцию.');
         }
         
-        // Вызываем Edge Function
+        const requestBody = customDate ? { fromDate: customDate } : {};
+        
         const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/club/sync`, {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json'
-          }
+          },
+          body: JSON.stringify(requestBody)
         });
         
         if (response.status === 401) {
@@ -833,13 +853,25 @@
         const result = await response.json();
         
         if (result.success) {
-          statusDiv.innerHTML = `<div style="color: #1e6f5c;">✅ Синхронизировано ${result.saved} новых тренировок из ${result.total} активностей</div>`;
+          statusDiv.innerHTML = `
+            <div style="color: #1e6f5c; text-align: left;">
+              ✅ <strong>Синхронизация завершена!</strong><br>
+              📊 Загружено: ${result.total} активностей<br>
+              💾 Сохранено: ${result.saved} новых тренировок<br>
+              ⏭ Пропущено: ${result.skipped || 0} (дубликаты)<br>
+              ❌ Ошибок: ${result.errors || 0}<br>
+              📅 Период: ${result.fromDate} → ${result.toDate}<br>
+              📄 Страниц: ${result.pagesLoaded || 0}<br>
+              ⏱ Время: ${result.durationSeconds || 0} сек.
+            </div>
+          `;
           showToast(`Синхронизация завершена! Добавлено ${result.saved} тренировок`, 4000);
           
           // Обновляем данные
           await loadStats();
           await loadActivities();
           await loadLeaderboard();
+          await loadSyncStatus();
         } else {
           throw new Error(result.error || 'Неизвестная ошибка');
         }
@@ -848,16 +880,90 @@
         statusDiv.innerHTML = `<div style="color: #e74c3c;">❌ ${error.message || 'Ошибка соединения'}</div>`;
         showToast(`Ошибка синхронизации: ${error.message}`, 5000);
       } finally {
-        if (syncBtn) {
-          syncBtn.disabled = false;
-          syncBtn.textContent = '🔄 Синхронизировать с клубом';
-        }
+        if (syncBtn) syncBtn.disabled = false;
+        if (syncCustomBtn) syncCustomBtn.disabled = false;
         
         setTimeout(() => {
-          if (statusDiv && statusDiv.innerHTML) {
+          if (statusDiv && statusDiv.innerHTML && !statusDiv.innerHTML.includes('Синхронизация завершена')) {
             statusDiv.innerHTML = '';
           }
-        }, 5000);
+        }, 10000);
+      }
+    }
+    
+    async function syncWithSelectedDate() {
+      const startDate = document.getElementById('sync-start-date')?.value;
+      if (!startDate) {
+        showToast('Выберите дату начала синхронизации', 3000);
+        return;
+      }
+      await syncClubActivities(startDate);
+    }
+    
+    async function loadSyncStatus() {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/sync/status`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        if (!response.ok) return null;
+        
+        const status = await response.json();
+        
+        const statusDiv = document.getElementById('sync-info');
+        if (statusDiv && status.lastSync) {
+          statusDiv.innerHTML = `
+            <div class="info-text">
+              📅 Последняя синхронизация: ${formatDate(status.lastSync)}<br>
+              🕐 Время последнего обновления: ${status.lastSyncDate ? new Date(status.lastSyncDate).toLocaleString() : '—'}<br>
+              ${status.lastSyncLog ? `
+              📊 Последний лог: ${new Date(status.lastSyncLog.sync_date).toLocaleString()}<br>
+              📈 Загружено: ${status.lastSyncLog.activities_total} активностей, сохранено: ${status.lastSyncLog.activities_saved}<br>
+              ⏱ Длительность: ${status.lastSyncLog.duration_seconds} сек.
+              ` : ''}
+            </div>
+          `;
+        }
+        
+        return status;
+      } catch (error) {
+        console.error('Error getting sync status:', error);
+        return null;
+      }
+    }
+    
+    async function resetSyncDate() {
+      if (!confirm('Вы уверены, что хотите сбросить дату синхронизации? Все последующие синхронизации будут загружать активности заново.')) {
+        return;
+      }
+      
+      const newDate = prompt('Введите новую дату начала синхронизации (ГГГГ-ММ-ДД):', '2026-03-01');
+      if (!newDate) return;
+      
+      if (!isAdmin) {
+        showToast('У вас нет прав для этой операции', 3000);
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/sync/reset`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ date: newDate })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          showToast(`Дата синхронизации сброшена на ${newDate}`, 3000);
+          await loadSyncStatus();
+        } else {
+          throw new Error(result.error);
+        }
+      } catch (error) {
+        console.error('Error resetting sync date:', error);
+        showToast(`Ошибка сброса даты: ${error.message}`, 3000);
       }
     }
     
@@ -889,7 +995,6 @@
       const totalKm = data.reduce((sum, a) => sum + (a.distance_km || 0), 0);
       const totalTime = data.reduce((sum, a) => sum + (a.duration_min || 0), 0);
       const trainingsCount = data.length;
-      const avgDistance = trainingsCount > 0 ? (totalKm / trainingsCount).toFixed(2) : 0;
       
       let avgPace = null;
       const paces = data.filter(a => a.pace_min_per_km).map(a => {
@@ -909,8 +1014,7 @@
         totalKm: totalKm.toFixed(2),
         totalTime: formatDuration(totalTime),
         avgPace: avgPace || '—',
-        trainingsCount: trainingsCount,
-        avgDistance: avgDistance
+        trainingsCount: trainingsCount
       };
     }
     
@@ -1147,6 +1251,7 @@
             <div class="user-details">
               ${profile?.gender === 'male' ? 'Мужчина' : profile?.gender === 'female' ? 'Женщина' : '—'}, 
               ${profile?.birth_date ? Math.floor((new Date() - new Date(profile.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : '—'} лет
+              ${profile?.city ? ` | ${escapeHtml(profile.city)}` : ''}
             </div>
           </div>
           <div class="burger" onclick="openMenu()">
@@ -1176,8 +1281,18 @@
             <a href="https://www.strava.com/clubs/2034009" target="_blank" class="club-link">
               Перейти в клуб Strava
             </a>
-            <button id="sync-btn" style="background: #1e6f5c; margin-top: 12px;">🔄 Синхронизировать с клубом</button>
-            <div id="sync-status" class="sync-status"></div>
+            ${isAdmin ? `
+              <div style="margin-top: 16px;">
+                <button id="sync-btn" style="background: #1e6f5c; margin-bottom: 8px;">🔄 Синхронизировать (последняя дата)</button>
+                <div id="sync-info" class="info-text"></div>
+                <button id="reset-sync-btn" style="background: #e74c3c; margin-top: 8px;">🗑 Сбросить дату синхронизации</button>
+              </div>
+              <div id="sync-status" class="sync-status"></div>
+            ` : `
+              <div class="info-text" style="margin-top: 12px;">
+                ℹ️ Синхронизация доступна только администраторам
+              </div>
+            `}
           </div>
           
           <div class="chart">
@@ -1212,19 +1327,125 @@
           <div class="menu-item" onclick="navigateTo('home'); closeMenu();"><span>🏠</span><span>Главная</span></div>
           <div class="menu-item" onclick="navigateTo('leaderboard'); closeMenu();"><span>🏆</span><span>Таблица лидеров</span></div>
           <div class="menu-item" onclick="navigateTo('settings'); closeMenu();"><span>⚙️</span><span>Настройки</span></div>
+          ${isAdmin ? `<div class="menu-item" onclick="navigateTo('sync'); closeMenu();"><span>🔄</span><span>Синхронизация</span></div>` : ''}
           <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
         </div>
       `;
       
-      // Добавляем обработчики
-      const syncBtn = document.getElementById('sync-btn');
-      if (syncBtn) {
-        syncBtn.onclick = () => syncClubActivities();
+      if (isAdmin) {
+        const syncBtn = document.getElementById('sync-btn');
+        if (syncBtn) syncBtn.onclick = () => syncClubActivities();
+        
+        const resetBtn = document.getElementById('reset-sync-btn');
+        if (resetBtn) resetBtn.onclick = () => resetSyncDate();
+        
+        await loadSyncStatus();
       }
       
-      // Загружаем данные
       await loadActivities();
       await loadLeaderboard();
+    }
+    
+    async function renderSyncPage() {
+      const profile = await loadProfile();
+      
+      document.getElementById('app').innerHTML = `
+        <div class="fixed-header">
+          <div class="user-info">
+            <div class="user-name">${escapeHtml(profile?.name_full || currentUser.email?.split('@')[0])}</div>
+            <div class="user-details">Администратор</div>
+          </div>
+          <div class="burger" onclick="openMenu()">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        
+        <div class="container">
+          <div class="card">
+            <h2>🔄 Управление синхронизацией</h2>
+            
+            <div style="margin-bottom: 24px;">
+              <label style="display: block; margin-bottom: 8px; font-weight: 500;">📅 Дата начала синхронизации:</label>
+              <input type="date" id="sync-start-date" value="2026-03-01" style="margin-bottom: 12px;">
+              <button id="sync-custom-btn" style="background: #289672; margin-bottom: 8px;">🔄 Синхронизировать с выбранной даты</button>
+              <button id="sync-last-btn" style="background: #1e6f5c;">📆 Синхронизировать с последней даты</button>
+            </div>
+            
+            <div id="sync-status" class="sync-status"></div>
+            
+            <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
+            
+            <h3>📊 История синхронизаций</h3>
+            <div id="sync-logs" class="activities-list"></div>
+            
+            <hr style="margin: 20px 0;">
+            
+            <h3>⚙️ Действия</h3>
+            <button id="reset-sync-btn" style="background: #e74c3c;">🗑 Сбросить дату синхронизации</button>
+            <div class="info-text" style="margin-top: 12px;">
+              ⚠️ Сброс даты заставит систему загружать все активности заново с указанной даты.
+            </div>
+          </div>
+        </div>
+        
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
+        <div id="menu" class="menu">
+          <div class="menu-header"><strong>Меню</strong></div>
+          <div class="menu-item" onclick="navigateTo('home'); closeMenu();"><span>🏠</span><span>Главная</span></div>
+          <div class="menu-item" onclick="navigateTo('leaderboard'); closeMenu();"><span>🏆</span><span>Таблица лидеров</span></div>
+          <div class="menu-item" onclick="navigateTo('settings'); closeMenu();"><span>⚙️</span><span>Настройки</span></div>
+          <div class="menu-item" onclick="navigateTo('sync'); closeMenu();"><span>🔄</span><span>Синхронизация</span></div>
+          <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
+        </div>
+      `;
+      
+      const syncCustomBtn = document.getElementById('sync-custom-btn');
+      if (syncCustomBtn) syncCustomBtn.onclick = () => syncWithSelectedDate();
+      
+      const syncLastBtn = document.getElementById('sync-last-btn');
+      if (syncLastBtn) syncLastBtn.onclick = () => syncClubActivities();
+      
+      const resetBtn = document.getElementById('reset-sync-btn');
+      if (resetBtn) resetBtn.onclick = () => resetSyncDate();
+      
+      await loadSyncStatus();
+      await loadSyncLogs();
+    }
+    
+    async function loadSyncLogs() {
+      const container = document.getElementById('sync-logs');
+      if (!container) return;
+      
+      try {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/sync/status`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        const status = await response.json();
+        
+        if (status.lastSyncLog) {
+          const log = status.lastSyncLog;
+          container.innerHTML = `
+            <div class="activity-item">
+              <div class="activity-info">
+                <div class="activity-name">${new Date(log.sync_date).toLocaleString()}</div>
+                <div class="activity-meta">
+                  Статус: ${log.status === 'success' ? '✅ Успешно' : '❌ Ошибка'}<br>
+                  Активностей: ${log.activities_total}, сохранено: ${log.activities_saved}<br>
+                  Длительность: ${log.duration_seconds} сек.
+                  ${log.error_message ? `<br>Ошибка: ${log.error_message}` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        } else {
+          container.innerHTML = '<div style="text-align:center; color:#8ba0ae; padding:20px;">Нет логов синхронизации</div>';
+        }
+      } catch (error) {
+        console.error('Error loading sync logs:', error);
+        container.innerHTML = '<div style="text-align:center; color:#e74c3c; padding:20px;">Ошибка загрузки логов</div>';
+      }
     }
     
     async function renderLeaderboardPage() {
@@ -1253,6 +1474,7 @@
           <div class="menu-item" onclick="navigateTo('home'); closeMenu();"><span>🏠</span><span>Главная</span></div>
           <div class="menu-item" onclick="navigateTo('leaderboard'); closeMenu();"><span>🏆</span><span>Таблица лидеров</span></div>
           <div class="menu-item" onclick="navigateTo('settings'); closeMenu();"><span>⚙️</span><span>Настройки</span></div>
+          ${isAdmin ? `<div class="menu-item" onclick="navigateTo('sync'); closeMenu();"><span>🔄</span><span>Синхронизация</span></div>` : ''}
           <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
         </div>
       `;
@@ -1299,6 +1521,7 @@
           <div class="menu-item" onclick="navigateTo('home'); closeMenu();"><span>🏠</span><span>Главная</span></div>
           <div class="menu-item" onclick="navigateTo('leaderboard'); closeMenu();"><span>🏆</span><span>Таблица лидеров</span></div>
           <div class="menu-item" onclick="navigateTo('settings'); closeMenu();"><span>⚙️</span><span>Настройки</span></div>
+          ${isAdmin ? `<div class="menu-item" onclick="navigateTo('sync'); closeMenu();"><span>🔄</span><span>Синхронизация</span></div>` : ''}
           <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
         </div>
       `;
@@ -1414,6 +1637,7 @@
           <div class="menu-item" onclick="navigateTo('home'); closeMenu();"><span>🏠</span><span>Главная</span></div>
           <div class="menu-item" onclick="navigateTo('leaderboard'); closeMenu();"><span>🏆</span><span>Таблица лидеров</span></div>
           <div class="menu-item" onclick="navigateTo('settings'); closeMenu();"><span>⚙️</span><span>Настройки</span></div>
+          ${isAdmin ? `<div class="menu-item" onclick="navigateTo('sync'); closeMenu();"><span>🔄</span><span>Синхронизация</span></div>` : ''}
           <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
         </div>
       `;
@@ -1423,6 +1647,7 @@
       const { data: { session } } = await sb.auth.getSession();
       if (session) {
         currentUser = session.user;
+        await checkAdminStatus();
       }
       handleRouting();
     }
@@ -1439,6 +1664,8 @@
         await renderLeaderboardPage();
       } else if (currentPage === 'settings') {
         await renderSettingsPage();
+      } else if (currentPage === 'sync' && isAdmin) {
+        await renderSyncPage();
       } else if (currentPage === 'userProfile') {
         await renderUserProfile();
       } else {
@@ -1451,6 +1678,8 @@
     window.login = login;
     window.logout = logout;
     window.syncClubActivities = syncClubActivities;
+    window.syncWithSelectedDate = syncWithSelectedDate;
+    window.resetSyncDate = resetSyncDate;
     window.navigateTo = navigateTo;
     window.openMenu = openMenu;
     window.closeMenu = closeMenu;
