@@ -735,6 +735,7 @@
     // ============= ДОБАВЛЕНИЕ ТРЕНИРОВОК =============
 
     // Подключение Strava
+// Подключение Strava
 async function connectStrava() {
   try {
     const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/auth/strava`)
@@ -744,59 +745,7 @@ async function connectStrava() {
     window.location.href = url
   } catch (error) {
     console.error('Error connecting Strava:', error)
-  }
-}
-   
-    async function addByLink() {
-  const link = document.getElementById('link-url').value
-  const errorDiv = document.getElementById('link-error')
-  const userToken = localStorage.getItem('strava_token')
-  
-  if (!link) {
-    errorDiv.innerHTML = '❌ Введите ссылку'
-    return
-  }
-  
-  errorDiv.innerHTML = '<span class="loader"></span> Обработка...'
-  
-  try {
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/parse`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: link, userToken: userToken })
-    })
-    
-    const result = await response.json()
-    
-    if (!result.success) {
-      errorDiv.innerHTML = '❌ ' + (result.error || 'Ошибка парсинга')
-      return
-    }
-    
-    const { error: insertError } = await sb
-      .from('activities')
-      .insert({
-        user_id: currentUser.id,
-        platform: 'strava',
-        activity_id: 'strava_' + Date.now(),
-        name: result.name,
-        distance_km: result.distance,
-        duration_min: result.duration,
-        pace_min_per_km: result.pace,
-        activity_date: result.date,
-        url: link
-      })
-    
-    if (insertError) {
-      errorDiv.innerHTML = '❌ ' + insertError.message
-    } else {
-      navigateTo('trainings')
-      setTimeout(() => {
-        document.getElementById('link-url').value = ''
-      }, 500)
-    }
-  } catch (err) {
-    errorDiv.innerHTML = '❌ Ошибка соединения: ' + err.message
+    alert('Ошибка подключения Strava. Попробуйте позже.')
   }
 }
     
@@ -1132,19 +1081,44 @@ async function connectStrava() {
     }
     
     async function renderHome() {
-      document.getElementById('app').innerHTML = `
-        <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div><div class="user-details">Загрузка...</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
-        <div class="container">
-          <div class="card"><div class="stats-grid"><div class="stat-card"><div class="stat-value">—</div><div class="stat-label">км</div></div><div class="stat-card"><div class="stat-value">—</div><div class="stat-label">время</div></div><div class="stat-card"><div class="stat-value">—</div><div class="stat-label">темп</div></div><div class="stat-card"><div class="stat-value">—</div><div class="stat-label">тренировок</div></div></div><div class="places-grid"><div class="place-card"><div class="place-title">Абсолют</div><div class="place-value">—</div></div><div class="place-card"><div class="place-title">Среди мужчин/женщин</div><div class="place-value">—</div></div><div class="place-card"><div class="place-title">Возрастная группа</div><div class="place-value">—</div></div></div></div>
-          <div class="chart"><h3>📈 Недельная динамика</h3><div class="chart-bars">${['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map(day => `<div class="bar-container"><div class="bar-value">—</div><div class="bar" style="height: 4px"></div><div class="bar-label">${day}</div></div>`).join('')}</div></div>
-          <div class="card"><h3>📋 Мои тренировки (последние 5)</h3><div id="home-recent-trainings" class="activities-list"><div class="loader"></div> Загрузка...</div><div class="show-all" onclick="navigateTo('trainings')">Показать все тренировки →</div></div>
-          <div class="card"><h3>🏆 Лидеры</h3><div id="home-leaderboard" class="activities-list"><div class="loader"></div> Загрузка...</div><div class="show-all" onclick="navigateTo('leaderboard')">Вся таблица →</div></div>
+  // Получаем токен Strava
+  const stravaToken = localStorage.getItem('strava_token');
+  const isStravaConnected = !!stravaToken;
+  
+  document.getElementById('app').innerHTML = `
+    <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div><div class="user-details">Загрузка...</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
+    <div class="container">
+      <div class="card"><div class="stats-grid"><div class="stat-card"><div class="stat-value">—</div><div class="stat-label">км</div></div><div class="stat-card"><div class="stat-value">—</div><div class="stat-label">время</div></div><div class="stat-card"><div class="stat-value">—</div><div class="stat-label">темп</div></div><div class="stat-card"><div class="stat-value">—</div><div class="stat-label">тренировок</div></div></div><div class="places-grid"><div class="place-card"><div class="place-title">Абсолют</div><div class="place-value">—</div></div><div class="place-card"><div class="place-title">Среди мужчин/женщин</div><div class="place-value">—</div></div><div class="place-card"><div class="place-title">Возрастная группа</div><div class="place-value">—</div></div></div></div>
+      
+      <div class="card" style="background: linear-gradient(135deg, #f8fafc 0%, #f0f4f8 100%);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h3 style="margin-bottom: 4px;">📎 Strava</h3>
+            <div style="font-size: 12px; color: #6c7a89;">${isStravaConnected ? '✅ Аккаунт подключён' : '❌ Не подключён'}</div>
+          </div>
+          <button id="strava-home-btn" style="width: auto; padding: 8px 20px; background: ${isStravaConnected ? '#6c7a89' : '#FC4C02'};">
+            ${isStravaConnected ? 'Переподключить' : 'Подключить Strava'}
+          </button>
         </div>
-        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div><div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div><div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div><div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div><div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div><div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div><div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div><div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div><div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div><div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div><div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div><div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div></div>
-        <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
-      `;
-      loadHomeData();
-    }
+        ${isStravaConnected ? '<div style="font-size: 12px; color: #1e6f5c; margin-top: 10px;">Вы можете добавлять свои тренировки по ссылкам из Strava</div>' : '<div style="font-size: 12px; color: #e74c3c; margin-top: 10px;">Подключите Strava, чтобы добавлять тренировки по ссылкам</div>'}
+      </div>
+      
+      <div class="chart"><h3>📈 Недельная динамика</h3><div class="chart-bars">${['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map(day => `<div class="bar-container"><div class="bar-value">—</div><div class="bar" style="height: 4px"></div><div class="bar-label">${day}</div></div>`).join('')}</div></div>
+      <div class="card"><h3>📋 Мои тренировки (последние 5)</h3><div id="home-recent-trainings" class="activities-list"><div class="loader"></div> Загрузка...</div><div class="show-all" onclick="navigateTo('trainings')">Показать все тренировки →</div></div>
+      <div class="card"><h3>🏆 Лидеры</h3><div id="home-leaderboard" class="activities-list"><div class="loader"></div> Загрузка...</div><div class="show-all" onclick="navigateTo('leaderboard')">Вся таблица →</div></div>
+    </div>
+    <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div><div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div><div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div><div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div><div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div><div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div><div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div><div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div><div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div><div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div><div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div><div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div></div>
+    <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
+  `;
+  
+  // Добавляем обработчик для кнопки подключения Strava на главной
+  const stravaHomeBtn = document.getElementById('strava-home-btn');
+  if (stravaHomeBtn) {
+    stravaHomeBtn.onclick = () => connectStrava();
+  }
+  
+  loadHomeData();
+}
     
     async function loadHomeData() {
       try {
@@ -1220,14 +1194,53 @@ async function connectStrava() {
     }
     
     async function renderSettingsPage() {
-      document.getElementById('app').innerHTML = `
-        <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
-        <div class="container"><div class="card"><h2>⚙️ Настройки</h2><input type="text" id="settings-name" placeholder="Имя"><select id="settings-gender"><option value="male">Мужчина</option><option value="female">Женщина</option></select><input type="date" id="settings-birthdate" placeholder="Дата рождения"><input type="text" id="settings-city" placeholder="Город"><button onclick="saveSettings()">Сохранить изменения</button><div id="settings-error" class="error"></div></div></div>
-        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div><div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div><div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div><div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div><div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div><div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div><div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div><div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div><div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div><div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div><div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div><div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div></div>
-        <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
-      `;
-      await loadSettings();
-    }
+  // Получаем текущий токен Strava
+  const stravaToken = localStorage.getItem('strava_token');
+  const isStravaConnected = !!stravaToken;
+  
+  document.getElementById('app').innerHTML = `
+    <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(currentUser?.email?.split('@')[0] || 'Пользователь')}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
+    <div class="container">
+      <div class="card">
+        <h2>⚙️ Настройки</h2>
+        <input type="text" id="settings-name" placeholder="Имя">
+        <select id="settings-gender">
+          <option value="male">Мужчина</option>
+          <option value="female">Женщина</option>
+        </select>
+        <input type="date" id="settings-birthdate" placeholder="Дата рождения">
+        <input type="text" id="settings-city" placeholder="Город">
+        
+        <div style="margin: 20px 0; padding: 15px; background: #f8fafc; border-radius: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <strong>📎 Strava</strong>
+              <div style="font-size: 12px; color: #6c7a89;">${isStravaConnected ? '✅ Подключена' : '❌ Не подключена'}</div>
+            </div>
+            <button id="strava-connect-btn" style="width: auto; padding: 10px 20px; background: ${isStravaConnected ? '#6c7a89' : '#FC4C02'};">
+              ${isStravaConnected ? 'Переподключить' : 'Подключить Strava'}
+            </button>
+          </div>
+          ${isStravaConnected ? '<div style="font-size: 12px; color: #1e6f5c; margin-top: 10px;">Токен активен. Вы можете добавлять свои тренировки по ссылкам.</div>' : '<div style="font-size: 12px; color: #e74c3c; margin-top: 10px;">Подключите Strava, чтобы автоматически добавлять тренировки по ссылкам.</div>'}
+        </div>
+        
+        <button onclick="saveSettings()">Сохранить изменения</button>
+        <div id="settings-error" class="error"></div>
+      </div>
+    </div>
+    <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
+    <div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div><div class="menu-item" onclick="navigateTo('home')"><span>🏠</span><span>Главная</span></div><div class="menu-item" onclick="navigateTo('abilities')"><span>⚡</span><span>Способности</span></div><div class="menu-item" onclick="navigateTo('trainings')"><span>📋</span><span>Мои тренировки</span></div><div class="menu-item" onclick="navigateTo('leaderboard')"><span>🏆</span><span>Таблица лидеров</span></div><div class="menu-item" onclick="navigateTo('feed')"><span>📰</span><span>Лента</span></div><div class="menu-item" onclick="navigateTo('settings')"><span>⚙️</span><span>Настройки</span></div><div class="menu-item" onclick="navigateTo('points')"><span>⭐</span><span>Баллы</span></div><div class="menu-item" onclick="navigateTo('achievements')"><span>🏅</span><span>Ачивки</span></div><div class="menu-item" onclick="navigateTo('nominations')"><span>🎯</span><span>Номинации</span></div><div class="menu-item" onclick="navigateTo('add')"><span>➕</span><span>Добавить тренировку</span></div><div class="menu-item" onclick="logout()"><span>🚪</span><span>Выход</span></div></div>
+    <div class="fab" onclick="navigateTo('add')"><span>+</span></div>
+  `;
+  
+  // Добавляем обработчик для кнопки подключения Strava
+  const connectBtn = document.getElementById('strava-connect-btn');
+  if (connectBtn) {
+    connectBtn.onclick = () => connectStrava();
+  }
+  
+  await loadSettings();
+}
     
     async function loadSettings() {
       const { data, error } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
@@ -1324,14 +1337,23 @@ async function handleStravaCallback() {
   if (code) {
     const userId = currentUser?.id
     if (userId) {
-      const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/auth/strava/callback?code=${code}&user_id=${userId}`)
-      const result = await response.json()
-      if (result.success) {
-        // Сохраняем токен в localStorage
-        localStorage.setItem('strava_token', result.access_token)
-        localStorage.setItem('strava_refresh_token', result.refresh_token)
-        alert('Strava успешно подключена!')
-        window.location.href = window.location.pathname
+      try {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/auth/strava/callback?code=${code}&user_id=${userId}`)
+        const result = await response.json()
+        if (result.success) {
+          // Сохраняем токен в localStorage
+          localStorage.setItem('strava_token', result.access_token)
+          localStorage.setItem('strava_refresh_token', result.refresh_token)
+          localStorage.setItem('strava_expires_at', result.expires_at)
+          alert('Strava успешно подключена!')
+          // Убираем код из URL и обновляем страницу
+          window.location.href = window.location.pathname + window.location.hash
+        } else {
+          alert('Ошибка подключения Strava: ' + (result.error || 'Неизвестная ошибка'))
+        }
+      } catch (err) {
+        console.error('Callback error:', err)
+        alert('Ошибка подключения Strava. Попробуйте позже.')
       }
     }
   }
