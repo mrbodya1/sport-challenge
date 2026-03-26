@@ -746,27 +746,7 @@ async function connectStrava() {
     console.error('Error connecting Strava:', error)
   }
 }
-
-// Обработка callback после авторизации Strava
-async function handleStravaCallback() {
-  const urlParams = new URLSearchParams(window.location.search)
-  const code = urlParams.get('code')
-  if (code) {
-    const userId = currentUser?.id
-    if (userId) {
-      const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/auth/strava/callback?code=${code}&user_id=${userId}`)
-      const result = await response.json()
-      if (result.success) {
-        // Сохраняем токен в localStorage
-        localStorage.setItem('strava_token', result.access_token)
-        localStorage.setItem('strava_refresh_token', result.refresh_token)
-        alert('Strava успешно подключена!')
-        window.location.href = window.location.pathname
-      }
-    }
-  }
-}
-    
+   
     async function addByLink() {
   const link = document.getElementById('link-url').value
   const errorDiv = document.getElementById('link-error')
@@ -1336,6 +1316,29 @@ async function handleStravaCallback() {
     
     initSession();
     window.addEventListener('popstate', () => handleRouting());
+
+    // Обработка callback после авторизации Strava
+async function handleStravaCallback() {
+  const urlParams = new URLSearchParams(window.location.search)
+  const code = urlParams.get('code')
+  if (code) {
+    const userId = currentUser?.id
+    if (userId) {
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/auth/strava/callback?code=${code}&user_id=${userId}`)
+      const result = await response.json()
+      if (result.success) {
+        // Сохраняем токен в localStorage
+        localStorage.setItem('strava_token', result.access_token)
+        localStorage.setItem('strava_refresh_token', result.refresh_token)
+        alert('Strava успешно подключена!')
+        window.location.href = window.location.pathname
+      }
+    }
+  }
+}
+
+// Запускаем обработку callback при загрузке
+handleStravaCallback()
   </script>
 </body>
 </html>
