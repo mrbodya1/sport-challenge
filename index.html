@@ -159,7 +159,6 @@
       box-shadow: 0 4px 12px rgba(252, 76, 2, 0.3);
     }
 
-    /* Общий блок информации */
     .info-main {
       background: white;
       border-radius: 28px;
@@ -255,7 +254,6 @@
     .place-card:hover {
       transform: translateY(-2px);
       background: #f1f5f9;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
     .place-title {
@@ -390,6 +388,22 @@
       transition: all 0.2s;
     }
 
+    input, select {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 20px;
+      font-size: 16px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #1e6f5c;
+      box-shadow: 0 0 0 3px rgba(30, 111, 92, 0.1);
+    }
+
     button {
       background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
       color: white;
@@ -406,6 +420,12 @@
     button:hover {
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(30, 111, 92, 0.3);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
     }
 
     .error {
@@ -506,6 +526,10 @@
       user-select: none;
     }
 
+    .leaderboard-table th:hover {
+      background: #f8fafc;
+    }
+
     .leaderboard-row {
       cursor: pointer;
       transition: background 0.2s;
@@ -561,6 +585,13 @@
       100% { background-position: 200% 0; }
     }
 
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #2c3e50;
+    }
+
     @media (max-width: 600px) {
       .stats-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -601,6 +632,15 @@
     let isAdmin = false;
     let leaderboardFilterGender = 'all';
     let leaderboardFilterAge = 'all';
+    
+    // Моковые данные для новостей
+    const newsFeed = [
+      { id: 1, type: 'points', user: 'Анна С.', text: 'набрала 150 баллов за неделю', time: '5 минут назад', icon: '⭐' },
+      { id: 2, type: 'achievement', user: 'Дмитрий П.', text: 'получил достижение "10 км"', time: '2 часа назад', icon: '🏅' },
+      { id: 3, type: 'ability', user: 'Елена К.', text: 'повысила уровень "Выносливость" до 3', time: 'вчера', icon: '⚡' },
+      { id: 4, type: 'points', user: 'Иван С.', text: 'набрал 500 баллов и вошел в топ-10', time: 'вчера', icon: '⭐' },
+      { id: 5, type: 'achievement', user: 'Мария И.', text: 'получила достижение "Марафон"', time: '2 дня назад', icon: '🏅' },
+    ];
     
     // ============= ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =============
     
@@ -951,7 +991,7 @@
       return days;
     }
     
-    async function loadActivities(limit = 10) {
+    async function loadActivities(limit = 20) {
       const { data, error } = await sb
         .from('activities')
         .select('*')
@@ -1030,7 +1070,7 @@
               <input type="text" id="reg-firstname" placeholder="Имя">
               <input type="text" id="reg-lastname" placeholder="Фамилия">
               <div class="info-text" style="margin-bottom: 8px;">
-                Как найти Strava username: зайдите в Strava → Настройки → Custom URL
+                🔍 Как найти Strava username: зайдите в Strava → Настройки → Custom URL
               </div>
               <input type="text" id="reg-strava-username" placeholder="Strava username" autocomplete="off">
               <select id="reg-gender">
@@ -1255,16 +1295,6 @@
     async function renderNewsPage() {
       const profile = await loadProfile();
       
-      // Моковые данные для новостей
-      const newsFeed = [
-        { id: 1, type: 'points', user: 'Анна С.', text: 'набрала 150 баллов за неделю', time: '5 минут назад', icon: '⭐' },
-        { id: 2, type: 'achievement', user: 'Дмитрий П.', text: 'получил достижение "10 км"', time: '2 часа назад', icon: '🏅' },
-        { id: 3, type: 'ability', user: 'Елена К.', text: 'повысила уровень "Выносливость" до 3', time: 'вчера', icon: '⚡' },
-        { id: 4, type: 'points', user: 'Иван С.', text: 'набрал 500 баллов и вошел в топ-10', time: 'вчера', icon: '⭐' },
-        { id: 5, type: 'achievement', user: 'Мария И.', text: 'получила достижение "Марафон"', time: '2 дня назад', icon: '🏅' },
-        { id: 6, type: 'ability', user: 'Сергей В.', text: 'повысил уровень "Скорость" до 4', time: '3 дня назад', icon: '⚡' },
-      ];
-      
       document.getElementById('app').innerHTML = `
         <div class="fixed-header">
           <div class="user-info">
@@ -1278,7 +1308,7 @@
         <div class="container">
           <div class="card">
             <h2>Лента новостей</h2>
-            <div class="news-feed" style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 12px;">
               ${newsFeed.map(item => `
                 <div class="activity-item" style="display: flex; align-items: center; gap: 12px;">
                   <div style="font-size: 24px;">${item.icon}</div>
@@ -1415,7 +1445,7 @@
         <div class="container">
           <div class="card">
             <h2>Достижения</h2>
-            <div class="info-value" style="text-align: center; font-size: 48px;">${totalAchievements} / ${maxAchievements}</div>
+            <div class="stat-value" style="text-align: center; font-size: 48px;">${totalAchievements} / ${maxAchievements}</div>
             <div class="stat-label" style="text-align: center; margin-bottom: 20px;">получено достижений</div>
             
             <div class="stats-grid">
@@ -1545,7 +1575,7 @@
     }
     
     async function renderSettingsPage() {
-      const { data: profile } = await sb
+      const { data: profile, error } = await sb
         .from('profiles')
         .select('*')
         .eq('id', currentUser.id)
@@ -1563,18 +1593,57 @@
         
         <div class="container">
           <div class="card">
-            <h2>Настройки профиля</h2>
-            <input type="text" id="settings-name" placeholder="Имя" value="${escapeHtml(profile?.first_name || '')}">
-            <input type="text" id="settings-lastname" placeholder="Фамилия" value="${escapeHtml(profile?.last_name || '')}">
-            <select id="settings-gender">
-              <option value="male" ${profile?.gender === 'male' ? 'selected' : ''}>Мужчина</option>
-              <option value="female" ${profile?.gender === 'female' ? 'selected' : ''}>Женщина</option>
-            </select>
-            <input type="date" id="settings-birthdate" placeholder="Дата рождения" value="${profile?.birth_date || ''}">
-            <input type="text" id="settings-city" placeholder="Город" value="${escapeHtml(profile?.city || '')}">
-            <input type="text" id="settings-strava-username" placeholder="Strava username" value="${escapeHtml(profile?.strava_username || '')}">
-            <button onclick="saveSettings()">Сохранить изменения</button>
+            <h2>⚙️ Настройки профиля</h2>
+            
+            <div style="margin-bottom: 20px;">
+              <label>Имя</label>
+              <input type="text" id="settings-name" placeholder="Имя" value="${escapeHtml(profile?.first_name || '')}">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+              <label>Фамилия</label>
+              <input type="text" id="settings-lastname" placeholder="Фамилия" value="${escapeHtml(profile?.last_name || '')}">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+              <label>Пол</label>
+              <select id="settings-gender">
+                <option value="male" ${profile?.gender === 'male' ? 'selected' : ''}>Мужчина</option>
+                <option value="female" ${profile?.gender === 'female' ? 'selected' : ''}>Женщина</option>
+              </select>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+              <label>Дата рождения</label>
+              <input type="date" id="settings-birthdate" placeholder="Дата рождения" value="${profile?.birth_date || ''}">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+              <label>Город</label>
+              <input type="text" id="settings-city" placeholder="Город" value="${escapeHtml(profile?.city || '')}">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+              <label>Strava username</label>
+              <div class="info-text" style="margin-bottom: 8px;">
+                🔍 Как найти Strava username: зайдите в Strava → Настройки → Custom URL<br>
+                Пример: если URL = strava.com/athletes/fedor_stroitel, то username = fedor_stroitel
+              </div>
+              <input type="text" id="settings-strava-username" placeholder="Strava username" value="${escapeHtml(profile?.strava_username || '')}">
+            </div>
+            
+            <button onclick="saveSettings()" style="margin-top: 8px;">💾 Сохранить изменения</button>
             <div id="settings-error" class="error"></div>
+          </div>
+          
+          <div class="card">
+            <h3>ℹ️ Информация</h3>
+            <div class="info-text">
+              <strong>Как работают тренировки:</strong><br>
+              • Ваши тренировки из клуба Strava синхронизируются автоматически<br>
+              • Для корректной синхронизации укажите ваш Strava username<br>
+              • После сохранения настроек запустите синхронизацию на странице администрирования
+            </div>
           </div>
         </div>
         
@@ -1606,6 +1675,8 @@
       
       if (!errorDiv) return;
       
+      errorDiv.innerHTML = '<span class="loader"></span> Сохранение...';
+      
       const { error } = await sb
         .from('profiles')
         .update({
@@ -1621,10 +1692,10 @@
         .eq('id', currentUser.id);
       
       if (error) {
-        errorDiv.innerHTML = error.message;
+        errorDiv.innerHTML = '❌ ' + error.message;
         errorDiv.style.color = '#e74c3c';
       } else {
-        errorDiv.innerHTML = 'Настройки сохранены';
+        errorDiv.innerHTML = '✅ Настройки сохранены';
         errorDiv.style.color = '#1e6f5c';
         showToast('Профиль обновлен!', 2000);
         setTimeout(() => { 
@@ -1652,20 +1723,30 @@
             <h2>Управление синхронизацией</h2>
             
             <div style="margin-bottom: 24px;">
-              <label style="display: block; margin-bottom: 8px; font-weight: 500;">Дата начала синхронизации:</label>
+              <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                <button id="check-rate-limit-btn" style="background: #3498db; flex: 1;">📊 Проверить лимиты API</button>
+                <button id="sync-last-btn" style="background: #1e6f5c; flex: 1;">🔄 Синхронизировать</button>
+              </div>
+              
+              <div id="rate-limit-info" style="display: none;"></div>
+            </div>
+            
+            <div style="margin-bottom: 24px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-weight: 500;">📅 Синхронизация с выбранной даты:</label>
               <input type="date" id="sync-start-date" value="2026-03-20" style="margin-bottom: 12px;">
-              <button id="sync-custom-btn" style="background: #289672; margin-bottom: 8px;">Синхронизировать с выбранной даты</button>
-              <button id="sync-last-btn" style="background: #1e6f5c;">Синхронизировать с последней даты</button>
+              <button id="sync-custom-btn" style="background: #289672;">🔄 Синхронизировать с выбранной даты</button>
             </div>
             
             <div id="sync-status" class="sync-status"></div>
             
             <hr style="margin: 20px 0;">
             
-            <h3>Действия</h3>
-            <button id="reset-sync-btn" class="btn-danger" style="background: #e74c3c;">Сбросить дату синхронизации</button>
+            <h3>⚙️ Действия</h3>
+            <button id="reset-sync-btn" style="background: #e74c3c;">🗑 Сбросить дату синхронизации</button>
             <div class="info-text" style="margin-top: 12px;">
-              Сброс даты заставит систему загружать все активности заново с указанной даты.
+              ⚠️ Сброс даты заставит систему загружать все активности заново с указанной даты.<br>
+              📅 Рекомендуемая дата: 2026-03-20<br>
+              📊 Лимиты Strava: 100 запросов / 15 минут, 1000 запросов / день
             </div>
           </div>
         </div>
@@ -1698,6 +1779,115 @@
       
       const resetBtn = document.getElementById('reset-sync-btn');
       if (resetBtn) resetBtn.onclick = () => resetSyncDate();
+      
+      const checkRateLimitBtn = document.getElementById('check-rate-limit-btn');
+      if (checkRateLimitBtn) checkRateLimitBtn.onclick = () => checkRateLimit();
+    }
+    
+    async function checkRateLimit() {
+      const checkBtn = document.getElementById('check-rate-limit-btn');
+      const rateLimitDiv = document.getElementById('rate-limit-info');
+      const syncStatus = document.getElementById('sync-status');
+      
+      if (checkBtn) {
+        checkBtn.disabled = true;
+        checkBtn.innerHTML = '<span class="loader"></span> Проверка...';
+      }
+      
+      if (rateLimitDiv) {
+        rateLimitDiv.style.display = 'block';
+        rateLimitDiv.innerHTML = '<div class="loader"></div> Получение информации о лимитах...';
+      }
+      
+      try {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/rate-limit`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          const percent = data.usagePercent;
+          let color = '#1e6f5c';
+          let bgColor = '#e8f5e9';
+          
+          if (data.status === 'warning') {
+            color = '#e67e22';
+            bgColor = '#fff3e0';
+          } else if (data.status === 'limited') {
+            color = '#e74c3c';
+            bgColor = '#ffebee';
+          }
+          
+          rateLimitDiv.innerHTML = `
+            <div style="background: ${bgColor}; border-radius: 20px; padding: 16px; margin-top: 8px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span style="font-weight: 600; color: #2c3e50;">📊 Лимиты Strava API</span>
+                <span style="color: ${color}; font-weight: 700;">${data.remaining} / ${data.limit}</span>
+              </div>
+              <div style="background: #e2e8f0; border-radius: 10px; height: 8px; overflow: hidden; margin-bottom: 12px;">
+                <div style="background: ${color}; width: ${percent}%; height: 100%; border-radius: 10px;"></div>
+              </div>
+              <div style="font-size: 13px; margin-bottom: 8px;">
+                <span>📈 Использовано: ${data.used} запросов (${percent}%)</span>
+              </div>
+              <div style="font-size: 13px; margin-bottom: 8px;">
+                <span>⏱ Сброс через: ${data.resetTimeRelative}</span>
+              </div>
+              <div style="font-size: 12px; color: #6c7a89;">
+                ${data.statusMessage}
+              </div>
+              ${data.status === 'limited' ? `
+                <div style="margin-top: 12px; padding: 8px; background: rgba(231, 76, 60, 0.1); border-radius: 12px;">
+                  ⚠️ Лимит исчерпан. Подождите ${data.resetTimeRelative} до следующей синхронизации.
+                </div>
+              ` : ''}
+            </div>
+          `;
+          
+          if (syncStatus && data.status === 'limited') {
+            syncStatus.innerHTML = `<div style="color: #e74c3c;">⚠️ Лимит API исчерпан! Синхронизация недоступна. Подождите ${data.resetTimeRelative}.</div>`;
+            
+            const syncCustomBtn = document.getElementById('sync-custom-btn');
+            const syncLastBtn = document.getElementById('sync-last-btn');
+            if (syncCustomBtn) syncCustomBtn.disabled = true;
+            if (syncLastBtn) syncLastBtn.disabled = true;
+          } else {
+            if (syncStatus && syncStatus.innerHTML.includes('Лимит')) {
+              syncStatus.innerHTML = '';
+            }
+            
+            const syncCustomBtn = document.getElementById('sync-custom-btn');
+            const syncLastBtn = document.getElementById('sync-last-btn');
+            if (syncCustomBtn) syncCustomBtn.disabled = false;
+            if (syncLastBtn) syncLastBtn.disabled = false;
+          }
+          
+        } else {
+          throw new Error(data.error || 'Не удалось получить информацию о лимитах');
+        }
+        
+      } catch (error) {
+        console.error('Error checking rate limit:', error);
+        if (rateLimitDiv) {
+          rateLimitDiv.innerHTML = `
+            <div style="background: #ffebee; border-radius: 20px; padding: 16px; margin-top: 8px;">
+              <div style="color: #e74c3c;">
+                ❌ Ошибка проверки лимитов: ${error.message}
+              </div>
+              <div style="font-size: 12px; color: #6c7a89; margin-top: 8px;">
+                Убедитесь, что функция parse-activity развернута и доступна.
+              </div>
+            </div>
+          `;
+        }
+      } finally {
+        if (checkBtn) {
+          checkBtn.disabled = false;
+          checkBtn.innerHTML = '📊 Проверить лимиты API';
+        }
+      }
     }
     
     async function syncClubActivities(customDate = null) {
@@ -1792,7 +1982,7 @@
       } finally {
         if (resetBtn) {
           resetBtn.disabled = false;
-          resetBtn.innerHTML = 'Сбросить дату синхронизации';
+          resetBtn.innerHTML = '🗑 Сбросить дату синхронизации';
         }
       }
     }
@@ -1933,6 +2123,7 @@
     window.closeMenu = closeMenu;
     window.saveSettings = saveSettings;
     window.changeLeaderboardSort = changeLeaderboardSort;
+    window.checkRateLimit = checkRateLimit;
     window.leaderboardFilterGender = leaderboardFilterGender;
     window.leaderboardFilterAge = leaderboardFilterAge;
     
