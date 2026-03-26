@@ -292,29 +292,6 @@
       background: #f0f9f6;
     }
 
-    .filter-bar {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
-
-    .filter-bar select, .filter-bar input {
-      flex: 1;
-      min-width: 100px;
-      padding: 10px;
-      font-size: 14px;
-      border: 2px solid #e2e8f0;
-      border-radius: 20px;
-      font-family: inherit;
-      transition: border-color 0.2s;
-    }
-
-    .filter-bar select:focus, .filter-bar input:focus {
-      outline: none;
-      border-color: #1e6f5c;
-    }
-
     input, select, textarea {
       width: 100%;
       padding: 14px 16px;
@@ -915,11 +892,12 @@
         if (statusDiv && status.lastSync) {
           statusDiv.innerHTML = `
             <div class="info-text">
-              📅 Последняя синхронизация: ${formatDate(status.lastSync)}<br>
-              🕐 Время последнего обновления: ${status.lastSyncDate ? new Date(status.lastSyncDate).toLocaleString() : '—'}<br>
+              📅 Текущая дата синхронизации: ${formatDate(status.lastSync)}<br>
+              🕐 Последнее обновление: ${status.lastSyncDate ? new Date(status.lastSyncDate).toLocaleString() : '—'}<br>
               ${status.lastSyncLog ? `
-              📊 Последний лог: ${new Date(status.lastSyncLog.sync_date).toLocaleString()}<br>
-              📈 Загружено: ${status.lastSyncLog.activities_total} активностей, сохранено: ${status.lastSyncLog.activities_saved}<br>
+              📊 Последняя синхронизация: ${new Date(status.lastSyncLog.sync_date).toLocaleString()}<br>
+              📈 Загружено: ${status.lastSyncLog.activities_total} активностей<br>
+              💾 Сохранено: ${status.lastSyncLog.activities_saved} тренировок<br>
               ⏱ Длительность: ${status.lastSyncLog.duration_seconds} сек.
               ` : ''}
             </div>
@@ -934,79 +912,79 @@
     }
     
     // Функция сброса даты синхронизации
-async function resetSyncDate() {
-  const newDate = prompt('Введите новую дату начала синхронизации (ГГГГ-ММ-ДД):', '2026-03-01');
-  if (!newDate) return;
-  
-  // Проверяем формат даты
-  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-  if (!dateRegex.test(newDate)) {
-    showToast('Неверный формат даты. Используйте ГГГГ-ММ-ДД', 3000);
-    return;
-  }
-  
-  if (!isAdmin) {
-    showToast('У вас нет прав для этой операции', 3000);
-    return;
-  }
-  
-  const resetBtn = document.getElementById('reset-sync-btn');
-  const statusDiv = document.getElementById('sync-status');
-  
-  if (resetBtn) {
-    resetBtn.disabled = true;
-    resetBtn.textContent = '🔄 Сброс...';
-  }
-  
-  if (statusDiv) {
-    statusDiv.innerHTML = '<div class="loader"></div> Сброс даты синхронизации...';
-  }
-  
-  try {
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/sync/reset`, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ date: newDate })
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || `HTTP ${response.status}`);
-    }
-    
-    const result = await response.json();
-    
-    if (result.success) {
-      showToast(`Дата синхронизации сброшена на ${result.newDate}`, 3000);
+    async function resetSyncDate() {
+      const newDate = prompt('Введите новую дату начала синхронизации (ГГГГ-ММ-ДД):\n\nФормат: 2026-03-01', '2026-03-01');
+      if (!newDate) return;
+      
+      // Проверяем формат даты
+      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+      if (!dateRegex.test(newDate)) {
+        showToast('Неверный формат даты. Используйте ГГГГ-ММ-ДД', 3000);
+        return;
+      }
+      
+      if (!isAdmin) {
+        showToast('У вас нет прав для этой операции', 3000);
+        return;
+      }
+      
+      const resetBtn = document.getElementById('reset-sync-btn');
+      const statusDiv = document.getElementById('sync-status');
+      
+      if (resetBtn) {
+        resetBtn.disabled = true;
+        resetBtn.textContent = '🔄 Сброс...';
+      }
+      
       if (statusDiv) {
-        statusDiv.innerHTML = `<div style="color: #1e6f5c;">✅ Дата синхронизации сброшена на ${result.newDate}</div>`;
+        statusDiv.innerHTML = '<div class="loader"></div> Сброс даты синхронизации...';
       }
-      // Обновляем информацию о синхронизации
-      await loadSyncStatus();
-    } else {
-      throw new Error(result.error || 'Неизвестная ошибка');
-    }
-  } catch (error) {
-    console.error('Error resetting sync date:', error);
-    showToast(`Ошибка сброса даты: ${error.message}`, 5000);
-    if (statusDiv) {
-      statusDiv.innerHTML = `<div style="color: #e74c3c;">❌ ${error.message}</div>`;
-    }
-  } finally {
-    if (resetBtn) {
-      resetBtn.disabled = false;
-      resetBtn.textContent = '🗑 Сбросить дату синхронизации';
-    }
-    
-    setTimeout(() => {
-      if (statusDiv && statusDiv.innerHTML && !statusDiv.innerHTML.includes('✅')) {
-        statusDiv.innerHTML = '';
+      
+      try {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/sync/reset`, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ date: newDate })
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || `HTTP ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          showToast(`Дата синхронизации сброшена на ${result.newDate}`, 3000);
+          if (statusDiv) {
+            statusDiv.innerHTML = `<div style="color: #1e6f5c;">✅ Дата синхронизации сброшена на ${result.newDate}</div>`;
+          }
+          // Обновляем информацию о синхронизации
+          await loadSyncStatus();
+        } else {
+          throw new Error(result.error || 'Неизвестная ошибка');
+        }
+      } catch (error) {
+        console.error('Error resetting sync date:', error);
+        showToast(`Ошибка сброса даты: ${error.message}`, 5000);
+        if (statusDiv) {
+          statusDiv.innerHTML = `<div style="color: #e74c3c;">❌ ${error.message}</div>`;
+        }
+      } finally {
+        if (resetBtn) {
+          resetBtn.disabled = false;
+          resetBtn.textContent = '🗑 Сбросить дату синхронизации';
+        }
+        
+        setTimeout(() => {
+          if (statusDiv && statusDiv.innerHTML && !statusDiv.innerHTML.includes('✅')) {
+            statusDiv.innerHTML = '';
+          }
+        }, 5000);
       }
-    }, 5000);
-  }
-}
+    }
     
     // ============= ЗАГРУЗКА ДАННЫХ =============
     
@@ -1416,15 +1394,16 @@ async function resetSyncDate() {
             
             <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
             
-            <h3>📊 История синхронизаций</h3>
-            <div id="sync-logs" class="activities-list"></div>
+            <h3>📊 Текущий статус</h3>
+            <div id="sync-info" class="info-text"></div>
             
             <hr style="margin: 20px 0;">
             
             <h3>⚙️ Действия</h3>
             <button id="reset-sync-btn" style="background: #e74c3c;">🗑 Сбросить дату синхронизации</button>
             <div class="info-text" style="margin-top: 12px;">
-              ⚠️ Сброс даты заставит систему загружать все активности заново с указанной даты.
+              ⚠️ Сброс даты заставит систему загружать все активности заново с указанной даты.<br>
+              📅 Рекомендуемая дата: 2026-03-01
             </div>
           </div>
         </div>
@@ -1450,43 +1429,6 @@ async function resetSyncDate() {
       if (resetBtn) resetBtn.onclick = () => resetSyncDate();
       
       await loadSyncStatus();
-      await loadSyncLogs();
-    }
-    
-    async function loadSyncLogs() {
-      const container = document.getElementById('sync-logs');
-      if (!container) return;
-      
-      try {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/sync/status`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' }
-        });
-        
-        const status = await response.json();
-        
-        if (status.lastSyncLog) {
-          const log = status.lastSyncLog;
-          container.innerHTML = `
-            <div class="activity-item">
-              <div class="activity-info">
-                <div class="activity-name">${new Date(log.sync_date).toLocaleString()}</div>
-                <div class="activity-meta">
-                  Статус: ${log.status === 'success' ? '✅ Успешно' : '❌ Ошибка'}<br>
-                  Активностей: ${log.activities_total}, сохранено: ${log.activities_saved}<br>
-                  Длительность: ${log.duration_seconds} сек.
-                  ${log.error_message ? `<br>Ошибка: ${log.error_message}` : ''}
-                </div>
-              </div>
-            </div>
-          `;
-        } else {
-          container.innerHTML = '<div style="text-align:center; color:#8ba0ae; padding:20px;">Нет логов синхронизации</div>';
-        }
-      } catch (error) {
-        console.error('Error loading sync logs:', error);
-        container.innerHTML = '<div style="text-align:center; color:#e74c3c; padding:20px;">Ошибка загрузки логов</div>';
-      }
     }
     
     async function renderLeaderboardPage() {
