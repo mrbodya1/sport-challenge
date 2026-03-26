@@ -737,12 +737,11 @@
 // Подключение Strava
 async function connectStrava() {
   try {
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/strava-oauth/auth/strava`)
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/auth/strava`)
     const { url } = await response.json()
     if (!url) {
       throw new Error('No URL returned')
     }
-    // Сохраняем user_id в sessionStorage для callback
     sessionStorage.setItem('strava_user_id', currentUser.id)
     window.location.href = url
   } catch (error) {
@@ -1340,22 +1339,19 @@ async function handleStravaCallback() {
     const userId = currentUser?.id
     if (userId) {
       try {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/strava-oauth/auth/strava/callback?code=${code}&user_id=${userId}`)
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/auth/strava/callback?code=${code}&user_id=${userId}`)
         const result = await response.json()
         if (result.success) {
-          // Сохраняем токен в localStorage
           localStorage.setItem('strava_token', result.access_token)
           localStorage.setItem('strava_refresh_token', result.refresh_token)
-          localStorage.setItem('strava_expires_at', result.expires_at)
           alert('Strava успешно подключена!')
-          // Убираем код из URL и обновляем страницу
           window.location.href = window.location.pathname + window.location.hash
         } else {
-          alert('Ошибка подключения Strava: ' + (result.error || 'Неизвестная ошибка'))
+          alert('Ошибка: ' + (result.error || 'Неизвестная ошибка'))
         }
       } catch (err) {
         console.error('Callback error:', err)
-        alert('Ошибка подключения Strava. Попробуйте позже.')
+        alert('Ошибка подключения Strava')
       }
     }
   }
