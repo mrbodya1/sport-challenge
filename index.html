@@ -933,39 +933,80 @@
       }
     }
     
-    async function resetSyncDate() {
-      if (!confirm('Вы уверены, что хотите сбросить дату синхронизации? Все последующие синхронизации будут загружать активности заново.')) {
-        return;
-      }
-      
-      const newDate = prompt('Введите новую дату начала синхронизации (ГГГГ-ММ-ДД):', '2026-03-01');
-      if (!newDate) return;
-      
-      if (!isAdmin) {
-        showToast('У вас нет прав для этой операции', 3000);
-        return;
-      }
-      
-      try {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/sync/reset`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ date: newDate })
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-          showToast(`Дата синхронизации сброшена на ${newDate}`, 3000);
-          await loadSyncStatus();
-        } else {
-          throw new Error(result.error);
-        }
-      } catch (error) {
-        console.error('Error resetting sync date:', error);
-        showToast(`Ошибка сброса даты: ${error.message}`, 3000);
-      }
+    // Функция сброса даты синхронизации
+async function resetSyncDate() {
+  const newDate = prompt('Введите новую дату начала синхронизации (ГГГГ-ММ-ДД):', '2026-03-01');
+  if (!newDate) return;
+  
+  // Проверяем формат даты
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateRegex.test(newDate)) {
+    showToast('Неверный формат даты. Используйте ГГГГ-ММ-ДД', 3000);
+    return;
+  }
+  
+  if (!isAdmin) {
+    showToast('У вас нет прав для этой операции', 3000);
+    return;
+  }
+  
+  const resetBtn = document.getElementById('reset-sync-btn');
+  const statusDiv = document.getElementById('sync-status');
+  
+  if (resetBtn) {
+    resetBtn.disabled = true;
+    resetBtn.textContent = '🔄 Сброс...';
+  }
+  
+  if (statusDiv) {
+    statusDiv.innerHTML = '<div class="loader"></div> Сброс даты синхронизации...';
+  }
+  
+  try {
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/sync/reset`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ date: newDate })
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || `HTTP ${response.status}`);
     }
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      showToast(`Дата синхронизации сброшена на ${result.newDate}`, 3000);
+      if (statusDiv) {
+        statusDiv.innerHTML = `<div style="color: #1e6f5c;">✅ Дата синхронизации сброшена на ${result.newDate}</div>`;
+      }
+      // Обновляем информацию о синхронизации
+      await loadSyncStatus();
+    } else {
+      throw new Error(result.error || 'Неизвестная ошибка');
+    }
+  } catch (error) {
+    console.error('Error resetting sync date:', error);
+    showToast(`Ошибка сброса даты: ${error.message}`, 5000);
+    if (statusDiv) {
+      statusDiv.innerHTML = `<div style="color: #e74c3c;">❌ ${error.message}</div>`;
+    }
+  } finally {
+    if (resetBtn) {
+      resetBtn.disabled = false;
+      resetBtn.textContent = '🗑 Сбросить дату синхронизации';
+    }
+    
+    setTimeout(() => {
+      if (statusDiv && statusDiv.innerHTML && !statusDiv.innerHTML.includes('✅')) {
+        statusDiv.innerHTML = '';
+      }
+    }, 5000);
+  }
+}
     
     // ============= ЗАГРУЗКА ДАННЫХ =============
     
