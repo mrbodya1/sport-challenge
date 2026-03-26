@@ -733,59 +733,91 @@
     }
     
     // ============= ДОБАВЛЕНИЕ ТРЕНИРОВОК =============
-    
-    async function addByLink() {
-      const link = document.getElementById('link-url').value;
-      const errorDiv = document.getElementById('link-error');
-      
-      if (!link) {
-        errorDiv.innerHTML = '❌ Введите ссылку';
-        return;
-      }
-      
-      errorDiv.innerHTML = '<span class="loader"></span> Обработка...';
-      
-      try {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: link })
-        });
-        
-        const result = await response.json();
-        
-        if (!result.success) {
-          errorDiv.innerHTML = '❌ ' + (result.error || 'Ошибка парсинга');
-          return;
-        }
-        
-        const { error: insertError } = await sb
-          .from('activities')
-          .insert({
-            user_id: currentUser.id,
-            platform: 'strava',
-            activity_id: 'strava_' + Date.now(),
-            name: result.name,
-            distance_km: result.distance,
-            duration_min: result.duration,
-            pace_min_per_km: result.pace,
-            activity_date: result.date,
-            url: result.url || link
-          });
-        
-        if (insertError) {
-          errorDiv.innerHTML = '❌ ' + insertError.message;
-        } else {
-          navigateTo('trainings');
-          setTimeout(() => {
-            document.getElementById('link-url').value = '';
-          }, 500);
-        }
-      } catch (err) {
-        console.error('Fetch error:', err);
-        errorDiv.innerHTML = '❌ Ошибка соединения: ' + err.message;
+
+    // Подключение Strava
+async function connectStrava() {
+  try {
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/auth/strava`)
+    const { url } = await response.json()
+    // Сохраняем user_id в sessionStorage для callback
+    sessionStorage.setItem('strava_user_id', currentUser.id)
+    window.location.href = url
+  } catch (error) {
+    console.error('Error connecting Strava:', error)
+  }
+}
+
+// Обработка callback после авторизации Strava
+async function handleStravaCallback() {
+  const urlParams = new URLSearchParams(window.location.search)
+  const code = urlParams.get('code')
+  if (code) {
+    const userId = sessionStorage.getItem('strava_user_id')
+    if (userId) {
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/auth/strava/callback?code=${code}&user_id=${userId}`)
+      const result = await response.json()
+      if (result.success) {
+        // Сохраняем токен в localStorage или базе
+        localStorage.setItem('strava_token', result.token)
+        alert('Strava успешно подключена!')
+        window.location.href = '/'
       }
     }
+  }
+}
+    
+    async function addByLink() {
+  const link = document.getElementById('link-url').value
+  const errorDiv = document.getElementById('link-error')
+  const userToken = localStorage.getItem('strava_token')
+  
+  if (!link) {
+    errorDiv.innerHTML = '❌ Введите ссылку'
+    return
+  }
+  
+  errorDiv.innerHTML = '<span class="loader"></span> Обработка...'
+  
+  try {
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/parse`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: link, userToken: userToken })
+    })
+    
+    const result = await response.json()
+    
+    if (!result.success) {
+      errorDiv.innerHTML = '❌ ' + (result.error || 'Ошибка парсинга')
+      return
+    }
+    
+    const { error: insertError } = await sb
+      .from('activities')
+      .insert({
+        user_id: currentUser.id,
+        platform: 'strava',
+        activity_id: 'strava_' + Date.now(),
+        name: result.name,
+        distance_km: result.distance,
+        duration_min: result.duration,
+        pace_min_per_km: result.pace,
+        activity_date: result.date,
+        url: link
+      })
+    
+    if (insertError) {
+      errorDiv.innerHTML = '❌ ' + insertError.message
+    } else {
+      navigateTo('trainings')
+      setTimeout(() => {
+        document.getElementById('link-url').value = ''
+      }, 500)
+    }
+  } catch (err) {
+    errorDiv.innerHTML = '❌ Ошибка соединения: ' + err.message
+  }
+}
     
     async function addByScreenshot() {
       alert('Функция распознавания скриншотов временно недоступна. Используйте "По ссылке" или "Вручную".');
