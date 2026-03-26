@@ -734,18 +734,20 @@
     
     // ============= ДОБАВЛЕНИЕ ТРЕНИРОВОК =============
 
-    // Подключение Strava
 // Подключение Strava
 async function connectStrava() {
   try {
     const response = await fetch(`${SUPABASE_URL}/functions/v1/strava-oauth/auth/strava`)
     const { url } = await response.json()
+    if (!url) {
+      throw new Error('No URL returned')
+    }
     // Сохраняем user_id в sessionStorage для callback
     sessionStorage.setItem('strava_user_id', currentUser.id)
     window.location.href = url
   } catch (error) {
     console.error('Error connecting Strava:', error)
-    alert('Ошибка подключения Strava. Попробуйте позже.')
+    alert('Ошибка подключения Strava: ' + error.message)
   }
 }
     
