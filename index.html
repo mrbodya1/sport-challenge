@@ -14,10 +14,19 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      background: linear-gradient(135deg, #e8f4f8 0%, #d4e9f0 100%);
+      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
       min-height: 100vh;
-      padding-top: 80px;
+      padding-top: 70px;
       padding-bottom: 20px;
+    }
+
+    /* Стекло-эффект */
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
 
     .fixed-header {
@@ -25,14 +34,14 @@
       top: 0;
       left: 0;
       right: 0;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      padding: 12px 20px;
+      background: rgba(15, 32, 39, 0.85);
+      backdrop-filter: blur(12px);
+      padding: 10px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 100;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .user-info {
@@ -41,19 +50,19 @@
 
     .user-name {
       font-weight: 600;
-      color: #1e6f5c;
+      color: #fff;
       font-size: 18px;
     }
 
     .user-details {
       font-size: 12px;
-      color: #6c7a89;
+      color: rgba(255, 255, 255, 0.7);
     }
 
     .burger {
       width: 44px;
       height: 44px;
-      background: white;
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 40px;
       display: flex;
       flex-direction: column;
@@ -61,19 +70,19 @@
       justify-content: center;
       gap: 4px;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       transition: all 0.2s;
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .burger:hover {
+      background: rgba(255, 255, 255, 0.2);
       transform: scale(1.02);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     .burger span {
       width: 22px;
       height: 2px;
-      background: #1e6f5c;
+      background: white;
       border-radius: 2px;
     }
 
@@ -83,59 +92,150 @@
       padding: 0 20px;
     }
 
+    /* Современные карточки */
     .card {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
       border-radius: 28px;
       padding: 20px;
       margin-bottom: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
     }
 
     .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
     }
 
-    h1 {
+    /* Статистика в 3 колонки */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .stat-item {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+      padding: 16px 12px;
+      border-radius: 24px;
+      text-align: center;
+      transition: all 0.2s;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .stat-item:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .stat-value {
       font-size: 28px;
-      font-weight: 700;
-      background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 0%, #a8edea 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      margin-bottom: 8px;
     }
 
-    h2 {
-      font-size: 20px;
-      font-weight: 600;
-      color: #1e6f5c;
+    .stat-label {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Блоки в 3 колонки */
+    .info-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
       margin-bottom: 16px;
     }
 
-    h3 {
-      font-size: 16px;
-      font-weight: 600;
-      color: #2c3e50;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .info-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+      padding: 16px 12px;
+      border-radius: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
+    .info-card:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .info-value {
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffd89b 0%, #c7e9fb 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .info-label {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 4px;
+    }
+
+    /* Места */
+    .places-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .place-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+      padding: 14px 10px;
+      border-radius: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .place-card:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .place-title {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 6px;
+    }
+
+    .place-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffd966;
+    }
+
+    /* Клуб промо */
     .club-promo {
       text-align: center;
       padding: 16px;
-      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(252, 76, 2, 0.2), rgba(252, 76, 2, 0.05));
+      border-radius: 28px;
       margin-bottom: 16px;
+      border: 1px solid rgba(252, 76, 2, 0.3);
     }
 
     .club-promo p {
-      color: #475569;
+      color: rgba(255, 255, 255, 0.8);
       font-size: 14px;
       margin-bottom: 12px;
     }
@@ -144,142 +244,43 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: #FC4C02;
+      background: linear-gradient(135deg, #FC4C02, #ff6a2c);
       color: white;
-      padding: 10px 20px;
+      padding: 10px 24px;
       border-radius: 40px;
       text-decoration: none;
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
       transition: all 0.2s;
     }
 
     .club-link:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(252, 76, 2, 0.3);
+      box-shadow: 0 8px 20px rgba(252, 76, 2, 0.4);
     }
 
-    .info-main {
-      background: white;
+    /* График */
+    .chart {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
       border-radius: 28px;
       padding: 20px;
       margin-bottom: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-bottom: 20px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .stat-card {
-      background: #f8fafc;
-      padding: 16px;
-      border-radius: 20px;
-      text-align: center;
-      transition: all 0.2s;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-2px);
-      background: #f1f5f9;
-    }
-
-    .stat-value {
-      font-size: 28px;
-      font-weight: 800;
-      color: #1e6f5c;
-    }
-
-    .stat-label {
-      font-size: 12px;
-      color: #6c7a89;
-      margin-top: 4px;
-    }
-
-    .info-block {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .info-card {
-      flex: 1;
-      background: #f8fafc;
-      padding: 16px;
-      border-radius: 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .info-card:hover {
-      transform: translateY(-2px);
-      background: #f1f5f9;
-    }
-
-    .info-value {
-      font-size: 28px;
-      font-weight: 800;
-      color: #1e6f5c;
-    }
-
-    .info-label {
-      font-size: 12px;
-      color: #6c7a89;
-      margin-top: 4px;
-    }
-
-    .places-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .place-card {
-      background: #f8fafc;
-      padding: 12px;
-      border-radius: 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .place-card:hover {
-      transform: translateY(-2px);
-      background: #f1f5f9;
-    }
-
-    .place-title {
-      font-size: 11px;
-      color: #6c7a89;
-      margin-bottom: 4px;
-    }
-
-    .place-value {
-      font-size: 16px;
-      font-weight: 700;
-      color: #1e6f5c;
-    }
-
-    .chart {
-      background: white;
-      border-radius: 20px;
-      padding: 16px;
+    .chart h3 {
+      color: white;
       margin-bottom: 16px;
+      font-size: 14px;
+      letter-spacing: 1px;
     }
 
     .chart-bars {
       display: flex;
       justify-content: space-around;
       align-items: flex-end;
-      height: 150px;
+      height: 140px;
       margin-top: 16px;
     }
 
@@ -292,16 +293,15 @@
 
     .bar {
       width: 100%;
-      background: linear-gradient(180deg, #1e6f5c 0%, #289672 100%);
+      background: linear-gradient(180deg, #ffd966, #ffb347);
       border-radius: 8px 8px 0 0;
       transition: height 0.3s ease;
       min-height: 4px;
-      cursor: pointer;
     }
 
     .bar-label {
       font-size: 10px;
-      color: #6c7a89;
+      color: rgba(255, 255, 255, 0.6);
       margin-top: 8px;
       text-align: center;
     }
@@ -309,10 +309,61 @@
     .bar-value {
       font-size: 10px;
       font-weight: 600;
-      color: #1e6f5c;
+      color: #ffd966;
       margin-bottom: 4px;
     }
 
+    /* Лента новостей */
+    .news-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .news-item {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(4px);
+      padding: 14px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .news-item:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateX(4px);
+    }
+
+    .news-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .news-content {
+      flex: 1;
+    }
+
+    .news-text {
+      font-size: 13px;
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .news-time {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Остальные стили сохраняем для других страниц */
     .activities-list {
       display: flex;
       flex-direction: column;
@@ -322,7 +373,7 @@
     }
 
     .activity-item {
-      background: #f8fafc;
+      background: rgba(255, 255, 255, 0.08);
       padding: 14px;
       border-radius: 20px;
       display: flex;
@@ -334,7 +385,7 @@
     }
 
     .activity-item:hover {
-      background: #f1f5f9;
+      background: rgba(255, 255, 255, 0.12);
       transform: translateX(4px);
     }
 
@@ -344,19 +395,19 @@
 
     .activity-name {
       font-weight: 600;
-      color: #1e6f5c;
+      color: #ffd966;
       margin-bottom: 4px;
     }
 
     .activity-meta {
-      font-size: 12px;
-      color: #6c7a89;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.6);
     }
 
     .show-all {
       text-align: center;
       padding: 12px;
-      color: #1e6f5c;
+      color: #ffd966;
       font-weight: 500;
       cursor: pointer;
       margin-top: 12px;
@@ -365,7 +416,7 @@
     }
 
     .show-all:hover {
-      background: #f0f9f6;
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .filter-bar {
@@ -378,35 +429,45 @@
     .filter-bar select {
       flex: 1;
       min-width: 120px;
-      padding: 10px 12px;
+      padding: 12px;
       font-size: 14px;
-      border: 2px solid #e2e8f0;
-      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
       font-family: inherit;
-      background: white;
       cursor: pointer;
-      transition: all 0.2s;
+    }
+
+    .filter-bar select option {
+      background: #2c5364;
     }
 
     input, select {
       width: 100%;
       padding: 14px 16px;
-      border: 2px solid #e2e8f0;
-      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 24px;
       font-size: 16px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
       font-family: inherit;
       transition: all 0.2s;
     }
 
     input:focus, select:focus {
       outline: none;
-      border-color: #1e6f5c;
-      box-shadow: 0 0 0 3px rgba(30, 111, 92, 0.1);
+      border-color: #ffd966;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
     }
 
     button {
-      background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
-      color: white;
+      background: linear-gradient(135deg, #ffd966, #ffb347);
+      color: #2c3e50;
       border: none;
       padding: 14px;
       border-radius: 40px;
@@ -418,18 +479,12 @@
     }
 
     button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(30, 111, 92, 0.3);
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 217, 102, 0.3);
     }
 
     .error {
-      color: #e74c3c;
+      color: #ff6b6b;
       margin-top: 12px;
       font-size: 14px;
       text-align: center;
@@ -439,8 +494,8 @@
       display: inline-block;
       width: 20px;
       height: 20px;
-      border: 3px solid #e2e8f0;
-      border-top-color: #1e6f5c;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #ffd966;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
       margin-right: 8px;
@@ -457,15 +512,10 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
       z-index: 200;
       display: none;
-      animation: fadeIn 0.3s;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
     }
 
     .menu {
@@ -474,13 +524,14 @@
       right: 0;
       width: 280px;
       height: 100%;
-      background: white;
-      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+      background: rgba(15, 32, 39, 0.95);
+      backdrop-filter: blur(20px);
       z-index: 201;
       transform: translateX(100%);
       transition: transform 0.3s ease;
       display: flex;
       flex-direction: column;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .menu.open {
@@ -489,8 +540,9 @@
 
     .menu-header {
       padding: 24px 20px;
-      background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
-      color: white;
+      background: linear-gradient(135deg, #ffd966, #ffb347);
+      color: #2c3e50;
+      font-weight: 700;
     }
 
     .menu-item {
@@ -498,14 +550,15 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.2s;
+      color: white;
     }
 
     .menu-item:hover {
-      background: #f5f5f5;
-      padding-left: 24px;
+      background: rgba(255, 255, 255, 0.1);
+      padding-left: 28px;
     }
 
     .leaderboard-table {
@@ -516,18 +569,14 @@
     .leaderboard-table th, .leaderboard-table td {
       padding: 12px 8px;
       text-align: left;
-      border-bottom: 1px solid #e2e8f0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
     }
 
     .leaderboard-table th {
       font-weight: 600;
-      color: #1e6f5c;
+      color: #ffd966;
       cursor: pointer;
-      user-select: none;
-    }
-
-    .leaderboard-table th:hover {
-      background: #f8fafc;
     }
 
     .leaderboard-row {
@@ -536,8 +585,7 @@
     }
 
     .leaderboard-row:hover {
-      background: #f8fafc;
-      transform: translateX(2px);
+      background: rgba(255, 255, 255, 0.05);
     }
 
     .badge {
@@ -550,64 +598,47 @@
     }
 
     .badge-gold {
-      background: #ffd700;
-      color: #8b6b00;
+      background: linear-gradient(135deg, #ffd700, #ffb347);
+      color: #2c3e50;
     }
 
     .badge-silver {
-      background: #c0c0c0;
-      color: #5a5a5a;
+      background: linear-gradient(135deg, #c0c0c0, #a0a0a0);
+      color: #2c3e50;
     }
 
     .badge-bronze {
-      background: #cd7f32;
-      color: #5a3a1a;
+      background: linear-gradient(135deg, #cd7f32, #b87333);
+      color: #2c3e50;
     }
 
     .info-text {
       font-size: 12px;
-      color: #6c7a89;
+      color: rgba(255, 255, 255, 0.6);
       margin-top: 8px;
       padding: 8px;
-      background: #f8fafc;
+      background: rgba(255, 255, 255, 0.05);
       border-radius: 12px;
-    }
-
-    .skeleton {
-      background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-      border-radius: 12px;
-    }
-
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
     }
 
     label {
       display: block;
       margin-bottom: 8px;
       font-weight: 500;
-      color: #2c3e50;
+      color: rgba(255, 255, 255, 0.8);
     }
 
     @media (max-width: 600px) {
-      .stats-grid {
+      .stats-row {
         grid-template-columns: repeat(2, 1fr);
       }
       
-      .info-block {
-        flex-direction: column;
+      .info-row {
+        grid-template-columns: repeat(2, 1fr);
       }
       
-      .places-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      
-      .leaderboard-table th, .leaderboard-table td {
-        font-size: 12px;
-        padding: 8px 4px;
+      .places-row {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
   </style>
@@ -627,13 +658,13 @@
     let currentPage = 'home';
     let menuOpen = false;
     let viewedUserId = null;
-    let leaderboardSort = 'position';
-    let leaderboardOrder = 'asc';
+    let leaderboardSort = 'total_km';
+    let leaderboardOrder = 'desc';
     let isAdmin = false;
     let leaderboardFilterGender = 'all';
     let leaderboardFilterAge = 'all';
     
-    // Моковые данные для новостей
+    // Моковые данные для новостей (позже заменим на реальные из БД)
     const newsFeed = [
       { id: 1, type: 'points', user: 'Анна С.', text: 'набрала 150 баллов за неделю', time: '5 минут назад', icon: '⭐' },
       { id: 2, type: 'achievement', user: 'Дмитрий П.', text: 'получил достижение "10 км"', time: '2 часа назад', icon: '🏅' },
@@ -698,7 +729,20 @@
       if (existingToast) existingToast.remove();
       
       const toast = document.createElement('div');
-      toast.className = 'toast';
+      toast.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.8);
+        backdrop-filter: blur(12px);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 40px;
+        font-size: 14px;
+        z-index: 1000;
+        white-space: nowrap;
+      `;
       toast.textContent = message;
       document.body.appendChild(toast);
       
@@ -812,7 +856,7 @@
       if (error) {
         errorDiv.innerHTML = error.message.includes('already registered') ? 'Логин уже занят' : error.message;
       } else {
-        errorDiv.style.color = '#1e6f5c';
+        errorDiv.style.color = '#ffd966';
         errorDiv.innerHTML = 'Регистрация успешна! Теперь войдите.';
         showToast('Регистрация успешна! Теперь войдите в систему', 3000);
         setTimeout(() => {
@@ -991,30 +1035,7 @@
       return days;
     }
     
-    async function loadActivities(limit = 20) {
-      const { data, error } = await sb
-        .from('activities')
-        .select('*')
-        .eq('user_id', currentUser.id)
-        .order('activity_date', { ascending: false })
-        .limit(limit);
-      
-      if (error) return [];
-      return data || [];
-    }
-    
-    async function loadAllActivities() {
-      const { data, error } = await sb
-        .from('activities')
-        .select('*')
-        .eq('user_id', currentUser.id)
-        .order('activity_date', { ascending: false });
-      
-      if (error) return [];
-      return data || [];
-    }
-    
-    async function loadLeaderboard(limit = 200) {
+    async function loadLeaderboard(limit = 100) {
       let query = sb.from('leaderboard').select('*');
       
       if (leaderboardFilterGender !== 'all') {
@@ -1023,16 +1044,9 @@
       if (leaderboardFilterAge !== 'all') {
         query = query.eq('age_group', leaderboardFilterAge);
       }
-
-      const ascending = leaderboardOrder === 'asc';
-      
-      if (leaderboardSort === 'position') {
-        query = query.order('total_km', { ascending: !ascending });
-      } else {
-        query = query.order(leaderboardSort, { ascending });
-      }
       
       const { data, error } = await query
+        .order(leaderboardSort, { ascending: leaderboardOrder === 'asc' })
         .limit(limit);
       
       if (error) return [];
@@ -1044,7 +1058,7 @@
         leaderboardOrder = leaderboardOrder === 'desc' ? 'asc' : 'desc';
       } else {
         leaderboardSort = field;
-        leaderboardOrder = field === 'position' ? 'asc' : 'desc';
+        leaderboardOrder = 'desc';
       }
       if (currentPage === 'leaderboard') {
         renderLeaderboardPage();
@@ -1057,12 +1071,12 @@
       document.getElementById('app').innerHTML = `
         <div class="container">
           <div class="card">
-            <h1>Спортивный челлендж</h1>
-            <p style="color: #6c7a89; margin-bottom: 24px;">Присоединяйтесь к клубу Strava, чтобы ваши тренировки автоматически учитывались в челлендже</p>
+            <h1 style="color: white; text-align: center;">Спортивный челлендж</h1>
+            <p style="color: rgba(255,255,255,0.7); text-align: center; margin-bottom: 24px;">Присоединяйтесь к клубу Strava, чтобы ваши тренировки автоматически учитывались в челлендже</p>
             
             <div style="margin-bottom:24px; display:flex; gap:10px;">
-              <button style="flex:1; background:#1e6f5c;" onclick="document.getElementById('login-form').style.display='block'; document.getElementById('register-form').style.display='none';">Вход</button>
-              <button style="flex:1; background:#289672;" onclick="document.getElementById('register-form').style.display='block'; document.getElementById('login-form').style.display='none';">Регистрация</button>
+              <button style="flex:1; background: linear-gradient(135deg, #ffd966, #ffb347);" onclick="document.getElementById('login-form').style.display='block'; document.getElementById('register-form').style.display='none';">Вход</button>
+              <button style="flex:1; background: rgba(255,255,255,0.2);" onclick="document.getElementById('register-form').style.display='block'; document.getElementById('login-form').style.display='none';">Регистрация</button>
             </div>
             
             <div id="login-form">
@@ -1122,12 +1136,12 @@
             </a>
           </div>
           
-          <div id="main-info" class="info-main">
-            <div class="skeleton" style="height: 350px;"></div>
+          <div id="stats-container" class="card" style="padding: 20px;">
+            <div class="skeleton" style="height: 180px;"></div>
           </div>
           
-          <div class="chart" id="chart-card">
-            <div class="skeleton" style="height: 200px;"></div>
+          <div id="chart-container">
+            <div class="skeleton" style="height: 200px; border-radius: 28px;"></div>
           </div>
         </div>
         
@@ -1159,6 +1173,9 @@
       const genderText = profile?.gender === 'male' ? 'мужчины' : profile?.gender === 'female' ? 'женщины' : '';
       const ageGroupText = places.ageGroupName ? `${places.ageGroupName} лет` : '';
       
+      // Последние 5 новостей
+      const latestNews = newsFeed.slice(0, 5);
+      
       document.getElementById('app').innerHTML = `
         <div class="fixed-header">
           <div class="user-info">
@@ -1181,15 +1198,24 @@
             </a>
           </div>
           
-          <div class="info-main">
-            <div class="stats-grid">
-              <div class="stat-card"><div class="stat-value">${stats.totalKm}</div><div class="stat-label">км всего</div></div>
-              <div class="stat-card"><div class="stat-value">${stats.totalTime}</div><div class="stat-label">время</div></div>
-              <div class="stat-card"><div class="stat-value">${stats.avgPace}</div><div class="stat-label">средний темп</div></div>
-              <div class="stat-card"><div class="stat-value">${stats.trainingsCount}</div><div class="stat-label">тренировок</div></div>
+          <!-- Статистика в 3 колонки -->
+          <div class="card">
+            <div class="stats-row">
+              <div class="stat-item">
+                <div class="stat-value">${stats.totalKm}</div>
+                <div class="stat-label">км всего</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">${stats.totalTime}</div>
+                <div class="stat-label">время</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">${stats.avgPace}</div>
+                <div class="stat-label">средний темп</div>
+              </div>
             </div>
             
-            <div class="info-block">
+            <div class="info-row">
               <div class="info-card" onclick="navigateTo('points')">
                 <div class="info-value">${totalPoints}</div>
                 <div class="info-label">баллов</div>
@@ -1198,9 +1224,13 @@
                 <div class="info-value">${totalAchievements} / ${maxAchievements}</div>
                 <div class="info-label">достижений</div>
               </div>
+              <div class="info-card" onclick="navigateTo('leaderboard')">
+                <div class="info-value">${stats.trainingsCount}</div>
+                <div class="info-label">тренировок</div>
+              </div>
             </div>
             
-            <div class="places-grid">
+            <div class="places-row">
               <div class="place-card" onclick="navigateTo('leaderboard')">
                 <div class="place-title">Абсолют</div>
                 <div class="place-value">${places.absolute} место</div>
@@ -1216,6 +1246,24 @@
             </div>
           </div>
           
+          <!-- Лента новостей -->
+          <div class="card">
+            <h3 style="color: white; margin-bottom: 16px;">📰 Последние события</h3>
+            <div class="news-feed">
+              ${latestNews.map(item => `
+                <div class="news-item">
+                  <div class="news-icon">${item.icon}</div>
+                  <div class="news-content">
+                    <div class="news-text">${escapeHtml(item.user)} ${escapeHtml(item.text)}</div>
+                    <div class="news-time">${escapeHtml(item.time)}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+            <div class="show-all" onclick="navigateTo('news')">Все новости →</div>
+          </div>
+          
+          <!-- График тренировок -->
           <div class="chart">
             <h3>Недельная динамика</h3>
             <div class="chart-bars">
@@ -1247,6 +1295,10 @@
       `;
     }
     
+    // Остальные функции (renderActivitiesPage, renderNewsPage, renderLeaderboardPage, renderAchievementsPage, renderPointsPage, renderAbilitiesPage, renderSettingsPage, renderSyncPage, renderUserProfile, saveSettings, syncClubActivities, resetSyncDate, checkRateLimit) остаются без изменений...
+    
+    // Для краткости, остальные функции здесь не повторяем, они такие же как в предыдущей версии
+    
     async function renderActivitiesPage() {
       const profile = await loadProfile();
       const activities = await loadAllActivities();
@@ -1263,7 +1315,7 @@
         
         <div class="container">
           <div class="card">
-            <h2>Мои тренировки</h2>
+            <h2 style="color: white;">Мои тренировки</h2>
             <div class="activities-list">
               ${activities.map(a => `
                 <div class="activity-item">
@@ -1273,11 +1325,11 @@
                       ${formatDate(a.activity_date)} | ${(a.distance_km || 0).toFixed(2)} км
                       ${a.duration_min ? ' | ' + formatDuration(a.duration_min) : ''}
                       ${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}
-                      ${a.url ? `<a href="${escapeHtml(a.url)}" target="_blank" style="color: #1e6f5c; margin-left: 8px;">🔗 Strava</a>` : ''}
+                      ${a.url ? `<a href="${escapeHtml(a.url)}" target="_blank" style="color: #ffd966; margin-left: 8px;">🔗 Strava</a>` : ''}
                     </div>
                   </div>
                 </div>
-              `).join('') || '<div style="text-align:center; color:#8ba0ae; padding:40px;">Нет тренировок<br><small>Присоединитесь к клубу Strava, чтобы тренировки автоматически загружались</small></div>'}
+              `).join('') || '<div style="text-align:center; color:rgba(255,255,255,0.6); padding:40px;">Нет тренировок<br><small>Присоединитесь к клубу Strava, чтобы тренировки автоматически загружались</small></div>'}
             </div>
           </div>
         </div>
@@ -1314,15 +1366,14 @@
         
         <div class="container">
           <div class="card">
-            <h2>Лента новостей</h2>
-            <div style="display: flex; flex-direction: column; gap: 12px;">
+            <h2 style="color: white;">Лента новостей</h2>
+            <div class="news-feed">
               ${newsFeed.map(item => `
-                <div class="activity-item" style="display: flex; align-items: center; gap: 12px;">
-                  <div style="font-size: 24px;">${item.icon}</div>
-                  <div class="activity-info">
-                    <div class="activity-name">${escapeHtml(item.user)}</div>
-                    <div class="activity-meta">${escapeHtml(item.text)}</div>
-                    <div class="activity-meta" style="font-size: 10px; color: #8ba0ae;">${escapeHtml(item.time)}</div>
+                <div class="news-item">
+                  <div class="news-icon">${item.icon}</div>
+                  <div class="news-content">
+                    <div class="news-text">${escapeHtml(item.user)} ${escapeHtml(item.text)}</div>
+                    <div class="news-time">${escapeHtml(item.time)}</div>
                   </div>
                 </div>
               `).join('')}
@@ -1372,7 +1423,7 @@
         
         <div class="container">
           <div class="card">
-            <h2>Таблица лидеров</h2>
+            <h2 style="color: white;">Таблица лидеров</h2>
             
             <div class="filter-bar">
               <select id="filter-gender" onchange="leaderboardFilterGender=this.value; renderLeaderboardPage()">
@@ -1412,7 +1463,7 @@
                 </tbody>
               </table>
             </div>
-            ${leaderboard.length === 0 ? '<div style="text-align:center; color:#8ba0ae; padding:40px;">Нет данных для отображения</div>' : ''}
+            ${leaderboard.length === 0 ? '<div style="text-align:center; color:rgba(255,255,255,0.6); padding:40px;">Нет данных для отображения</div>' : ''}
           </div>
         </div>
         
@@ -1451,15 +1502,15 @@
         
         <div class="container">
           <div class="card">
-            <h2>Достижения</h2>
-            <div class="stat-value" style="text-align: center; font-size: 48px;">${totalAchievements} / ${maxAchievements}</div>
-            <div class="stat-label" style="text-align: center; margin-bottom: 20px;">получено достижений</div>
+            <h2 style="color: white;">Достижения</h2>
+            <div class="stat-value" style="text-align: center; font-size: 48px; color: #ffd966;">${totalAchievements} / ${maxAchievements}</div>
+            <div class="stat-label" style="text-align: center; margin-bottom: 20px; color: rgba(255,255,255,0.7);">получено достижений</div>
             
-            <div class="stats-grid">
-              <div class="stat-card"><div class="stat-value">🏅</div><div class="stat-label">Первый километр</div><div class="stat-label">${stats.totalKm > 0 ? '✅' : '❌'}</div></div>
-              <div class="stat-card"><div class="stat-value">🏅</div><div class="stat-label">10 км</div><div class="stat-label">${stats.totalKm >= 10 ? '✅' : '❌'}</div></div>
-              <div class="stat-card"><div class="stat-value">🏅</div><div class="stat-label">Полумарафон</div><div class="stat-label">${stats.totalKm >= 21.1 ? '✅' : '❌'}</div></div>
-              <div class="stat-card"><div class="stat-value">🏅</div><div class="stat-label">Марафон</div><div class="stat-label">${stats.totalKm >= 42.2 ? '✅' : '❌'}</div></div>
+            <div class="stats-row">
+              <div class="stat-item"><div class="stat-value">🏅</div><div class="stat-label">Первый километр</div><div class="stat-label" style="color: ${stats.totalKm > 0 ? '#ffd966' : 'rgba(255,255,255,0.5)'};">${stats.totalKm > 0 ? '✅' : '❌'}</div></div>
+              <div class="stat-item"><div class="stat-value">🏅</div><div class="stat-label">10 км</div><div class="stat-label" style="color: ${stats.totalKm >= 10 ? '#ffd966' : 'rgba(255,255,255,0.5)'};">${stats.totalKm >= 10 ? '✅' : '❌'}</div></div>
+              <div class="stat-item"><div class="stat-value">🏅</div><div class="stat-label">Полумарафон</div><div class="stat-label" style="color: ${stats.totalKm >= 21.1 ? '#ffd966' : 'rgba(255,255,255,0.5)'};">${stats.totalKm >= 21.1 ? '✅' : '❌'}</div></div>
+              <div class="stat-item"><div class="stat-value">🏅</div><div class="stat-label">Марафон</div><div class="stat-label" style="color: ${stats.totalKm >= 42.2 ? '#ffd966' : 'rgba(255,255,255,0.5)'};">${stats.totalKm >= 42.2 ? '✅' : '❌'}</div></div>
             </div>
           </div>
         </div>
@@ -1498,11 +1549,11 @@
         
         <div class="container">
           <div class="card">
-            <h2>Баллы</h2>
-            <div class="stat-value" style="text-align: center; font-size: 48px;">${totalPoints}</div>
-            <div class="stat-label" style="text-align: center; margin-bottom: 20px;">общий счет</div>
+            <h2 style="color: white;">Баллы</h2>
+            <div class="stat-value" style="text-align: center; font-size: 64px; color: #ffd966;">${totalPoints}</div>
+            <div class="stat-label" style="text-align: center; margin-bottom: 20px; color: rgba(255,255,255,0.7);">общий счет</div>
             <div class="info-text">
-              <strong>Правила начисления:</strong><br>
+              <strong style="color: #ffd966;">Правила начисления:</strong><br>
               • 1 км = 10 баллов<br>
               • Бонус за регулярность: +50 баллов за каждую неделю с тренировками<br>
               • Бонус за достижения: +100 баллов за каждый новый рекорд
@@ -1547,15 +1598,15 @@
         
         <div class="container">
           <div class="card">
-            <h2>Способности</h2>
-            <div class="stats-grid">
-              <div class="stat-card"><div class="stat-value">🏃‍♂️</div><div class="stat-label">Выносливость</div><div class="stat-label">Уровень ${enduranceLevel}</div></div>
-              <div class="stat-card"><div class="stat-value">⚡</div><div class="stat-label">Скорость</div><div class="stat-label">Уровень ${speedLevel}</div></div>
-              <div class="stat-card"><div class="stat-value">⛰️</div><div class="stat-label">Сила</div><div class="stat-label">Уровень ${strengthLevel}</div></div>
-              <div class="stat-card"><div class="stat-value">❤️</div><div class="stat-label">Восстановление</div><div class="stat-label">Уровень ${Math.floor(enduranceLevel / 2) + 1}</div></div>
+            <h2 style="color: white;">Способности</h2>
+            <div class="stats-row">
+              <div class="stat-item"><div class="stat-value">🏃‍♂️</div><div class="stat-label">Выносливость</div><div class="stat-label" style="color: #ffd966;">Уровень ${enduranceLevel}</div></div>
+              <div class="stat-item"><div class="stat-value">⚡</div><div class="stat-label">Скорость</div><div class="stat-label" style="color: #ffd966;">Уровень ${speedLevel}</div></div>
+              <div class="stat-item"><div class="stat-value">⛰️</div><div class="stat-label">Сила</div><div class="stat-label" style="color: #ffd966;">Уровень ${strengthLevel}</div></div>
+              <div class="stat-item"><div class="stat-value">❤️</div><div class="stat-label">Восстановление</div><div class="stat-label" style="color: #ffd966;">Уровень ${Math.floor(enduranceLevel / 2) + 1}</div></div>
             </div>
             <div class="info-text" style="margin-top: 20px;">
-              <strong>Как повысить уровень:</strong><br>
+              <strong style="color: #ffd966;">Как повысить уровень:</strong><br>
               • Выносливость: общий километраж (100 км = уровень 2, 200 км = уровень 3)<br>
               • Скорость: средний темп быстрее 5:00/км<br>
               • Сила: количество тренировок (20 тренировок = уровень 2)<br>
@@ -1600,7 +1651,7 @@
         
         <div class="container">
           <div class="card">
-            <h2>⚙️ Настройки профиля</h2>
+            <h2 style="color: white;">⚙️ Настройки профиля</h2>
             
             <div style="margin-bottom: 20px;">
               <label>Имя</label>
@@ -1644,9 +1695,9 @@
           </div>
           
           <div class="card">
-            <h3>ℹ️ Информация</h3>
+            <h3 style="color: white;">ℹ️ Информация</h3>
             <div class="info-text">
-              <strong>Как работают тренировки:</strong><br>
+              <strong style="color: #ffd966;">Как работают тренировки:</strong><br>
               • Ваши тренировки из клуба Strava синхронизируются автоматически<br>
               • Для корректной синхронизации укажите ваш Strava username<br>
               • После сохранения настроек запустите синхронизацию на странице администрирования
@@ -1700,10 +1751,10 @@
       
       if (error) {
         errorDiv.innerHTML = '❌ ' + error.message;
-        errorDiv.style.color = '#e74c3c';
+        errorDiv.style.color = '#ff6b6b';
       } else {
         errorDiv.innerHTML = '✅ Настройки сохранены';
-        errorDiv.style.color = '#1e6f5c';
+        errorDiv.style.color = '#ffd966';
         showToast('Профиль обновлен!', 2000);
         setTimeout(() => { 
           if (errorDiv) errorDiv.innerHTML = ''; 
@@ -1727,29 +1778,29 @@
         
         <div class="container">
           <div class="card">
-            <h2>Управление синхронизацией</h2>
+            <h2 style="color: white;">Управление синхронизацией</h2>
             
             <div style="margin-bottom: 24px;">
               <div style="display: flex; gap: 12px; margin-bottom: 16px;">
-                <button id="check-rate-limit-btn" style="background: #3498db; flex: 1;">📊 Проверить лимиты API</button>
-                <button id="sync-last-btn" style="background: #1e6f5c; flex: 1;">🔄 Синхронизировать</button>
+                <button id="check-rate-limit-btn" style="background: linear-gradient(135deg, #3498db, #2980b9); flex: 1;">📊 Проверить лимиты API</button>
+                <button id="sync-last-btn" style="background: linear-gradient(135deg, #ffd966, #ffb347); flex: 1;">🔄 Синхронизировать</button>
               </div>
               
               <div id="rate-limit-info" style="display: none;"></div>
             </div>
             
-            <div style="margin-bottom: 24px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
-              <label style="display: block; margin-bottom: 8px; font-weight: 500;">📅 Синхронизация с выбранной даты:</label>
+            <div style="margin-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+              <label style="display: block; margin-bottom: 8px;">📅 Синхронизация с выбранной даты:</label>
               <input type="date" id="sync-start-date" value="2026-03-20" style="margin-bottom: 12px;">
-              <button id="sync-custom-btn" style="background: #289672;">🔄 Синхронизировать с выбранной даты</button>
+              <button id="sync-custom-btn" style="background: linear-gradient(135deg, #289672, #1e6f5c);">🔄 Синхронизировать с выбранной даты</button>
             </div>
             
             <div id="sync-status" class="sync-status"></div>
             
-            <hr style="margin: 20px 0;">
+            <hr style="margin: 20px 0; border-color: rgba(255,255,255,0.1);">
             
-            <h3>⚙️ Действия</h3>
-            <button id="reset-sync-btn" style="background: #e74c3c;">🗑 Сбросить дату синхронизации</button>
+            <h3 style="color: white;">⚙️ Действия</h3>
+            <button id="reset-sync-btn" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">🗑 Сбросить дату синхронизации</button>
             <div class="info-text" style="margin-top: 12px;">
               ⚠️ Сброс даты заставит систему загружать все активности заново с указанной даты.<br>
               📅 Рекомендуемая дата: 2026-03-20<br>
@@ -1816,37 +1867,37 @@
         
         if (data.success) {
           const percent = data.usagePercent;
-          let color = '#1e6f5c';
-          let bgColor = '#e8f5e9';
+          let color = '#ffd966';
+          let bgColor = 'rgba(255, 217, 102, 0.1)';
           
           if (data.status === 'warning') {
             color = '#e67e22';
-            bgColor = '#fff3e0';
+            bgColor = 'rgba(230, 126, 34, 0.1)';
           } else if (data.status === 'limited') {
             color = '#e74c3c';
-            bgColor = '#ffebee';
+            bgColor = 'rgba(231, 76, 60, 0.1)';
           }
           
           rateLimitDiv.innerHTML = `
             <div style="background: ${bgColor}; border-radius: 20px; padding: 16px; margin-top: 8px;">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <span style="font-weight: 600; color: #2c3e50;">📊 Лимиты Strava API</span>
+                <span style="font-weight: 600; color: white;">📊 Лимиты Strava API</span>
                 <span style="color: ${color}; font-weight: 700;">${data.remaining} / ${data.limit}</span>
               </div>
-              <div style="background: #e2e8f0; border-radius: 10px; height: 8px; overflow: hidden; margin-bottom: 12px;">
+              <div style="background: rgba(255,255,255,0.2); border-radius: 10px; height: 8px; overflow: hidden; margin-bottom: 12px;">
                 <div style="background: ${color}; width: ${percent}%; height: 100%; border-radius: 10px;"></div>
               </div>
-              <div style="font-size: 13px; margin-bottom: 8px;">
+              <div style="font-size: 13px; margin-bottom: 8px; color: white;">
                 <span>📈 Использовано: ${data.used} запросов (${percent}%)</span>
               </div>
-              <div style="font-size: 13px; margin-bottom: 8px;">
+              <div style="font-size: 13px; margin-bottom: 8px; color: white;">
                 <span>⏱ Сброс через: ${data.resetTimeRelative}</span>
               </div>
-              <div style="font-size: 12px; color: #6c7a89;">
+              <div style="font-size: 12px; color: rgba(255,255,255,0.7);">
                 ${data.statusMessage}
               </div>
               ${data.status === 'limited' ? `
-                <div style="margin-top: 12px; padding: 8px; background: rgba(231, 76, 60, 0.1); border-radius: 12px;">
+                <div style="margin-top: 12px; padding: 8px; background: rgba(231, 76, 60, 0.2); border-radius: 12px; color: #ff6b6b;">
                   ⚠️ Лимит исчерпан. Подождите ${data.resetTimeRelative} до следующей синхронизации.
                 </div>
               ` : ''}
@@ -1854,7 +1905,7 @@
           `;
           
           if (syncStatus && data.status === 'limited') {
-            syncStatus.innerHTML = `<div style="color: #e74c3c;">⚠️ Лимит API исчерпан! Синхронизация недоступна. Подождите ${data.resetTimeRelative}.</div>`;
+            syncStatus.innerHTML = `<div style="color: #ff6b6b;">⚠️ Лимит API исчерпан! Синхронизация недоступна. Подождите ${data.resetTimeRelative}.</div>`;
             
             const syncCustomBtn = document.getElementById('sync-custom-btn');
             const syncLastBtn = document.getElementById('sync-last-btn');
@@ -1879,11 +1930,11 @@
         console.error('Error checking rate limit:', error);
         if (rateLimitDiv) {
           rateLimitDiv.innerHTML = `
-            <div style="background: #ffebee; border-radius: 20px; padding: 16px; margin-top: 8px;">
-              <div style="color: #e74c3c;">
+            <div style="background: rgba(231, 76, 60, 0.1); border-radius: 20px; padding: 16px; margin-top: 8px;">
+              <div style="color: #ff6b6b;">
                 ❌ Ошибка проверки лимитов: ${error.message}
               </div>
-              <div style="font-size: 12px; color: #6c7a89; margin-top: 8px;">
+              <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 8px;">
                 Убедитесь, что функция parse-activity развернута и доступна.
               </div>
             </div>
@@ -1921,14 +1972,14 @@
         const result = await response.json();
         
         if (result.success) {
-          statusDiv.innerHTML = `<div style="color: #1e6f5c;">✅ Синхронизировано ${result.saved} тренировок из ${result.total} активностей</div>`;
+          statusDiv.innerHTML = `<div style="color: #ffd966;">✅ Синхронизировано ${result.saved} тренировок из ${result.total} активностей</div>`;
           showToast(`Синхронизация завершена! Добавлено ${result.saved} тренировок`, 4000);
         } else {
           throw new Error(result.error || 'Неизвестная ошибка');
         }
       } catch (error) {
         console.error('Sync error:', error);
-        statusDiv.innerHTML = `<div style="color: #e74c3c;">❌ ${error.message || 'Ошибка соединения'}</div>`;
+        statusDiv.innerHTML = `<div style="color: #ff6b6b;">❌ ${error.message || 'Ошибка соединения'}</div>`;
         showToast(`Ошибка синхронизации: ${error.message}`, 5000);
       } finally {
         if (syncCustomBtn) syncCustomBtn.disabled = false;
@@ -1975,7 +2026,7 @@
         if (result.success) {
           showToast(`Дата синхронизации сброшена на ${result.newDate}`, 3000);
           if (statusDiv) {
-            statusDiv.innerHTML = `<div style="color: #1e6f5c;">✅ Дата синхронизации сброшена на ${result.newDate}</div>`;
+            statusDiv.innerHTML = `<div style="color: #ffd966;">✅ Дата синхронизации сброшена на ${result.newDate}</div>`;
           }
         } else {
           throw new Error(result.error);
@@ -1984,7 +2035,7 @@
         console.error('Error resetting sync date:', error);
         showToast(`Ошибка сброса даты: ${error.message}`, 5000);
         if (statusDiv) {
-          statusDiv.innerHTML = `<div style="color: #e74c3c;">❌ ${error.message}</div>`;
+          statusDiv.innerHTML = `<div style="color: #ff6b6b;">❌ ${error.message}</div>`;
         }
       } finally {
         if (resetBtn) {
@@ -1992,6 +2043,17 @@
           resetBtn.innerHTML = '🗑 Сбросить дату синхронизации';
         }
       }
+    }
+    
+    async function loadAllActivities() {
+      const { data, error } = await sb
+        .from('activities')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .order('activity_date', { ascending: false });
+      
+      if (error) return [];
+      return data || [];
     }
     
     async function renderUserProfile() {
@@ -2035,15 +2097,15 @@
         
         <div class="container">
           <div class="card">
-            <div class="stats-grid">
-              <div class="stat-card"><div class="stat-value">${totalKm}</div><div class="stat-label">км всего</div></div>
-              <div class="stat-card"><div class="stat-value">${trainingsCount}</div><div class="stat-label">тренировок</div></div>
-              <div class="stat-card"><div class="stat-value">${formatDuration(totalTime)}</div><div class="stat-label">общее время</div></div>
+            <div class="stats-row">
+              <div class="stat-item"><div class="stat-value">${totalKm}</div><div class="stat-label">км всего</div></div>
+              <div class="stat-item"><div class="stat-value">${trainingsCount}</div><div class="stat-label">тренировок</div></div>
+              <div class="stat-item"><div class="stat-value">${formatDuration(totalTime)}</div><div class="stat-label">общее время</div></div>
             </div>
           </div>
           
           <div class="card">
-            <h3>Последние тренировки</h3>
+            <h3 style="color: white;">Последние тренировки</h3>
             <div class="activities-list">
               ${(activities || []).map(a => `
                 <div class="activity-item">
@@ -2056,7 +2118,7 @@
                     </div>
                   </div>
                 </div>
-              `).join('') || '<div style="text-align:center; color:#8ba0ae; padding:20px;">Нет тренировок</div>'}
+              `).join('') || '<div style="text-align:center; color:rgba(255,255,255,0.6); padding:20px;">Нет тренировок</div>'}
             </div>
             <div class="show-all" onclick="navigateTo('home')">← Назад на главную</div>
           </div>
