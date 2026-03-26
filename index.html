@@ -752,15 +752,16 @@ async function handleStravaCallback() {
   const urlParams = new URLSearchParams(window.location.search)
   const code = urlParams.get('code')
   if (code) {
-    const userId = sessionStorage.getItem('strava_user_id')
+    const userId = currentUser?.id
     if (userId) {
       const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/auth/strava/callback?code=${code}&user_id=${userId}`)
       const result = await response.json()
       if (result.success) {
-        // Сохраняем токен в localStorage или базе
-        localStorage.setItem('strava_token', result.token)
+        // Сохраняем токен в localStorage
+        localStorage.setItem('strava_token', result.access_token)
+        localStorage.setItem('strava_refresh_token', result.refresh_token)
         alert('Strava успешно подключена!')
-        window.location.href = '/'
+        window.location.href = window.location.pathname
       }
     }
   }
