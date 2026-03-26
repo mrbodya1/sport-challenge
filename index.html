@@ -126,6 +126,23 @@
       gap: 8px;
     }
 
+    /* Скелетон анимация */
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 12px;
+    }
+
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -157,6 +174,10 @@
       font-size: 12px;
       color: #6c7a89;
       margin-top: 6px;
+    }
+
+    .stat-skeleton {
+      height: 70px;
     }
 
     .places-grid {
@@ -309,11 +330,6 @@
       box-shadow: 0 0 0 3px rgba(30, 111, 92, 0.1);
     }
 
-    input[type="date"] {
-      position: relative;
-      color: #2c3e50;
-    }
-
     button {
       background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
       color: white;
@@ -340,6 +356,25 @@
       opacity: 0.5;
       cursor: not-allowed;
       transform: none;
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #289672 0%, #1e6f5c 100%);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #1e6f5c;
+      color: #1e6f5c;
+    }
+
+    .btn-outline:hover {
+      background: #1e6f5c;
+      color: white;
     }
 
     .error {
@@ -543,6 +578,14 @@
       border-radius: 12px;
     }
 
+    .strava-username-input {
+      margin-top: 12px;
+    }
+
+    .strava-username-input input {
+      margin-bottom: 8px;
+    }
+
     @media (max-width: 600px) {
       .stats-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -583,6 +626,7 @@
     let leaderboardSort = 'total_km';
     let leaderboardOrder = 'desc';
     let isAdmin = false;
+    let hasActivities = false;
     
     // ============= ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =============
     
@@ -704,11 +748,12 @@
       const password = document.getElementById('reg-password').value;
       const firstName = document.getElementById('reg-firstname').value;
       const lastName = document.getElementById('reg-lastname').value;
+      const stravaUsername = document.getElementById('reg-strava-username').value;
       const gender = document.getElementById('reg-gender').value;
       const birthDate = document.getElementById('reg-birthdate').value;
       const errorDiv = document.getElementById('register-error');
       
-      if (!username || !password || !firstName || !lastName || !gender || !birthDate) {
+      if (!username || !password || !firstName || !lastName || !stravaUsername || !gender || !birthDate) {
         errorDiv.innerHTML = '❌ Заполните все поля';
         return;
       }
@@ -724,6 +769,7 @@
             first_name: firstName,
             last_name: lastName,
             name_full: `${firstName} ${lastName}`,
+            strava_username: stravaUsername,
             gender: gender,
             birth_date: birthDate
           }
@@ -794,13 +840,14 @@
     
     async function syncClubActivities(customDate = null) {
       const syncBtn = document.getElementById('sync-btn');
-      const syncCustomBtn = document.getElementById('sync-custom-btn');
       const statusDiv = document.getElementById('sync-status');
       
       if (!statusDiv) return;
       
-      if (syncBtn) syncBtn.disabled = true;
-      if (syncCustomBtn) syncCustomBtn.disabled = true;
+      if (syncBtn) {
+        syncBtn.disabled = true;
+        syncBtn.innerHTML = '<span class="loader"></span> Синхронизация...';
+      }
       
       statusDiv.innerHTML = '<div class="loader"></div> Синхронизация с клубом Strava...';
       
@@ -835,20 +882,16 @@
               ✅ <strong>Синхронизация завершена!</strong><br>
               📊 Загружено: ${result.total} активностей<br>
               💾 Сохранено: ${result.saved} новых тренировок<br>
-              ⏭ Пропущено: ${result.skipped || 0} (дубликаты)<br>
-              ❌ Ошибок: ${result.errors || 0}<br>
+              ⏭ Пропущено: ${result.skipped || 0}<br>
               📅 Период: ${result.fromDate} → ${result.toDate}<br>
-              📄 Страниц: ${result.pagesLoaded || 0}<br>
               ⏱ Время: ${result.durationSeconds || 0} сек.
+              ${result.missingUsernames && result.missingUsernames.length > 0 ? `<br>👥 Не найдены: ${result.missingUsernames.join(', ')}` : ''}
             </div>
           `;
           showToast(`Синхронизация завершена! Добавлено ${result.saved} тренировок`, 4000);
           
           // Обновляем данные
-          await loadStats();
-          await loadActivities();
-          await loadLeaderboard();
-          await loadSyncStatus();
+          await loadAllData();
         } else {
           throw new Error(result.error || 'Неизвестная ошибка');
         }
@@ -857,136 +900,119 @@
         statusDiv.innerHTML = `<div style="color: #e74c3c;">❌ ${error.message || 'Ошибка соединения'}</div>`;
         showToast(`Ошибка синхронизации: ${error.message}`, 5000);
       } finally {
-        if (syncBtn) syncBtn.disabled = false;
-        if (syncCustomBtn) syncCustomBtn.disabled = false;
+        if (syncBtn) {
+          syncBtn.disabled = false;
+          syncBtn.innerHTML = '🔄 Синхронизировать с клубом';
+        }
         
         setTimeout(() => {
           if (statusDiv && statusDiv.innerHTML && !statusDiv.innerHTML.includes('Синхронизация завершена')) {
             statusDiv.innerHTML = '';
           }
-        }, 10000);
+        }, 8000);
       }
     }
     
-    async function syncWithSelectedDate() {
-      const startDate = document.getElementById('sync-start-date')?.value;
-      if (!startDate) {
-        showToast('Выберите дату начала синхронизации', 3000);
-        return;
-      }
-      await syncClubActivities(startDate);
-    }
-    
-    async function loadSyncStatus() {
-      try {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/sync/status`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' }
-        });
-        
-        if (!response.ok) return null;
-        
-        const status = await response.json();
-        
-        const statusDiv = document.getElementById('sync-info');
-        if (statusDiv && status.lastSync) {
-          statusDiv.innerHTML = `
-            <div class="info-text">
-              📅 Текущая дата синхронизации: ${formatDate(status.lastSync)}<br>
-              🕐 Последнее обновление: ${status.lastSyncDate ? new Date(status.lastSyncDate).toLocaleString() : '—'}<br>
-              ${status.lastSyncLog ? `
-              📊 Последняя синхронизация: ${new Date(status.lastSyncLog.sync_date).toLocaleString()}<br>
-              📈 Загружено: ${status.lastSyncLog.activities_total} активностей<br>
-              💾 Сохранено: ${status.lastSyncLog.activities_saved} тренировок<br>
-              ⏱ Длительность: ${status.lastSyncLog.duration_seconds} сек.
-              ` : ''}
-            </div>
-          `;
-        }
-        
-        return status;
-      } catch (error) {
-        console.error('Error getting sync status:', error);
-        return null;
-      }
-    }
-    
-    // Функция сброса даты синхронизации
-    async function resetSyncDate() {
-      const newDate = prompt('Введите новую дату начала синхронизации (ГГГГ-ММ-ДД):\n\nФормат: 2026-03-01', '2026-03-01');
-      if (!newDate) return;
-      
-      // Проверяем формат даты
-      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-      if (!dateRegex.test(newDate)) {
-        showToast('Неверный формат даты. Используйте ГГГГ-ММ-ДД', 3000);
+    async function saveStravaUsername() {
+      const stravaUsername = document.getElementById('strava-username-input')?.value;
+      if (!stravaUsername) {
+        showToast('Введите Strava username', 3000);
         return;
       }
       
-      if (!isAdmin) {
-        showToast('У вас нет прав для этой операции', 3000);
-        return;
-      }
-      
-      const resetBtn = document.getElementById('reset-sync-btn');
-      const statusDiv = document.getElementById('sync-status');
-      
-      if (resetBtn) {
-        resetBtn.disabled = true;
-        resetBtn.textContent = '🔄 Сброс...';
-      }
-      
-      if (statusDiv) {
-        statusDiv.innerHTML = '<div class="loader"></div> Сброс даты синхронизации...';
+      const saveBtn = document.getElementById('save-strava-btn');
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<span class="loader"></span> Сохранение...';
       }
       
       try {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/sync/reset`, {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/user/update-strava-username`, {
           method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ date: newDate })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: currentUser.id, stravaUsername })
         });
-        
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || `HTTP ${response.status}`);
-        }
         
         const result = await response.json();
         
         if (result.success) {
-          showToast(`Дата синхронизации сброшена на ${result.newDate}`, 3000);
+          showToast(`Strava username сохранен: ${stravaUsername}`, 3000);
+          const statusDiv = document.getElementById('strava-status');
           if (statusDiv) {
-            statusDiv.innerHTML = `<div style="color: #1e6f5c;">✅ Дата синхронизации сброшена на ${result.newDate}</div>`;
+            statusDiv.innerHTML = `<div style="color: #1e6f5c;">✅ Strava username сохранен: ${stravaUsername}</div>`;
           }
-          // Обновляем информацию о синхронизации
-          await loadSyncStatus();
         } else {
-          throw new Error(result.error || 'Неизвестная ошибка');
+          throw new Error(result.error);
         }
       } catch (error) {
-        console.error('Error resetting sync date:', error);
-        showToast(`Ошибка сброса даты: ${error.message}`, 5000);
-        if (statusDiv) {
-          statusDiv.innerHTML = `<div style="color: #e74c3c;">❌ ${error.message}</div>`;
-        }
+        console.error('Error saving Strava username:', error);
+        showToast(`Ошибка: ${error.message}`, 3000);
       } finally {
-        if (resetBtn) {
-          resetBtn.disabled = false;
-          resetBtn.textContent = '🗑 Сбросить дату синхронизации';
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = '💾 Сохранить';
         }
-        
-        setTimeout(() => {
-          if (statusDiv && statusDiv.innerHTML && !statusDiv.innerHTML.includes('✅')) {
-            statusDiv.innerHTML = '';
-          }
-        }, 5000);
       }
     }
     
-    // ============= ЗАГРУЗКА ДАННЫХ =============
+    // ============= ЗАГРУЗКА ДАННЫХ С СКЕЛЕТОНАМИ =============
+    
+    function renderSkeleton() {
+      return `
+        <div class="fixed-header">
+          <div class="user-info">
+            <div class="skeleton" style="width: 120px; height: 20px;"></div>
+            <div class="skeleton" style="width: 80px; height: 12px; margin-top: 4px;"></div>
+          </div>
+          <div class="burger">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        
+        <div class="container">
+          <div class="card">
+            <div class="stats-grid">
+              <div class="stat-card"><div class="skeleton stat-skeleton"></div></div>
+              <div class="stat-card"><div class="skeleton stat-skeleton"></div></div>
+              <div class="stat-card"><div class="skeleton stat-skeleton"></div></div>
+              <div class="stat-card"><div class="skeleton stat-skeleton"></div></div>
+            </div>
+            <div class="places-grid">
+              <div class="place-card"><div class="skeleton" style="height: 50px;"></div></div>
+              <div class="place-card"><div class="skeleton" style="height: 50px;"></div></div>
+              <div class="place-card"><div class="skeleton" style="height: 50px;"></div></div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="skeleton" style="height: 80px;"></div>
+          </div>
+          
+          <div class="chart">
+            <div class="skeleton" style="height: 200px;"></div>
+          </div>
+          
+          <div class="card">
+            <div class="skeleton" style="height: 300px;"></div>
+          </div>
+          
+          <div class="card">
+            <div class="skeleton" style="height: 300px;"></div>
+          </div>
+        </div>
+      `;
+    }
+    
+    async function loadAllData() {
+      await Promise.all([
+        loadProfile(),
+        loadStats(),
+        loadPlaces(),
+        loadWeeklyChart(),
+        loadActivities(),
+        loadLeaderboard()
+      ]);
+    }
     
     async function loadProfile() {
       const { data, error } = await sb
@@ -1037,7 +1063,11 @@
       };
     }
     
-    async function loadPlaces(profile) {
+    async function loadPlaces(profile = null) {
+      if (!profile) {
+        profile = await loadProfile();
+      }
+      
       const { data: leaderboard, error } = await sb
         .from('leaderboard')
         .select('*')
@@ -1112,11 +1142,6 @@
     }
     
     async function loadActivities(limit = 20) {
-      const container = document.getElementById('activities-list');
-      if (!container) return;
-      
-      container.innerHTML = '<div style="text-align:center; padding:20px;"><span class="loader"></span> Загрузка...</div>';
-      
       const { data, error } = await sb
         .from('activities')
         .select('*')
@@ -1124,88 +1149,34 @@
         .order('activity_date', { ascending: false })
         .limit(limit);
       
-      if (error || !data || data.length === 0) {
-        container.innerHTML = '<div style="text-align:center; color:#8ba0ae; padding:40px;">📭 Нет тренировок<br><small>Присоединитесь к клубу Strava, чтобы тренировки автоматически загружались</small></div>';
-        return;
-      }
-      
-      container.innerHTML = data.map(a => `
-        <div class="activity-item">
-          <div class="activity-info">
-            <div class="activity-name">${escapeHtml(a.name || 'Без названия')}</div>
-            <div class="activity-meta">
-              ${formatDate(a.activity_date)} | ${(a.distance_km || 0).toFixed(2)} км
-              ${a.duration_min ? ' | ' + formatDuration(a.duration_min) : ''}
-              ${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}
-              ${a.url ? `<a href="${escapeHtml(a.url)}" target="_blank" style="color: #1e6f5c; margin-left: 8px;">🔗 Strava</a>` : ''}
-            </div>
-          </div>
-        </div>
-      `).join('');
+      if (error) return [];
+      return data || [];
     }
     
     async function loadLeaderboard(limit = 100) {
-      const container = document.getElementById('leaderboard-list');
-      if (!container) return;
-      
-      container.innerHTML = '<div style="text-align:center; padding:20px;"><span class="loader"></span> Загрузка...</div>';
-      
       const { data, error } = await sb
         .from('leaderboard')
         .select('*')
         .order(leaderboardSort, { ascending: leaderboardOrder === 'asc' })
         .limit(limit);
       
-      if (error || !data || data.length === 0) {
-        container.innerHTML = '<div style="text-align:center; color:#8ba0ae; padding:40px;">🏆 Нет данных для рейтинга</div>';
-        return;
-      }
-      
-      const getMedalBadge = (position) => {
-        if (position === 0) return '<span class="badge badge-gold">🥇</span>';
-        if (position === 1) return '<span class="badge badge-silver">🥈</span>';
-        if (position === 2) return '<span class="badge badge-bronze">🥉</span>';
-        return '';
-      };
-      
-      container.innerHTML = `
-        <div style="overflow-x: auto;">
-          <table class="leaderboard-table">
-            <thead>
-              <tr>
-                <th onclick="changeLeaderboardSort('position')">🥇 Место</th>
-                <th onclick="changeLeaderboardSort('participant')">Участник</th>
-                <th onclick="changeLeaderboardSort('total_km')">🏃 Км</th>
-                <th onclick="changeLeaderboardSort('activities_count')">📊 Тренировок</th>
-                <th onclick="changeLeaderboardSort('total_time_min')">⏱ Время</th>
-                <th onclick="changeLeaderboardSort('avg_pace_seconds')">⚡ Темп</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${data.map((item, idx) => `
-                <tr class="leaderboard-row" onclick="navigateTo('userProfile', '${item.user_id}')">
-                  <td><strong>${idx + 1}</strong> ${getMedalBadge(idx)}</td>
-                  <td><strong>${escapeHtml(item.participant)}</strong></td>
-                  <td><strong>${(item.total_km || 0).toFixed(2)}</strong></td>
-                  <td>${item.activities_count || 0}</td>
-                  <td>${Math.floor((item.total_time_min || 0) / 60)}ч ${(item.total_time_min || 0) % 60}мин</td>
-                  <td>${formatPaceFromSeconds(item.avg_pace_seconds) || '—'}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
+      if (error) return [];
+      return data || [];
     }
     
-    function changeLeaderboardSort(field) {
-      if (leaderboardSort === field) {
-        leaderboardOrder = leaderboardOrder === 'desc' ? 'asc' : 'desc';
-      } else {
-        leaderboardSort = field;
-        leaderboardOrder = 'desc';
+    async function loadSyncStatus() {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/sync/status`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        if (!response.ok) return null;
+        return await response.json();
+      } catch (error) {
+        console.error('Error getting sync status:', error);
+        return null;
       }
-      loadLeaderboard();
     }
     
     // ============= ОТРИСОВКА СТРАНИЦ =============
@@ -1233,6 +1204,13 @@
               <input type="text" id="reg-username" placeholder="Логин" autocomplete="username">
               <input type="text" id="reg-firstname" placeholder="Имя">
               <input type="text" id="reg-lastname" placeholder="Фамилия">
+              <div class="info-text" style="margin-bottom: 8px;">
+                🔍 Как найти Strava username:<br>
+                1. Зайдите в Strava → Настройки<br>
+                2. Найдите поле "Custom URL"<br>
+                3. Скопируйте значение (например: fedor_stroitel)
+              </div>
+              <input type="text" id="reg-strava-username" placeholder="Strava username" autocomplete="off">
               <select id="reg-gender">
                 <option value="">Пол</option>
                 <option value="male">Мужчина</option>
@@ -1257,11 +1235,65 @@
     }
     
     async function renderHome() {
-      const profile = await loadProfile();
-      const stats = await loadStats();
-      const places = await loadPlaces(profile);
-      const weeklyData = await loadWeeklyChart();
+      // Показываем скелетон
+      document.getElementById('app').innerHTML = renderSkeleton();
+      
+      // Загружаем все данные параллельно
+      const [profile, stats, places, weeklyData, activities, leaderboard, syncStatus] = await Promise.all([
+        loadProfile(),
+        loadStats(),
+        loadPlaces(),
+        loadWeeklyChart(),
+        loadActivities(20),
+        loadLeaderboard(50),
+        isAdmin ? loadSyncStatus() : null
+      ]);
+      
       const maxKm = Math.max(...weeklyData.map(d => d.km), 1);
+      hasActivities = activities && activities.length > 0;
+      
+      const leaderboardHtml = leaderboard && leaderboard.length > 0 ? `
+        <div style="overflow-x: auto;">
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th onclick="changeLeaderboardSort('position')">🥇 Место</th>
+                <th onclick="changeLeaderboardSort('participant')">Участник</th>
+                <th onclick="changeLeaderboardSort('total_km')">🏃 Км</th>
+                <th onclick="changeLeaderboardSort('activities_count')">📊 Тренировок</th>
+                <th onclick="changeLeaderboardSort('total_time_min')">⏱ Время</th>
+                <th onclick="changeLeaderboardSort('avg_pace_seconds')">⚡ Темп</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${leaderboard.slice(0, 10).map((item, idx) => `
+                <tr class="leaderboard-row" onclick="navigateTo('userProfile', '${item.user_id}')">
+                  <td><strong>${idx + 1}</strong></td>
+                  <td><strong>${escapeHtml(item.participant)}</strong></td>
+                  <td><strong>${(item.total_km || 0).toFixed(2)}</strong></td>
+                  <td>${item.activities_count || 0}</td>
+                  <td>${Math.floor((item.total_time_min || 0) / 60)}ч ${(item.total_time_min || 0) % 60}мин</td>
+                  <td>${formatPaceFromSeconds(item.avg_pace_seconds) || '—'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      ` : '<div style="text-align:center; color:#8ba0ae; padding:40px;">🏆 Нет данных для рейтинга</div>';
+      
+      const activitiesHtml = activities && activities.length > 0 ? activities.slice(0, 5).map(a => `
+        <div class="activity-item">
+          <div class="activity-info">
+            <div class="activity-name">${escapeHtml(a.name || 'Без названия')}</div>
+            <div class="activity-meta">
+              ${formatDate(a.activity_date)} | ${(a.distance_km || 0).toFixed(2)} км
+              ${a.duration_min ? ' | ' + formatDuration(a.duration_min) : ''}
+              ${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}
+              ${a.url ? `<a href="${escapeHtml(a.url)}" target="_blank" style="color: #1e6f5c; margin-left: 8px;">🔗 Strava</a>` : ''}
+            </div>
+          </div>
+        </div>
+      `).join('') : '<div style="text-align:center; color:#8ba0ae; padding:40px;">📭 Нет тренировок<br><small>Присоединитесь к клубу Strava, чтобы тренировки автоматически загружались</small></div>';
       
       document.getElementById('app').innerHTML = `
         <div class="fixed-header">
@@ -1271,6 +1303,7 @@
               ${profile?.gender === 'male' ? 'Мужчина' : profile?.gender === 'female' ? 'Женщина' : '—'}, 
               ${profile?.birth_date ? Math.floor((new Date() - new Date(profile.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : '—'} лет
               ${profile?.city ? ` | ${escapeHtml(profile.city)}` : ''}
+              ${profile?.strava_username ? ` | Strava: @${escapeHtml(profile.strava_username)}` : ''}
             </div>
           </div>
           <div class="burger" onclick="openMenu()">
@@ -1300,18 +1333,24 @@
             <a href="https://www.strava.com/clubs/2034009" target="_blank" class="club-link">
               Перейти в клуб Strava
             </a>
-            ${isAdmin ? `
+            
+            ${!profile?.strava_username ? `
+              <div class="strava-username-input">
+                <div class="info-text" style="margin-bottom: 8px;">
+                  🔍 Для автоматического импорта тренировок укажите ваш Strava username:
+                </div>
+                <input type="text" id="strava-username-input" placeholder="Strava username (например: fedor_stroitel)">
+                <button id="save-strava-btn" class="btn-outline" style="background: white;">💾 Сохранить Strava username</button>
+                <div id="strava-status"></div>
+              </div>
+            ` : ''}
+            
+            ${isAdmin && !hasActivities ? `
               <div style="margin-top: 16px;">
-                <button id="sync-btn" style="background: #1e6f5c; margin-bottom: 8px;">🔄 Синхронизировать (последняя дата)</button>
-                <div id="sync-info" class="info-text"></div>
-                <button id="reset-sync-btn" style="background: #e74c3c; margin-top: 8px;">🗑 Сбросить дату синхронизации</button>
+                <button id="sync-btn" style="background: #1e6f5c;">🔄 Синхронизировать с клубом</button>
+                <div id="sync-status" class="sync-status"></div>
               </div>
-              <div id="sync-status" class="sync-status"></div>
-            ` : `
-              <div class="info-text" style="margin-top: 12px;">
-                ℹ️ Синхронизация доступна только администраторам
-              </div>
-            `}
+            ` : ''}
           </div>
           
           <div class="chart">
@@ -1329,13 +1368,13 @@
           
           <div class="card">
             <h3>📋 Мои тренировки</h3>
-            <div id="activities-list" class="activities-list"></div>
-            <div class="show-all" onclick="loadActivities(100)">Показать все →</div>
+            <div id="activities-list" class="activities-list">${activitiesHtml}</div>
+            ${activities && activities.length > 5 ? `<div class="show-all" onclick="loadActivities(100)">Показать все →</div>` : ''}
           </div>
           
           <div class="card">
             <h3>🏆 Таблица лидеров</h3>
-            <div id="leaderboard-list" class="activities-list"></div>
+            <div id="leaderboard-list" class="activities-list">${leaderboardHtml}</div>
             <div class="show-all" onclick="navigateTo('leaderboard')">Полная таблица →</div>
           </div>
         </div>
@@ -1351,22 +1390,21 @@
         </div>
       `;
       
-      if (isAdmin) {
-        const syncBtn = document.getElementById('sync-btn');
-        if (syncBtn) syncBtn.onclick = () => syncClubActivities();
-        
-        const resetBtn = document.getElementById('reset-sync-btn');
-        if (resetBtn) resetBtn.onclick = () => resetSyncDate();
-        
-        await loadSyncStatus();
+      // Добавляем обработчики
+      const saveBtn = document.getElementById('save-strava-btn');
+      if (saveBtn) {
+        saveBtn.onclick = () => saveStravaUsername();
       }
       
-      await loadActivities();
-      await loadLeaderboard();
+      const syncBtn = document.getElementById('sync-btn');
+      if (syncBtn) {
+        syncBtn.onclick = () => syncClubActivities();
+      }
     }
     
     async function renderSyncPage() {
       const profile = await loadProfile();
+      const syncStatus = await loadSyncStatus();
       
       document.getElementById('app').innerHTML = `
         <div class="fixed-header">
@@ -1385,25 +1423,29 @@
             
             <div style="margin-bottom: 24px;">
               <label style="display: block; margin-bottom: 8px; font-weight: 500;">📅 Дата начала синхронизации:</label>
-              <input type="date" id="sync-start-date" value="2026-03-01" style="margin-bottom: 12px;">
+              <input type="date" id="sync-start-date" value="2026-03-20" style="margin-bottom: 12px;">
               <button id="sync-custom-btn" style="background: #289672; margin-bottom: 8px;">🔄 Синхронизировать с выбранной даты</button>
               <button id="sync-last-btn" style="background: #1e6f5c;">📆 Синхронизировать с последней даты</button>
             </div>
             
             <div id="sync-status" class="sync-status"></div>
             
-            <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
+            <hr style="margin: 20px 0;">
             
             <h3>📊 Текущий статус</h3>
-            <div id="sync-info" class="info-text"></div>
+            <div class="info-text">
+              📅 Текущая дата синхронизации: ${formatDate(syncStatus?.lastSync || '2026-03-20')}<br>
+              🕐 Последнее обновление: ${syncStatus?.lastSyncDate ? new Date(syncStatus.lastSyncDate).toLocaleString() : '—'}<br>
+              👥 Пользователей без Strava username: ${syncStatus?.usersWithoutStrava?.length || 0}
+            </div>
             
             <hr style="margin: 20px 0;">
             
             <h3>⚙️ Действия</h3>
-            <button id="reset-sync-btn" style="background: #e74c3c;">🗑 Сбросить дату синхронизации</button>
+            <button id="reset-sync-btn" class="btn-danger" style="background: #e74c3c;">🗑 Сбросить дату синхронизации</button>
             <div class="info-text" style="margin-top: 12px;">
               ⚠️ Сброс даты заставит систему загружать все активности заново с указанной даты.<br>
-              📅 Рекомендуемая дата: 2026-03-01
+              📅 Рекомендуемая дата: 2026-03-20
             </div>
           </div>
         </div>
@@ -1420,19 +1462,82 @@
       `;
       
       const syncCustomBtn = document.getElementById('sync-custom-btn');
-      if (syncCustomBtn) syncCustomBtn.onclick = () => syncWithSelectedDate();
+      if (syncCustomBtn) syncCustomBtn.onclick = () => {
+        const date = document.getElementById('sync-start-date')?.value;
+        if (date) syncClubActivities(date);
+        else showToast('Выберите дату', 3000);
+      };
       
       const syncLastBtn = document.getElementById('sync-last-btn');
       if (syncLastBtn) syncLastBtn.onclick = () => syncClubActivities();
       
       const resetBtn = document.getElementById('reset-sync-btn');
       if (resetBtn) resetBtn.onclick = () => resetSyncDate();
+    }
+    
+    async function resetSyncDate() {
+      const newDate = prompt('Введите новую дату начала синхронизации (ГГГГ-ММ-ДД):\n\nФормат: 2026-03-20', '2026-03-20');
+      if (!newDate) return;
       
-      await loadSyncStatus();
+      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+      if (!dateRegex.test(newDate)) {
+        showToast('Неверный формат даты. Используйте ГГГГ-ММ-ДД', 3000);
+        return;
+      }
+      
+      const resetBtn = document.getElementById('reset-sync-btn');
+      const statusDiv = document.getElementById('sync-status');
+      
+      if (resetBtn) {
+        resetBtn.disabled = true;
+        resetBtn.innerHTML = '<span class="loader"></span> Сброс...';
+      }
+      
+      if (statusDiv) {
+        statusDiv.innerHTML = '<div class="loader"></div> Сброс даты синхронизации...';
+      }
+      
+      try {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/sync/reset`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ date: newDate })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          showToast(`Дата синхронизации сброшена на ${result.newDate}`, 3000);
+          if (statusDiv) {
+            statusDiv.innerHTML = `<div style="color: #1e6f5c;">✅ Дата синхронизации сброшена на ${result.newDate}</div>`;
+          }
+        } else {
+          throw new Error(result.error);
+        }
+      } catch (error) {
+        console.error('Error resetting sync date:', error);
+        showToast(`Ошибка сброса даты: ${error.message}`, 5000);
+        if (statusDiv) {
+          statusDiv.innerHTML = `<div style="color: #e74c3c;">❌ ${error.message}</div>`;
+        }
+      } finally {
+        if (resetBtn) {
+          resetBtn.disabled = false;
+          resetBtn.innerHTML = '🗑 Сбросить дату синхронизации';
+        }
+      }
     }
     
     async function renderLeaderboardPage() {
       const profile = await loadProfile();
+      const leaderboard = await loadLeaderboard(200);
+      
+      const getMedalBadge = (position) => {
+        if (position === 0) return '<span class="badge badge-gold">🥇</span>';
+        if (position === 1) return '<span class="badge badge-silver">🥈</span>';
+        if (position === 2) return '<span class="badge badge-bronze">🥉</span>';
+        return '';
+      };
       
       document.getElementById('app').innerHTML = `
         <div class="fixed-header">
@@ -1447,7 +1552,32 @@
         <div class="container">
           <div class="card">
             <h2>🏆 Таблица лидеров</h2>
-            <div id="leaderboard-list" class="activities-list"></div>
+            <div style="overflow-x: auto;">
+              <table class="leaderboard-table">
+                <thead>
+                  <tr>
+                    <th onclick="changeLeaderboardSort('position')">🥇 Место</th>
+                    <th onclick="changeLeaderboardSort('participant')">Участник</th>
+                    <th onclick="changeLeaderboardSort('total_km')">🏃 Км</th>
+                    <th onclick="changeLeaderboardSort('activities_count')">📊 Тренировок</th>
+                    <th onclick="changeLeaderboardSort('total_time_min')">⏱ Время</th>
+                    <th onclick="changeLeaderboardSort('avg_pace_seconds')">⚡ Темп</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${leaderboard.map((item, idx) => `
+                    <tr class="leaderboard-row" onclick="navigateTo('userProfile', '${item.user_id}')">
+                      <td><strong>${idx + 1}</strong> ${getMedalBadge(idx)}</td>
+                      <td><strong>${escapeHtml(item.participant)}</strong></td>
+                      <td><strong>${(item.total_km || 0).toFixed(2)}</strong></td>
+                      <td>${item.activities_count || 0}</td>
+                      <td>${Math.floor((item.total_time_min || 0) / 60)}ч ${(item.total_time_min || 0) % 60}мин</td>
+                      <td>${formatPaceFromSeconds(item.avg_pace_seconds) || '—'}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
         
@@ -1461,8 +1591,6 @@
           <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
         </div>
       `;
-      
-      loadLeaderboard(200);
     }
     
     async function renderSettingsPage() {
@@ -1493,6 +1621,7 @@
             </select>
             <input type="date" id="settings-birthdate" placeholder="Дата рождения" value="${profile?.birth_date || ''}">
             <input type="text" id="settings-city" placeholder="Город" value="${escapeHtml(profile?.city || '')}">
+            <input type="text" id="settings-strava-username" placeholder="Strava username" value="${escapeHtml(profile?.strava_username || '')}">
             <button onclick="saveSettings()">💾 Сохранить изменения</button>
             <div id="settings-error" class="error"></div>
           </div>
@@ -1516,6 +1645,7 @@
       const gender = document.getElementById('settings-gender')?.value || '';
       const birthDate = document.getElementById('settings-birthdate')?.value || '';
       const city = document.getElementById('settings-city')?.value || '';
+      const stravaUsername = document.getElementById('settings-strava-username')?.value || '';
       const errorDiv = document.getElementById('settings-error');
       
       if (!errorDiv) return;
@@ -1529,6 +1659,7 @@
           gender: gender,
           birth_date: birthDate,
           city: city,
+          strava_username: stravaUsername || null,
           updated_at: new Date().toISOString()
         })
         .eq('id', currentUser.id);
@@ -1578,6 +1709,7 @@
               ${profile.gender === 'male' ? 'Мужчина' : profile.gender === 'female' ? 'Женщина' : '—'}, 
               ${profile.birth_date ? Math.floor((new Date() - new Date(profile.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : '—'} лет
               ${profile.city ? ` | ${escapeHtml(profile.city)}` : ''}
+              ${profile.strava_username ? ` | Strava: @${escapeHtml(profile.strava_username)}` : ''}
             </div>
           </div>
           <div class="burger" onclick="openMenu()">
@@ -1626,6 +1758,20 @@
       `;
     }
     
+    function changeLeaderboardSort(field) {
+      if (leaderboardSort === field) {
+        leaderboardOrder = leaderboardOrder === 'desc' ? 'asc' : 'desc';
+      } else {
+        leaderboardSort = field;
+        leaderboardOrder = 'desc';
+      }
+      if (currentPage === 'leaderboard') {
+        renderLeaderboardPage();
+      } else {
+        renderHome();
+      }
+    }
+    
     async function initSession() {
       const { data: { session } } = await sb.auth.getSession();
       if (session) {
@@ -1656,13 +1802,13 @@
       }
     }
     
-    // Делаем функции глобальными для доступа из HTML
+    // Делаем функции глобальными
     window.register = register;
     window.login = login;
     window.logout = logout;
     window.syncClubActivities = syncClubActivities;
-    window.syncWithSelectedDate = syncWithSelectedDate;
     window.resetSyncDate = resetSyncDate;
+    window.saveStravaUsername = saveStravaUsername;
     window.navigateTo = navigateTo;
     window.openMenu = openMenu;
     window.closeMenu = closeMenu;
