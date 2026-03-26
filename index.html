@@ -192,6 +192,33 @@
       margin-top: 6px;
     }
 
+    .info-block {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .info-card {
+      flex: 1;
+      background: white;
+      padding: 16px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .info-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: #1e6f5c;
+    }
+
+    .info-label {
+      font-size: 12px;
+      color: #6c7a89;
+      margin-top: 4px;
+    }
+
     .places-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -223,6 +250,113 @@
       font-size: 18px;
       font-weight: 700;
       color: #1e6f5c;
+    }
+
+    .leaderboard-preview {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .leaderboard-preview-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 20px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .leaderboard-preview-item:hover {
+      background: #f1f5f9;
+      transform: translateX(4px);
+    }
+
+    .leaderboard-rank {
+      width: 40px;
+      font-weight: 700;
+      font-size: 18px;
+      color: #1e6f5c;
+    }
+
+    .leaderboard-name {
+      flex: 1;
+      font-weight: 500;
+    }
+
+    .leaderboard-distance {
+      font-weight: 700;
+      color: #1e6f5c;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+    .badge-gold {
+      background: #ffd700;
+      color: #8b6b00;
+    }
+
+    .badge-silver {
+      background: #c0c0c0;
+      color: #5a5a5a;
+    }
+
+    .badge-bronze {
+      background: #cd7f32;
+      color: #5a3a1a;
+    }
+
+    .news-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .news-item {
+      background: #f8fafc;
+      padding: 12px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .news-icon {
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .news-content {
+      flex: 1;
+    }
+
+    .news-text {
+      font-size: 14px;
+      color: #2c3e50;
+      margin-bottom: 4px;
+    }
+
+    .news-time {
+      font-size: 10px;
+      color: #8ba0ae;
     }
 
     .chart {
@@ -361,12 +495,6 @@
       transition: all 0.2s;
     }
 
-    input:focus, select:focus {
-      outline: none;
-      border-color: #1e6f5c;
-      box-shadow: 0 0 0 3px rgba(30, 111, 92, 0.1);
-    }
-
     button {
       background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
       color: white;
@@ -385,25 +513,11 @@
       box-shadow: 0 4px 12px rgba(30, 111, 92, 0.3);
     }
 
-    button:active {
-      transform: translateY(0);
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
     .error {
       color: #e74c3c;
       margin-top: 12px;
       font-size: 14px;
       text-align: center;
-    }
-
-    .success {
-      color: #1e6f5c;
     }
 
     .loader {
@@ -422,6 +536,11 @@
       to { transform: rotate(360deg); }
     }
 
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .menu-overlay {
       position: fixed;
       top: 0;
@@ -432,11 +551,6 @@
       z-index: 200;
       display: none;
       animation: fadeIn 0.3s;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
     }
 
     .menu {
@@ -511,30 +625,6 @@
       transform: translateX(2px);
     }
 
-    .badge {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 10px;
-      font-weight: 600;
-      margin-left: 8px;
-    }
-
-    .badge-gold {
-      background: #ffd700;
-      color: #8b6b00;
-    }
-
-    .badge-silver {
-      background: #c0c0c0;
-      color: #5a5a5a;
-    }
-
-    .badge-bronze {
-      background: #cd7f32;
-      color: #5a3a1a;
-    }
-
     .info-text {
       font-size: 12px;
       color: #6c7a89;
@@ -547,6 +637,10 @@
     @media (max-width: 600px) {
       .stats-grid {
         grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .info-block {
+        flex-direction: column;
       }
       
       .places-grid {
@@ -562,10 +656,6 @@
         white-space: normal;
         text-align: center;
         max-width: 90%;
-      }
-
-      .filter-bar select {
-        min-width: 100px;
       }
     }
   </style>
@@ -590,6 +680,15 @@
     let isAdmin = false;
     let leaderboardFilterGender = 'all';
     let leaderboardFilterAge = 'all';
+    
+    // Моковые данные для новостей (позже заменим на реальные из БД)
+    let newsFeed = [
+      { id: 1, type: 'points', user: 'Анна С.', text: 'набрала 150 баллов за неделю', time: '5 минут назад', icon: '⭐' },
+      { id: 2, type: 'achievement', user: 'Дмитрий П.', text: 'получил достижение "10 км"', time: '2 часа назад', icon: '🏅' },
+      { id: 3, type: 'ability', user: 'Елена К.', text: 'повысила уровень "Выносливость" до 3', time: 'вчера', icon: '⚡' },
+      { id: 4, type: 'points', user: 'Иван С.', text: 'набрал 500 баллов и вошел в топ-10', time: 'вчера', icon: '⭐' },
+      { id: 5, type: 'achievement', user: 'Мария И.', text: 'получила достижение "Марафон"', time: '2 дня назад', icon: '🏅' },
+    ];
     
     // ============= ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =============
     
@@ -1003,7 +1102,7 @@
               <input type="text" id="reg-firstname" placeholder="Имя">
               <input type="text" id="reg-lastname" placeholder="Фамилия">
               <div class="info-text" style="margin-bottom: 8px;">
-                Как найти Strava username: зайдите в Strava → Настройки → Custom URL (то, что после /athletes/)
+                Как найти Strava username: зайдите в Strava → Настройки → Custom URL
               </div>
               <input type="text" id="reg-strava-username" placeholder="Strava username" autocomplete="off">
               <select id="reg-gender">
@@ -1049,23 +1148,20 @@
           </div>
           
           <div class="card" id="stats-card">
+            <div class="skeleton" style="height: 120px;"></div>
+          </div>
+          
+          <div class="info-block" id="info-block">
+            <div class="skeleton" style="height: 80px; flex:1;"></div>
+            <div class="skeleton" style="height: 80px; flex:1;"></div>
+          </div>
+          
+          <div class="card" id="leaderboard-preview">
             <div class="skeleton" style="height: 200px;"></div>
           </div>
           
-          <div class="card" id="places-card">
-            <div class="skeleton" style="height: 100px;"></div>
-          </div>
-          
-          <div class="card" id="abilities-card">
-            <div class="skeleton" style="height: 150px;"></div>
-          </div>
-          
-          <div class="card" id="achievements-card">
-            <div class="skeleton" style="height: 150px;"></div>
-          </div>
-          
-          <div class="card" id="points-card">
-            <div class="skeleton" style="height: 100px;"></div>
+          <div class="card" id="news-feed">
+            <div class="skeleton" style="height: 300px;"></div>
           </div>
           
           <div class="chart" id="chart-card">
@@ -1073,10 +1169,6 @@
           </div>
           
           <div class="card" id="activities-card">
-            <div class="skeleton" style="height: 300px;"></div>
-          </div>
-          
-          <div class="card" id="leaderboard-card">
             <div class="skeleton" style="height: 300px;"></div>
           </div>
         </div>
@@ -1097,13 +1189,24 @@
       
       const profile = await loadProfile();
       const stats = await loadStats();
-      const places = await loadPlaces(profile);
       const weeklyData = await loadWeeklyChart();
       const maxKm = Math.max(...weeklyData.map(d => d.km), 1);
       const activities = await loadActivities(5);
-      const leaderboard = await loadLeaderboard(10);
+      const totalPoints = Math.floor(stats.totalKm * 10);
+      const totalAchievements = Math.floor(stats.trainingsCount / 5);
+      const maxAchievements = 20;
       
-      const getMedalBadge = (position) => {
+      // Получаем топ-3 по абсолю
+      const allLeaderboard = await loadLeaderboard(100);
+      const top3Absolute = allLeaderboard.slice(0, 3);
+      
+      // Получаем топ-3 в возрастной группе пользователя
+      const userAge = profile?.birth_date ? Math.floor((new Date() - new Date(profile.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : null;
+      const userAgeGroup = getAgeGroup(userAge);
+      const ageLeaderboard = allLeaderboard.filter(l => l.age_group === userAgeGroup);
+      const top3Age = ageLeaderboard.slice(0, 3);
+      
+      const getRankBadge = (position) => {
         if (position === 0) return '<span class="badge badge-gold">🥇</span>';
         if (position === 1) return '<span class="badge badge-silver">🥈</span>';
         if (position === 2) return '<span class="badge badge-bronze">🥉</span>';
@@ -1117,7 +1220,6 @@
             <div class="user-details">
               ${profile?.gender === 'male' ? 'Мужчина' : profile?.gender === 'female' ? 'Женщина' : '—'}, 
               ${profile?.birth_date ? Math.floor((new Date() - new Date(profile.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : '—'} лет
-              ${profile?.city ? ` | ${escapeHtml(profile.city)}` : ''}
             </div>
           </div>
           <div class="burger" onclick="openMenu()">
@@ -1140,40 +1242,63 @@
               <div class="stat-card"><div class="stat-value">${stats.avgPace}</div><div class="stat-label">средний темп</div></div>
               <div class="stat-card"><div class="stat-value">${stats.trainingsCount}</div><div class="stat-label">тренировок</div></div>
             </div>
-            
-            <div class="places-grid">
-              <div class="place-card" onclick="navigateTo('leaderboard')"><div class="place-title">Абсолют</div><div class="place-value">${places.absolute} место</div></div>
-              <div class="place-card" onclick="navigateTo('leaderboard')"><div class="place-title">Среди ${profile?.gender === 'male' ? 'мужчин' : 'женщин'}</div><div class="place-value">${places.gender} место</div></div>
-              <div class="place-card" onclick="navigateTo('leaderboard')"><div class="place-title">Возрастная группа</div><div class="place-value">${places.age} место</div></div>
+          </div>
+          
+          <div class="info-block">
+            <div class="info-card" onclick="navigateTo('points')">
+              <div class="info-value">${totalPoints}</div>
+              <div class="info-label">баллов</div>
+            </div>
+            <div class="info-card" onclick="navigateTo('achievements')">
+              <div class="info-value">${totalAchievements} / ${maxAchievements}</div>
+              <div class="info-label">достижений</div>
             </div>
           </div>
           
           <div class="card">
-            <h3>Способности</h3>
-            <div class="stats-grid">
-              <div class="stat-card"><div class="stat-value">🏃‍♂️</div><div class="stat-label">Выносливость</div></div>
-              <div class="stat-card"><div class="stat-value">⚡</div><div class="stat-label">Скорость</div></div>
-              <div class="stat-card"><div class="stat-value">⛰️</div><div class="stat-label">Сила</div></div>
-              <div class="stat-card"><div class="stat-value">❤️</div><div class="stat-label">Восстановление</div></div>
+            <h3>Абсолютный топ</h3>
+            <div class="leaderboard-preview">
+              ${top3Absolute.map((item, idx) => `
+                <div class="leaderboard-preview-item" onclick="navigateTo('userProfile', '${item.user_id}')">
+                  <div class="leaderboard-rank">${idx + 1}${getRankBadge(idx)}</div>
+                  <div class="leaderboard-name">${escapeHtml(item.participant)}</div>
+                  <div class="leaderboard-distance">${(item.total_km || 0).toFixed(2)} км</div>
+                </div>
+              `).join('')}
             </div>
-            <div class="show-all" onclick="navigateTo('abilities')">Подробнее →</div>
+            ${top3Absolute.length === 0 ? '<div class="info-text">Нет данных для отображения</div>' : ''}
+            <div class="show-all" onclick="navigateTo('leaderboard')">Вся таблица →</div>
           </div>
           
+          ${userAgeGroup ? `
           <div class="card">
-            <h3>Достижения</h3>
-            <div class="stats-grid">
-              <div class="stat-card"><div class="stat-value">🎯</div><div class="stat-label">Личные рекорды</div></div>
-              <div class="stat-card"><div class="stat-value">🏆</div><div class="stat-label">Победы</div></div>
-              <div class="stat-card"><div class="stat-value">📈</div><div class="stat-label">Прогресс</div></div>
+            <h3>Топ в возрастной группе ${userAgeGroup} лет</h3>
+            <div class="leaderboard-preview">
+              ${top3Age.map((item, idx) => `
+                <div class="leaderboard-preview-item" onclick="navigateTo('userProfile', '${item.user_id}')">
+                  <div class="leaderboard-rank">${idx + 1}${getRankBadge(idx)}</div>
+                  <div class="leaderboard-name">${escapeHtml(item.participant)}</div>
+                  <div class="leaderboard-distance">${(item.total_km || 0).toFixed(2)} км</div>
+                </div>
+              `).join('')}
             </div>
-            <div class="show-all" onclick="navigateTo('achievements')">Подробнее →</div>
+            ${top3Age.length === 0 ? '<div class="info-text">Нет данных для отображения</div>' : ''}
           </div>
+          ` : ''}
           
           <div class="card">
-            <h3>Баллы</h3>
-            <div class="stat-value" style="text-align: center; font-size: 32px;">${Math.floor(stats.totalKm * 10)}</div>
-            <div class="stat-label" style="text-align: center;">общий счет</div>
-            <div class="show-all" onclick="navigateTo('points')">Детали начисления →</div>
+            <h3>Лента новостей</h3>
+            <div class="news-feed">
+              ${newsFeed.map(item => `
+                <div class="news-item">
+                  <div class="news-icon">${item.icon}</div>
+                  <div class="news-content">
+                    <div class="news-text">${escapeHtml(item.user)} ${escapeHtml(item.text)}</div>
+                    <div class="news-time">${escapeHtml(item.time)}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
           </div>
           
           <div class="chart">
@@ -1206,37 +1331,6 @@
               `).join('') || '<div style="text-align:center; color:#8ba0ae; padding:40px;">Нет тренировок</div>'}
             </div>
             <div class="show-all" onclick="loadActivities(100)">Показать все →</div>
-          </div>
-          
-          <div class="card">
-            <h3>Таблица лидеров</h3>
-            <div style="overflow-x: auto;">
-              <table class="leaderboard-table">
-                <thead>
-                  <tr>
-                    <th>Место</th>
-                    <th>Участник</th>
-                    <th>Км</th>
-                    <th>Тренировок</th>
-                    <th>Время</th>
-                    <th>Темп</th>
-                   </tr>
-                </thead>
-                <tbody>
-                  ${leaderboard.slice(0, 5).map((item, idx) => `
-                    <tr class="leaderboard-row" onclick="navigateTo('userProfile', '${item.user_id}')">
-                      <td><strong>${idx + 1}</strong> ${getMedalBadge(idx)}</td>
-                      <td><strong>${escapeHtml(item.participant)}</strong></td>
-                      <td><strong>${(item.total_km || 0).toFixed(2)}</strong></td>
-                      <td>${item.activities_count || 0}</td>
-                      <td>${formatDuration(item.total_time_min || 0)}</td>
-                      <td>${formatPaceFromSeconds(item.avg_pace_seconds) || '—'}</td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-            <div class="show-all" onclick="navigateTo('leaderboard')">Полная таблица →</div>
           </div>
         </div>
         
@@ -1341,6 +1435,9 @@
     
     async function renderAchievementsPage() {
       const profile = await loadProfile();
+      const stats = await loadStats();
+      const totalAchievements = Math.floor(stats.trainingsCount / 5);
+      const maxAchievements = 20;
       
       document.getElementById('app').innerHTML = `
         <div class="fixed-header">
@@ -1355,11 +1452,14 @@
         <div class="container">
           <div class="card">
             <h2>Достижения</h2>
+            <div class="info-value" style="text-align: center; font-size: 48px;">${totalAchievements} / ${maxAchievements}</div>
+            <div class="stat-label" style="text-align: center; margin-bottom: 20px;">получено достижений</div>
+            
             <div class="stats-grid">
-              <div class="stat-card"><div class="stat-value">🏅</div><div class="stat-label">Первый километр</div></div>
-              <div class="stat-card"><div class="stat-value">🏅</div><div class="stat-label">10 км</div></div>
-              <div class="stat-card"><div class="stat-value">🏅</div><div class="stat-label">Полумарафон</div></div>
-              <div class="stat-card"><div class="stat-value">🏅</div><div class="stat-label">Марафон</div></div>
+              <div class="stat-card"><div class="stat-value">🏅</div><div class="stat-label">Первый километр</div><div class="stat-label">${stats.totalKm > 0 ? '✅' : '❌'}</div></div>
+              <div class="stat-card"><div class="stat-value">🏅</div><div class="stat-label">10 км</div><div class="stat-label">${stats.totalKm >= 10 ? '✅' : '❌'}</div></div>
+              <div class="stat-card"><div class="stat-value">🏅</div><div class="stat-label">Полумарафон</div><div class="stat-label">${stats.totalKm >= 21.1 ? '✅' : '❌'}</div></div>
+              <div class="stat-card"><div class="stat-value">🏅</div><div class="stat-label">Марафон</div><div class="stat-label">${stats.totalKm >= 42.2 ? '✅' : '❌'}</div></div>
             </div>
           </div>
         </div>
@@ -1398,8 +1498,8 @@
           <div class="card">
             <h2>Баллы</h2>
             <div class="stat-value" style="text-align: center; font-size: 48px;">${totalPoints}</div>
-            <div class="stat-label" style="text-align: center;">общий счет</div>
-            <div class="info-text" style="margin-top: 20px;">
+            <div class="stat-label" style="text-align: center; margin-bottom: 20px;">общий счет</div>
+            <div class="info-text">
               <strong>Правила начисления:</strong><br>
               • 1 км = 10 баллов<br>
               • Бонус за регулярность: +50 баллов за каждую неделю с тренировками<br>
@@ -1425,6 +1525,11 @@
     
     async function renderAbilitiesPage() {
       const profile = await loadProfile();
+      const stats = await loadStats();
+      
+      const enduranceLevel = Math.min(5, Math.floor(stats.totalKm / 100) + 1);
+      const speedLevel = Math.min(5, Math.floor(parseFloat(stats.avgPace?.split(':')[0] || 7) / 2));
+      const strengthLevel = Math.min(5, Math.floor(stats.trainingsCount / 20) + 1);
       
       document.getElementById('app').innerHTML = `
         <div class="fixed-header">
@@ -1440,16 +1545,16 @@
           <div class="card">
             <h2>Способности</h2>
             <div class="stats-grid">
-              <div class="stat-card"><div class="stat-value">🏃‍♂️</div><div class="stat-label">Выносливость</div><div class="stat-label">Уровень 3</div></div>
-              <div class="stat-card"><div class="stat-value">⚡</div><div class="stat-label">Скорость</div><div class="stat-label">Уровень 2</div></div>
-              <div class="stat-card"><div class="stat-value">⛰️</div><div class="stat-label">Сила</div><div class="stat-label">Уровень 1</div></div>
-              <div class="stat-card"><div class="stat-value">❤️</div><div class="stat-label">Восстановление</div><div class="stat-label">Уровень 2</div></div>
+              <div class="stat-card"><div class="stat-value">🏃‍♂️</div><div class="stat-label">Выносливость</div><div class="stat-label">Уровень ${enduranceLevel}</div></div>
+              <div class="stat-card"><div class="stat-value">⚡</div><div class="stat-label">Скорость</div><div class="stat-label">Уровень ${speedLevel}</div></div>
+              <div class="stat-card"><div class="stat-value">⛰️</div><div class="stat-label">Сила</div><div class="stat-label">Уровень ${strengthLevel}</div></div>
+              <div class="stat-card"><div class="stat-value">❤️</div><div class="stat-label">Восстановление</div><div class="stat-label">Уровень ${Math.floor(enduranceLevel / 2) + 1}</div></div>
             </div>
             <div class="info-text" style="margin-top: 20px;">
               <strong>Как повысить уровень:</strong><br>
-              • Выносливость: общий километраж<br>
+              • Выносливость: общий километраж (100 км = уровень 2, 200 км = уровень 3)<br>
               • Скорость: средний темп быстрее 5:00/км<br>
-              • Сила: набор высоты<br>
+              • Сила: количество тренировок (20 тренировок = уровень 2)<br>
               • Восстановление: регулярность тренировок
             </div>
           </div>
