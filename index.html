@@ -627,8 +627,8 @@
     let currentPage = 'home';
     let menuOpen = false;
     let viewedUserId = null;
-    let leaderboardSort = 'total_km';
-    let leaderboardOrder = 'desc';
+    let leaderboardSort = 'position';
+    let leaderboardOrder = 'asc';
     let isAdmin = false;
     let leaderboardFilterGender = 'all';
     let leaderboardFilterAge = 'all';
@@ -1024,8 +1024,15 @@
         query = query.eq('age_group', leaderboardFilterAge);
       }
       
+      const ascending = leaderboardOrder === 'asc';
+      
+      if (leaderboardSort === 'position') {
+        query = query.order('total_km', { ascending: !ascending });
+      } else {
+        query = query.order(leaderboardSort, { ascending });
+      }
+      
       const { data, error } = await query
-        .order(leaderboardSort, { ascending: leaderboardOrder === 'asc' })
         .limit(limit);
       
       if (error) return [];
@@ -1037,7 +1044,7 @@
         leaderboardOrder = leaderboardOrder === 'desc' ? 'asc' : 'desc';
       } else {
         leaderboardSort = field;
-        leaderboardOrder = 'desc';
+        leaderboardOrder = field === 'position' ? 'asc' : 'desc';
       }
       if (currentPage === 'leaderboard') {
         renderLeaderboardPage();
