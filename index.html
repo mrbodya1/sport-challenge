@@ -5,24 +5,531 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Спортивный челлендж</title>
   <style>
-    /* ВСЕ ВАШИ СТИЛИ ЗДЕСЬ (из style.css) */
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; background: linear-gradient(135deg, #e8f4f8 0%, #d4e9f0 100%); min-height: 100vh; padding-top: 80px; padding-bottom: 20px; }
-    /* ... и так далее все стили из style.css ... */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #e8f4f8 0%, #d4e9f0 100%);
+      min-height: 100vh;
+      padding-top: 80px;
+      padding-bottom: 20px;
+    }
+
+    .fixed-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .user-info {
+      flex: 1;
+    }
+
+    .user-name {
+      font-weight: 600;
+      color: #1e6f5c;
+      font-size: 18px;
+    }
+
+    .user-details {
+      font-size: 12px;
+      color: #6c7a89;
+    }
+
+    .burger {
+      width: 44px;
+      height: 44px;
+      background: white;
+      border-radius: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .burger span {
+      width: 22px;
+      height: 2px;
+      background: #1e6f5c;
+      border-radius: 2px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 28px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1e6f5c;
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .fab {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(30, 111, 92, 0.4);
+      cursor: pointer;
+      transition: transform 0.2s;
+      z-index: 100;
+    }
+
+    .fab span {
+      font-size: 32px;
+      font-weight: 300;
+      color: white;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 16px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #1e6f5c;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #6c7a89;
+      margin-top: 6px;
+    }
+
+    .places-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .place-card {
+      background: white;
+      padding: 12px;
+      border-radius: 20px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .place-title {
+      font-size: 12px;
+      color: #6c7a89;
+    }
+
+    .place-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e6f5c;
+    }
+
+    .chart {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .chart-bars {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      height: 150px;
+      margin-top: 16px;
+    }
+
+    .bar-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 12%;
+    }
+
+    .bar {
+      width: 100%;
+      background: linear-gradient(180deg, #1e6f5c 0%, #289672 100%);
+      border-radius: 8px 8px 0 0;
+      transition: height 0.3s;
+      min-height: 4px;
+    }
+
+    .bar-label {
+      font-size: 10px;
+      color: #6c7a89;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    .bar-value {
+      font-size: 10px;
+      font-weight: 600;
+      color: #1e6f5c;
+      margin-bottom: 4px;
+    }
+
+    .activities-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .activity-item {
+      background: #f8fafc;
+      padding: 14px;
+      border-radius: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .activity-item.deleted {
+      opacity: 0.5;
+      background: #e2e8f0;
+    }
+
+    .activity-info {
+      flex: 1;
+    }
+
+    .activity-name {
+      font-weight: 600;
+      color: #1e6f5c;
+      margin-bottom: 4px;
+      cursor: pointer;
+    }
+
+    .activity-meta {
+      font-size: 12px;
+      color: #6c7a89;
+    }
+
+    .delete-btn {
+      background: #e74c3c;
+      padding: 8px 16px;
+      font-size: 12px;
+      border-radius: 30px;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .restore-btn {
+      background: #289672;
+      padding: 6px 12px;
+      font-size: 11px;
+      border-radius: 20px;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .show-all {
+      text-align: center;
+      padding: 12px;
+      color: #1e6f5c;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .filter-bar select, .filter-bar input {
+      flex: 1;
+      min-width: 100px;
+      padding: 10px;
+      font-size: 14px;
+      border: 2px solid #e2e8f0;
+      border-radius: 20px;
+      font-family: inherit;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 20px;
+      font-size: 16px;
+      margin-bottom: 12px;
+      font-family: inherit;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #1e6f5c;
+    }
+
+    input[type="date"] {
+      position: relative;
+      color: #2c3e50;
+    }
+
+    input[type="date"]:before {
+      content: attr(placeholder);
+      position: absolute;
+      color: #8ba0ae;
+      background: white;
+      padding: 0 4px;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    input[type="date"]:focus:before,
+    input[type="date"]:valid:before {
+      display: none;
+    }
+
+    button {
+      background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 40px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .method-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .method-btn {
+      flex: 1;
+      background: #f1f5f9;
+      color: #2c3e50;
+      padding: 10px;
+      border-radius: 30px;
+      font-size: 13px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .method-btn.active {
+      background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
+      color: white;
+    }
+
+    .add-form {
+      display: none;
+    }
+
+    .add-form.active {
+      display: block;
+    }
+
+    .error {
+      color: #e74c3c;
+      margin-top: 12px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .loader {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #e2e8f0;
+      border-top-color: #1e6f5c;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .screenshot-preview {
+      max-width: 100%;
+      border-radius: 16px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      display: none;
+    }
+
+    .menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 280px;
+      height: 100%;
+      background: white;
+      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+      z-index: 201;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu.open {
+      transform: translateX(0);
+    }
+
+    .menu-header {
+      padding: 24px 20px;
+      background: linear-gradient(135deg, #1e6f5c 0%, #289672 100%);
+      color: white;
+    }
+
+    .menu-item {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .menu-item:hover {
+      background: #f5f5f5;
+    }
+
+    .nomination-card {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .nomination-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e6f5c;
+      margin-bottom: 12px;
+    }
+
+    .nomination-winners {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nomination-winner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .winner-place {
+      font-weight: 700;
+      width: 40px;
+    }
+
+    .winner-name {
+      flex: 1;
+    }
+
+    .winner-value {
+      font-weight: 600;
+      color: #1e6f5c;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://unpkg.com/tesseract.js@5.0.0/dist/tesseract.min.js"></script>
 </head>
 <body>
   <div id="app"></div>
 
   <script>
-    // ============= ВЕСЬ ВАШ JavaScript КОД ЗДЕСЬ =============
-    // (весь код из всех js-файлов, в правильном порядке)
-    
-    // config.js
+    // ============= КОНФИГУРАЦИЯ =============
     const SUPABASE_URL = 'https://idkghmydocvjhuwtgojh.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlka2dobXlkb2N2amh1d3Rnb2poIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNTU3NzgsImV4cCI6MjA4OTgzMTc3OH0.omQ4zi4gILIk8nQtbYPstcORhEyEhFvKDnFs5qwFlSM';
+    
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
     let currentUser = null;
@@ -34,14 +541,129 @@
     let feedLoading = false;
     let feedHasMore = true;
     
-    // utils.js
-    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
-    function formatDuration(minutes) { if (!minutes) return '—'; const hrs = Math.floor(minutes / 60); const mins = Math.round(minutes % 60); return hrs > 0 ? `${hrs}ч ${mins}мин` : `${mins}мин`; }
-    function formatDate(dateStr) { if (!dateStr) return '—'; const d = new Date(dateStr); return `${d.getDate().toString().padStart(2, '0')}.${(d.getMonth() + 1).toString().padStart(2, '0')}.${d.getFullYear()}`; }
-    function formatPaceFromSeconds(seconds) { if (!seconds) return '—'; const min = Math.floor(seconds / 60); const sec = Math.round(seconds % 60); return `${min}:${sec.toString().padStart(2, '0')}`; }
-    function getAgeGroup(age) { if (age >= 18 && age <= 24) return '18-24'; if (age >= 25 && age <= 29) return '25-29'; if (age >= 30 && age <= 34) return '30-34'; if (age >= 35 && age <= 39) return '35-39'; if (age >= 40 && age <= 44) return '40-44'; if (age >= 45 && age <= 49) return '45-49'; if (age >= 50 && age <= 54) return '50-54'; if (age >= 55 && age <= 59) return '55-59'; if (age >= 60 && age <= 64) return '60-64'; if (age >= 65 && age <= 69) return '65-69'; if (age >= 70) return '70+'; return '18-24'; }
+    // ============= ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =============
+    
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
+    }
+    
+    function formatDuration(minutes) {
+      if (!minutes) return '—';
+      const hrs = Math.floor(minutes / 60);
+      const mins = Math.round(minutes % 60);
+      return hrs > 0 ? `${hrs}ч ${mins}мин` : `${mins}мин`;
+    }
+    
+    function formatDate(dateStr) {
+      if (!dateStr) return '—';
+      const d = new Date(dateStr);
+      return `${d.getDate().toString().padStart(2, '0')}.${(d.getMonth() + 1).toString().padStart(2, '0')}.${d.getFullYear()}`;
+    }
+    
+    function getAgeGroup(age) {
+      if (age >= 18 && age <= 24) return '18-24';
+      if (age >= 25 && age <= 29) return '25-29';
+      if (age >= 30 && age <= 34) return '30-34';
+      if (age >= 35 && age <= 39) return '35-39';
+      if (age >= 40 && age <= 44) return '40-44';
+      if (age >= 45 && age <= 49) return '45-49';
+      if (age >= 50 && age <= 54) return '50-54';
+      if (age >= 55 && age <= 59) return '55-59';
+      if (age >= 60 && age <= 64) return '60-64';
+      if (age >= 65 && age <= 69) return '65-69';
+      if (age >= 70) return '70+';
+      return '18-24';
+    }
+    
+    function formatPaceFromSeconds(seconds) {
+      if (!seconds) return '—';
+      const min = Math.floor(seconds / 60);
+      const sec = Math.round(seconds % 60);
+      return `${min}:${sec.toString().padStart(2, '0')}`;
+    }
+    
+    // ============= МАРШРУТИЗАЦИЯ =============
+    
+    function navigateTo(page, userId = null) {
+      let hash = '#/';
+      if (page === 'home') hash = '#/';
+      else if (page === 'trainings') hash = '#/activities';
+      else if (page === 'leaderboard') hash = '#/leaderboard';
+      else if (page === 'add') hash = '#/add';
+      else if (page === 'abilities') hash = '#/abilities';
+      else if (page === 'settings') hash = '#/settings';
+      else if (page === 'points') hash = '#/points';
+      else if (page === 'achievements') hash = '#/achievements';
+      else if (page === 'nominations') hash = '#/nominations';
+      else if (page === 'feed') hash = '#/feed';
+      else if (page === 'userProfile' && userId) hash = `#/profile/${userId}`;
+      
+      window.location.hash = hash;
+      currentPage = page;
+      if (userId) viewedUserId = userId;
+      render();
+    }
+    
+    function handleRouting() {
+      const hash = window.location.hash.slice(2);
+      
+      if (hash.startsWith('activities')) {
+        currentPage = 'trainings';
+      } else if (hash.startsWith('leaderboard')) {
+        currentPage = 'leaderboard';
+      } else if (hash.startsWith('profile/')) {
+        const userId = hash.split('/')[1];
+        viewedUserId = userId;
+        currentPage = 'userProfile';
+      } else if (hash.startsWith('add')) {
+        currentPage = 'add';
+      } else if (hash.startsWith('abilities')) {
+        currentPage = 'abilities';
+      } else if (hash.startsWith('settings')) {
+        currentPage = 'settings';
+      } else if (hash.startsWith('points')) {
+        currentPage = 'points';
+      } else if (hash.startsWith('achievements')) {
+        currentPage = 'achievements';
+      } else if (hash.startsWith('nominations')) {
+        currentPage = 'nominations';
+      } else if (hash.startsWith('feed')) {
+        currentPage = 'feed';
+      } else {
+        currentPage = 'home';
+      }
+      
+      render();
+    }
+    
+    function showPage(page) {
+      navigateTo(page);
+    }
+    
+    function closeMenu() {
+      menuOpen = false;
+      const menu = document.getElementById('menu');
+      const overlay = document.getElementById('menu-overlay');
+      if (menu) menu.classList.remove('open');
+      if (overlay) overlay.style.display = 'none';
+    }
+    
+    function openMenu() {
+      menuOpen = true;
+      const menu = document.getElementById('menu');
+      const overlay = document.getElementById('menu-overlay');
+      if (menu) menu.classList.add('open');
+      if (overlay) overlay.style.display = 'block';
+    }
     
     // ============= АВТОРИЗАЦИЯ =============
+    
     async function register() {
       const username = document.getElementById('reg-username').value;
       const password = document.getElementById('reg-password').value;
@@ -50,22 +672,37 @@
       const gender = document.getElementById('reg-gender').value;
       const birthDate = document.getElementById('reg-birthdate').value;
       const errorDiv = document.getElementById('register-error');
+      
       if (!username || !password || !firstName || !lastName || !gender || !birthDate) {
         errorDiv.innerHTML = '❌ Заполните все поля';
         return;
       }
+      
       errorDiv.innerHTML = '<span class="loader"></span> Регистрация...';
+      
       const { data, error } = await sb.auth.signUp({
         email: username + '@challenge.local',
         password: password,
-        options: { data: { username, first_name: firstName, last_name: lastName, name_full: `${firstName} ${lastName}`, gender, birth_date: birthDate } }
+        options: {
+          data: {
+            username: username,
+            first_name: firstName,
+            last_name: lastName,
+            name_full: `${firstName} ${lastName}`,
+            gender: gender,
+            birth_date: birthDate
+          }
+        }
       });
+      
       if (error) {
         errorDiv.innerHTML = '❌ ' + (error.message.includes('already registered') ? 'Логин уже занят' : error.message);
       } else {
         errorDiv.style.color = '#1e6f5c';
         errorDiv.innerHTML = '✅ Регистрация успешна! Теперь войдите.';
-        setTimeout(() => { navigateTo('home'); }, 1500);
+        setTimeout(() => {
+          navigateTo('home');
+        }, 1500);
       }
     }
     
@@ -73,8 +710,14 @@
       const username = document.getElementById('login-username').value;
       const password = document.getElementById('login-password').value;
       const errorDiv = document.getElementById('login-error');
+      
       errorDiv.innerHTML = '<span class="loader"></span> Вход...';
-      const { data, error } = await sb.auth.signInWithPassword({ email: username + '@challenge.local', password: password });
+      
+      const { data, error } = await sb.auth.signInWithPassword({
+        email: username + '@challenge.local',
+        password: password
+      });
+      
       if (error) {
         errorDiv.innerHTML = '❌ Неверный логин или пароль';
       } else {
@@ -90,49 +733,61 @@
     }
     
     // ============= ДОБАВЛЕНИЕ ТРЕНИРОВОК =============
+    
     async function addByLink() {
       const link = document.getElementById('link-url').value;
       const errorDiv = document.getElementById('link-error');
+      
       if (!link) {
         errorDiv.innerHTML = '❌ Введите ссылку';
         return;
       }
+      
       errorDiv.innerHTML = '<span class="loader"></span> Обработка...';
+      
       try {
         const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ url: link })
         });
+        
         const result = await response.json();
+        
         if (!result.success) {
           errorDiv.innerHTML = '❌ ' + (result.error || 'Ошибка парсинга');
           return;
         }
-        const { error: insertError } = await sb.from('activities').insert({
-          user_id: currentUser.id,
-          platform: 'strava',
-          activity_id: 'strava_' + Date.now(),
-          name: result.name,
-          distance_km: result.distance,
-          duration_min: result.duration,
-          pace_min_per_km: result.pace,
-          activity_date: result.date,
-          url: result.url || link
-        });
+        
+        const { error: insertError } = await sb
+          .from('activities')
+          .insert({
+            user_id: currentUser.id,
+            platform: 'strava',
+            activity_id: 'strava_' + Date.now(),
+            name: result.name,
+            distance_km: result.distance,
+            duration_min: result.duration,
+            pace_min_per_km: result.pace,
+            activity_date: result.date,
+            url: result.url || link
+          });
+        
         if (insertError) {
           errorDiv.innerHTML = '❌ ' + insertError.message;
         } else {
           navigateTo('trainings');
-          setTimeout(() => { document.getElementById('link-url').value = ''; }, 500);
+          setTimeout(() => {
+            document.getElementById('link-url').value = '';
+          }, 500);
         }
       } catch (err) {
+        console.error('Fetch error:', err);
         errorDiv.innerHTML = '❌ Ошибка соединения: ' + err.message;
       }
     }
     
     async function addByScreenshot() {
-      // Tesseract временно отключён из-за CSP
       alert('Функция распознавания скриншотов временно недоступна. Используйте "По ссылке" или "Вручную".');
       return;
     }
@@ -144,11 +799,14 @@
       const pace = document.getElementById('manual-pace').value;
       const date = document.getElementById('manual-date').value;
       const errorDiv = document.getElementById('manual-error');
+      
       if (!distance) {
         errorDiv.innerHTML = '❌ Введите дистанцию';
         return;
       }
+      
       errorDiv.innerHTML = '<span class="loader"></span> Добавление...';
+      
       let paceValue = pace;
       if (!paceValue && duration && distance) {
         const paceSec = (parseFloat(duration) * 60) / parseFloat(distance);
@@ -156,17 +814,21 @@
         const paceSecs = Math.round(paceSec % 60);
         paceValue = `${paceMin}:${paceSecs.toString().padStart(2, '0')}`;
       }
-      const { error: insertError } = await sb.from('activities').insert({
-        user_id: currentUser.id,
-        platform: 'manual',
-        activity_id: 'manual_' + Date.now(),
-        name: name || 'Ручная тренировка',
-        distance_km: parseFloat(distance),
-        duration_min: duration ? parseFloat(duration) : null,
-        pace_min_per_km: paceValue,
-        activity_date: date || new Date().toISOString().split('T')[0],
-        url: ''
-      });
+      
+      const { error: insertError } = await sb
+        .from('activities')
+        .insert({
+          user_id: currentUser.id,
+          platform: 'manual',
+          activity_id: 'manual_' + Date.now(),
+          name: name || 'Ручная тренировка',
+          distance_km: parseFloat(distance),
+          duration_min: duration ? parseFloat(duration) : null,
+          pace_min_per_km: paceValue,
+          activity_date: date || new Date().toISOString().split('T')[0],
+          url: ''
+        });
+      
       if (insertError) {
         errorDiv.innerHTML = '❌ ' + insertError.message;
       } else {
@@ -180,8 +842,10 @@
     }
     
     // ============= УДАЛЕНИЕ С ВОССТАНОВЛЕНИЕМ =============
+    
     async function softDeleteActivity(activityId, activityName) {
       if (!confirm(`Удалить тренировку "${activityName}"?`)) return;
+      
       const deletedItem = document.getElementById(`activity-${activityId}`);
       if (deletedItem) {
         deletedItem.classList.add('deleted');
@@ -190,6 +854,7 @@
           buttonsDiv.innerHTML = `<button class="restore-btn" onclick="restoreActivity('${activityId}')">↺ Восстановить</button>`;
         }
       }
+      
       const timeoutId = setTimeout(async () => {
         const { error } = await sb.from('activities').delete().eq('id', activityId);
         if (!error) {
@@ -198,6 +863,7 @@
           else render();
         }
       }, 5 * 60 * 1000);
+      
       deletedActivities.set(activityId, timeoutId);
     }
     
@@ -216,6 +882,7 @@
     }
     
     // ============= ЗАГРУЗКА ДАННЫХ =============
+    
     async function loadProfile() {
       const { data, error } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
       return data;
@@ -418,47 +1085,8 @@
     
     async function showUserProfile(userId) { navigateTo('userProfile', userId); }
     
-    // ============= МАРШРУТИЗАЦИЯ =============
-    function navigateTo(page, userId = null) {
-      let hash = '#/';
-      if (page === 'home') hash = '#/';
-      else if (page === 'trainings') hash = '#/activities';
-      else if (page === 'leaderboard') hash = '#/leaderboard';
-      else if (page === 'add') hash = '#/add';
-      else if (page === 'abilities') hash = '#/abilities';
-      else if (page === 'settings') hash = '#/settings';
-      else if (page === 'points') hash = '#/points';
-      else if (page === 'achievements') hash = '#/achievements';
-      else if (page === 'nominations') hash = '#/nominations';
-      else if (page === 'feed') hash = '#/feed';
-      else if (page === 'userProfile' && userId) hash = `#/profile/${userId}`;
-      window.location.hash = hash;
-      currentPage = page;
-      if (userId) viewedUserId = userId;
-      render();
-    }
-    
-    function handleRouting() {
-      const hash = window.location.hash.slice(2);
-      if (hash.startsWith('activities')) currentPage = 'trainings';
-      else if (hash.startsWith('leaderboard')) currentPage = 'leaderboard';
-      else if (hash.startsWith('profile/')) { const userId = hash.split('/')[1]; viewedUserId = userId; currentPage = 'userProfile'; }
-      else if (hash.startsWith('add')) currentPage = 'add';
-      else if (hash.startsWith('abilities')) currentPage = 'abilities';
-      else if (hash.startsWith('settings')) currentPage = 'settings';
-      else if (hash.startsWith('points')) currentPage = 'points';
-      else if (hash.startsWith('achievements')) currentPage = 'achievements';
-      else if (hash.startsWith('nominations')) currentPage = 'nominations';
-      else if (hash.startsWith('feed')) currentPage = 'feed';
-      else currentPage = 'home';
-      render();
-    }
-    
-    function showPage(page) { navigateTo(page); }
-    function closeMenu() { menuOpen = false; const menu = document.getElementById('menu'); const overlay = document.getElementById('menu-overlay'); if (menu) menu.classList.remove('open'); if (overlay) overlay.style.display = 'none'; }
-    function openMenu() { menuOpen = true; const menu = document.getElementById('menu'); const overlay = document.getElementById('menu-overlay'); if (menu) menu.classList.add('open'); if (overlay) overlay.style.display = 'block'; }
-    
     // ============= ОТРИСОВКА СТРАНИЦ =============
+    
     function renderAuth() {
       document.getElementById('app').innerHTML = `
         <div class="container">
@@ -470,10 +1098,20 @@
               <div class="method-btn" onclick="document.getElementById('register-form').style.display='block'; document.getElementById('login-form').style.display='none'; this.classList.add('active'); this.previousElementSibling.classList.remove('active')">Регистрация</div>
             </div>
             <div id="login-form">
-              <input type="text" id="login-username" placeholder="Логин"><input type="password" id="login-password" placeholder="Пароль"><button onclick="login()">Войти</button><div id="login-error" class="error"></div>
+              <input type="text" id="login-username" placeholder="Логин">
+              <input type="password" id="login-password" placeholder="Пароль">
+              <button onclick="login()">Войти</button>
+              <div id="login-error" class="error"></div>
             </div>
             <div id="register-form" style="display:none;">
-              <input type="text" id="reg-username" placeholder="Логин"><input type="text" id="reg-firstname" placeholder="Имя"><input type="text" id="reg-lastname" placeholder="Фамилия"><select id="reg-gender"><option value="">Пол</option><option value="male">Мужчина</option><option value="female">Женщина</option></select><input type="date" id="reg-birthdate" placeholder="Дата рождения"><input type="password" id="reg-password" placeholder="Пароль"><button onclick="register()">Зарегистрироваться</button><div id="register-error" class="error"></div>
+              <input type="text" id="reg-username" placeholder="Логин">
+              <input type="text" id="reg-firstname" placeholder="Имя">
+              <input type="text" id="reg-lastname" placeholder="Фамилия">
+              <select id="reg-gender"><option value="">Пол</option><option value="male">Мужчина</option><option value="female">Женщина</option></select>
+              <input type="date" id="reg-birthdate" placeholder="Дата рождения">
+              <input type="password" id="reg-password" placeholder="Пароль">
+              <button onclick="register()">Зарегистрироваться</button>
+              <div id="register-error" class="error"></div>
             </div>
           </div>
         </div>
