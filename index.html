@@ -20,15 +20,6 @@
       padding-bottom: 20px;
     }
 
-    /* Стекло-эффект */
-    .glass {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
-
     .fixed-header {
       position: fixed;
       top: 0;
@@ -44,24 +35,12 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .user-info {
-      flex: 1;
-    }
-
-    .user-name {
-      font-weight: 600;
-      color: #fff;
-      font-size: 18px;
-    }
-
-    .user-details {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.7);
-    }
+    .user-info { flex: 1; }
+    .user-name { font-weight: 600; color: #fff; font-size: 18px; }
+    .user-details { font-size: 12px; color: rgba(255, 255, 255, 0.7); }
 
     .burger {
-      width: 44px;
-      height: 44px;
+      width: 44px; height: 44px;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 40px;
       display: flex;
@@ -73,26 +52,11 @@
       transition: all 0.2s;
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
+    .burger:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.02); }
+    .burger span { width: 22px; height: 2px; background: white; border-radius: 2px; }
 
-    .burger:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.02);
-    }
+    .container { max-width: 700px; margin: 0 auto; padding: 0 20px; }
 
-    .burger span {
-      width: 22px;
-      height: 2px;
-      background: white;
-      border-radius: 2px;
-    }
-
-    .container {
-      max-width: 700px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    /* Современные карточки */
     .card {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(12px);
@@ -102,22 +66,16 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
       transition: all 0.3s ease;
     }
+    .card:hover { transform: translateY(-4px); background: rgba(255, 255, 255, 0.15); }
 
-    .card:hover {
-      transform: translateY(-4px);
-      background: rgba(255, 255, 255, 0.15);
-      border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    /* Статистика в 3 колонки */
-    .stats-row {
+    .stats-row, .info-row, .places-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
       margin-bottom: 16px;
     }
 
-    .stat-item {
+    .stat-item, .info-card, .place-card {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(8px);
       padding: 16px 12px;
@@ -125,10 +83,10 @@
       text-align: center;
       transition: all 0.2s;
       border: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: pointer;
     }
-
-    .stat-item:hover {
-      background: rgba(255, 255, 255, 0.15);
+    .stat-item:hover, .info-card:hover, .place-card:hover {
+      background: rgba(255, 255, 255, 0.2);
       transform: translateY(-2px);
     }
 
@@ -140,39 +98,6 @@
       background-clip: text;
       color: transparent;
     }
-
-    .stat-label {
-      font-size: 11px;
-      color: rgba(255, 255, 255, 0.7);
-      margin-top: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* Блоки в 3 колонки */
-    .info-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .info-card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(8px);
-      padding: 16px 12px;
-      border-radius: 24px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .info-card:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-    }
-
     .info-value {
       font-size: 24px;
       font-weight: 800;
@@ -181,50 +106,15 @@
       background-clip: text;
       color: transparent;
     }
+    .place-value { font-size: 18px; font-weight: 700; color: #ffd966; }
 
-    .info-label {
-      font-size: 10px;
+    .stat-label, .info-label, .place-title {
+      font-size: 11px;
       color: rgba(255, 255, 255, 0.7);
       margin-top: 4px;
     }
+    .place-title { font-size: 10px; margin-bottom: 6px; }
 
-    /* Места */
-    .places-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .place-card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(8px);
-      padding: 14px 10px;
-      border-radius: 24px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .place-card:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-    }
-
-    .place-title {
-      font-size: 10px;
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 6px;
-    }
-
-    .place-value {
-      font-size: 18px;
-      font-weight: 700;
-      color: #ffd966;
-    }
-
-    /* Клуб промо */
     .club-promo {
       text-align: center;
       padding: 16px;
@@ -233,13 +123,6 @@
       margin-bottom: 16px;
       border: 1px solid rgba(252, 76, 2, 0.3);
     }
-
-    .club-promo p {
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-
     .club-link {
       display: inline-flex;
       align-items: center;
@@ -253,13 +136,8 @@
       font-weight: 600;
       transition: all 0.2s;
     }
+    .club-link:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(252, 76, 2, 0.4); }
 
-    .club-link:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(252, 76, 2, 0.4);
-    }
-
-    /* График */
     .chart {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(12px);
@@ -268,14 +146,7 @@
       margin-bottom: 16px;
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
-
-    .chart h3 {
-      color: white;
-      margin-bottom: 16px;
-      font-size: 14px;
-      letter-spacing: 1px;
-    }
-
+    .chart h3 { color: white; margin-bottom: 16px; font-size: 14px; }
     .chart-bars {
       display: flex;
       justify-content: space-around;
@@ -283,14 +154,12 @@
       height: 140px;
       margin-top: 16px;
     }
-
     .bar-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 12%;
     }
-
     .bar {
       width: 100%;
       background: linear-gradient(180deg, #ffd966, #ffb347);
@@ -298,31 +167,13 @@
       transition: height 0.3s ease;
       min-height: 4px;
     }
+    .bar-label, .bar-value { font-size: 10px; }
+    .bar-value { font-weight: 600; color: #ffd966; margin-bottom: 4px; }
+    .bar-label { color: rgba(255, 255, 255, 0.6); margin-top: 8px; text-align: center; }
 
-    .bar-label {
-      font-size: 10px;
-      color: rgba(255, 255, 255, 0.6);
-      margin-top: 8px;
-      text-align: center;
-    }
-
-    .bar-value {
-      font-size: 10px;
-      font-weight: 600;
-      color: #ffd966;
-      margin-bottom: 4px;
-    }
-
-    /* Лента новостей */
-    .news-feed {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
+    .news-feed { display: flex; flex-direction: column; gap: 12px; }
     .news-item {
       background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(4px);
       padding: 14px;
       border-radius: 20px;
       display: flex;
@@ -331,15 +182,9 @@
       transition: all 0.2s;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
-
-    .news-item:hover {
-      background: rgba(255, 255, 255, 0.12);
-      transform: translateX(4px);
-    }
-
+    .news-item:hover { background: rgba(255, 255, 255, 0.12); transform: translateX(4px); }
     .news-icon {
-      width: 44px;
-      height: 44px;
+      width: 44px; height: 44px;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 44px;
       display: flex;
@@ -347,23 +192,9 @@
       justify-content: center;
       font-size: 22px;
     }
+    .news-text { font-size: 13px; color: white; margin-bottom: 4px; }
+    .news-time { font-size: 10px; color: rgba(255, 255, 255, 0.5); }
 
-    .news-content {
-      flex: 1;
-    }
-
-    .news-text {
-      font-size: 13px;
-      color: white;
-      margin-bottom: 4px;
-    }
-
-    .news-time {
-      font-size: 10px;
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    /* Остальные стили сохраняем для других страниц */
     .activities-list {
       display: flex;
       flex-direction: column;
@@ -371,7 +202,6 @@
       max-height: 500px;
       overflow-y: auto;
     }
-
     .activity-item {
       background: rgba(255, 255, 255, 0.08);
       padding: 14px;
@@ -379,30 +209,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
       transition: all 0.2s;
     }
-
-    .activity-item:hover {
-      background: rgba(255, 255, 255, 0.12);
-      transform: translateX(4px);
-    }
-
-    .activity-info {
-      flex: 1;
-    }
-
-    .activity-name {
-      font-weight: 600;
-      color: #ffd966;
-      margin-bottom: 4px;
-    }
-
-    .activity-meta {
-      font-size: 11px;
-      color: rgba(255, 255, 255, 0.6);
-    }
+    .activity-item:hover { background: rgba(255, 255, 255, 0.12); transform: translateX(4px); }
+    .activity-name { font-weight: 600; color: #ffd966; margin-bottom: 4px; }
+    .activity-meta { font-size: 11px; color: rgba(255, 255, 255, 0.6); }
 
     .show-all {
       text-align: center;
@@ -414,56 +225,33 @@
       border-radius: 20px;
       transition: all 0.2s;
     }
+    .show-all:hover { background: rgba(255, 255, 255, 0.1); }
 
-    .show-all:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .filter-bar {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
+    .filter-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
     .filter-bar select {
       flex: 1;
-      min-width: 120px;
       padding: 12px;
       font-size: 14px;
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 24px;
       background: rgba(255, 255, 255, 0.1);
       color: white;
-      font-family: inherit;
       cursor: pointer;
     }
-
-    .filter-bar select option {
-      background: #2c5364;
-    }
+    .filter-bar select option { background: #2c5364; }
 
     input, select {
       width: 100%;
       padding: 14px 16px;
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 24px;
-      font-size: 16px;
       background: rgba(255, 255, 255, 0.1);
       color: white;
       font-family: inherit;
       transition: all 0.2s;
     }
-
-    input:focus, select:focus {
-      outline: none;
-      border-color: #ffd966;
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    input::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-    }
+    input:focus, select:focus { outline: none; border-color: #ffd966; background: rgba(255, 255, 255, 0.15); }
+    input::placeholder { color: rgba(255, 255, 255, 0.5); }
 
     button {
       background: linear-gradient(135deg, #ffd966, #ffb347);
@@ -477,19 +265,9 @@
       width: 100%;
       transition: all 0.2s;
     }
+    button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 217, 102, 0.3); }
 
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(255, 217, 102, 0.3);
-    }
-
-    .error {
-      color: #ff6b6b;
-      margin-top: 12px;
-      font-size: 14px;
-      text-align: center;
-    }
-
+    .error { color: #ff6b6b; margin-top: 12px; font-size: 14px; text-align: center; }
     .loader {
       display: inline-block;
       width: 20px;
@@ -501,23 +279,16 @@
       margin-right: 8px;
       vertical-align: middle;
     }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     .menu-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(4px);
       z-index: 200;
       display: none;
     }
-
     .menu {
       position: fixed;
       top: 0;
@@ -529,22 +300,15 @@
       z-index: 201;
       transform: translateX(100%);
       transition: transform 0.3s ease;
-      display: flex;
-      flex-direction: column;
       border-left: 1px solid rgba(255, 255, 255, 0.1);
     }
-
-    .menu.open {
-      transform: translateX(0);
-    }
-
+    .menu.open { transform: translateX(0); }
     .menu-header {
       padding: 24px 20px;
       background: linear-gradient(135deg, #ffd966, #ffb347);
       color: #2c3e50;
       font-weight: 700;
     }
-
     .menu-item {
       padding: 16px 20px;
       display: flex;
@@ -555,62 +319,23 @@
       transition: all 0.2s;
       color: white;
     }
+    .menu-item:hover { background: rgba(255, 255, 255, 0.1); padding-left: 28px; }
 
-    .menu-item:hover {
-      background: rgba(255, 255, 255, 0.1);
-      padding-left: 28px;
-    }
-
-    .leaderboard-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
+    .leaderboard-table { width: 100%; border-collapse: collapse; }
     .leaderboard-table th, .leaderboard-table td {
       padding: 12px 8px;
       text-align: left;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       color: white;
     }
+    .leaderboard-table th { font-weight: 600; color: #ffd966; cursor: pointer; }
+    .leaderboard-row { cursor: pointer; transition: background 0.2s; }
+    .leaderboard-row:hover { background: rgba(255, 255, 255, 0.05); }
 
-    .leaderboard-table th {
-      font-weight: 600;
-      color: #ffd966;
-      cursor: pointer;
-    }
-
-    .leaderboard-row {
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .leaderboard-row:hover {
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 10px;
-      font-weight: 600;
-      margin-left: 8px;
-    }
-
-    .badge-gold {
-      background: linear-gradient(135deg, #ffd700, #ffb347);
-      color: #2c3e50;
-    }
-
-    .badge-silver {
-      background: linear-gradient(135deg, #c0c0c0, #a0a0a0);
-      color: #2c3e50;
-    }
-
-    .badge-bronze {
-      background: linear-gradient(135deg, #cd7f32, #b87333);
-      color: #2c3e50;
-    }
+    .badge-gold { background: linear-gradient(135deg, #ffd700, #ffb347); }
+    .badge-silver { background: linear-gradient(135deg, #c0c0c0, #a0a0a0); }
+    .badge-bronze { background: linear-gradient(135deg, #cd7f32, #b87333); }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; margin-left: 8px; color: #2c3e50; }
 
     .info-text {
       font-size: 12px;
@@ -620,26 +345,17 @@
       background: rgba(255, 255, 255, 0.05);
       border-radius: 12px;
     }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.8);
+    label { display: block; margin-bottom: 8px; font-weight: 500; color: rgba(255, 255, 255, 0.8); }
+    .skeleton {
+      background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 20px;
     }
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
     @media (max-width: 600px) {
-      .stats-row {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      
-      .info-row {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      
-      .places-row {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .stats-row, .info-row, .places-row { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -648,1081 +364,273 @@
   <div id="app"></div>
 
   <script>
-    // ============= КОНФИГУРАЦИЯ =============
     const SUPABASE_URL = 'https://idkghmydocvjhuwtgojh.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlka2dobXlkb2N2amh1d3Rnb2poIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNTU3NzgsImV4cCI6MjA4OTgzMTc3OH0.omQ4zi4gILIk8nQtbYPstcORhEyEhFvKDnFs5qwFlSM';
-    
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
-    let currentUser = null;
-    let currentPage = 'home';
-    let menuOpen = false;
-    let viewedUserId = null;
-    let leaderboardSort = 'total_km';
-    let leaderboardOrder = 'desc';
-    let isAdmin = false;
-    let leaderboardFilterGender = 'all';
-    let leaderboardFilterAge = 'all';
+    let currentUser = null, currentPage = 'home', menuOpen = false, viewedUserId = null;
+    let leaderboardSort = 'total_km', leaderboardOrder = 'desc', isAdmin = false;
+    let leaderboardFilterGender = 'all', leaderboardFilterAge = 'all';
     
-    // Моковые данные для новостей (позже заменим на реальные из БД)
     const newsFeed = [
-      { id: 1, type: 'points', user: 'Анна С.', text: 'набрала 150 баллов за неделю', time: '5 минут назад', icon: '⭐' },
-      { id: 2, type: 'achievement', user: 'Дмитрий П.', text: 'получил достижение "10 км"', time: '2 часа назад', icon: '🏅' },
-      { id: 3, type: 'ability', user: 'Елена К.', text: 'повысила уровень "Выносливость" до 3', time: 'вчера', icon: '⚡' },
-      { id: 4, type: 'points', user: 'Иван С.', text: 'набрал 500 баллов и вошел в топ-10', time: 'вчера', icon: '⭐' },
-      { id: 5, type: 'achievement', user: 'Мария И.', text: 'получила достижение "Марафон"', time: '2 дня назад', icon: '🏅' },
+      { id: 1, user: 'Анна С.', text: 'набрала 150 баллов за неделю', time: '5 минут назад', icon: '⭐' },
+      { id: 2, user: 'Дмитрий П.', text: 'получил достижение "10 км"', time: '2 часа назад', icon: '🏅' },
+      { id: 3, user: 'Елена К.', text: 'повысила уровень "Выносливость" до 3', time: 'вчера', icon: '⚡' },
     ];
     
-    // ============= ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =============
-    
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-      });
-    }
-    
-    function formatDuration(minutes) {
-      if (!minutes) return '—';
-      const hrs = Math.floor(minutes / 60);
-      const mins = Math.round(minutes % 60);
-      if (hrs > 0) {
-        return `${hrs}ч ${mins.toString().padStart(2, '0')}мин`;
-      }
-      return `${mins}мин`;
-    }
-    
-    function formatDate(dateStr) {
-      if (!dateStr) return '—';
-      const d = new Date(dateStr);
-      return `${d.getDate().toString().padStart(2, '0')}.${(d.getMonth() + 1).toString().padStart(2, '0')}.${d.getFullYear()}`;
-    }
-    
-    function getAgeGroup(age) {
-      if (!age) return null;
-      if (age >= 18 && age <= 24) return '18-24';
-      if (age >= 25 && age <= 29) return '25-29';
-      if (age >= 30 && age <= 34) return '30-34';
-      if (age >= 35 && age <= 39) return '35-39';
-      if (age >= 40 && age <= 44) return '40-44';
-      if (age >= 45 && age <= 49) return '45-49';
-      if (age >= 50 && age <= 54) return '50-54';
-      if (age >= 55 && age <= 59) return '55-59';
-      if (age >= 60 && age <= 64) return '60-64';
-      if (age >= 65 && age <= 69) return '65-69';
-      if (age >= 70) return '70+';
-      return null;
-    }
-    
-    function formatPaceFromSeconds(seconds) {
-      if (!seconds) return '—';
-      const min = Math.floor(seconds / 60);
-      const sec = Math.round(seconds % 60);
-      return `${min}:${sec.toString().padStart(2, '0')}`;
-    }
-    
-    function showToast(message, duration = 3000) {
-      const existingToast = document.querySelector('.toast');
-      if (existingToast) existingToast.remove();
-      
+    // ============= HELPER FUNCTIONS =============
+    const escapeHtml = s => s ? s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])) : '';
+    const formatDuration = m => !m ? '—' : (hrs => hrs > 0 ? `${hrs}ч ${Math.round(m % 60).toString().padStart(2,'0')}мин` : `${Math.round(m)}мин`)(Math.floor(m / 60));
+    const formatDate = d => d ? new Date(d).toLocaleDateString('ru-RU') : '—';
+    const getAgeGroup = a => !a ? null : a<25?'18-24':a<30?'25-29':a<35?'30-34':a<40?'35-39':a<45?'40-44':a<50?'45-49':a<55?'50-54':a<60?'55-59':a<65?'60-64':a<70?'65-69':'70+';
+    const formatPace = s => s ? `${Math.floor(s/60)}:${Math.round(s%60).toString().padStart(2,'0')}` : '—';
+    const showToast = (msg, d=3000) => {
+      const t = document.querySelector('.toast'); if(t) t.remove();
       const toast = document.createElement('div');
-      toast.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0,0,0,0.8);
-        backdrop-filter: blur(12px);
-        color: white;
-        padding: 12px 24px;
-        border-radius: 40px;
-        font-size: 14px;
-        z-index: 1000;
-        white-space: nowrap;
-      `;
-      toast.textContent = message;
+      toast.className = 'toast';
+      toast.textContent = msg;
       document.body.appendChild(toast);
-      
-      setTimeout(() => {
-        toast.remove();
-      }, duration);
-    }
+      setTimeout(() => toast.remove(), d);
+    };
     
-    // ============= МАРШРУТИЗАЦИЯ =============
-    
-    function navigateTo(page, userId = null) {
-      let hash = '#/';
-      if (page === 'home') hash = '#/';
-      else if (page === 'leaderboard') hash = '#/leaderboard';
-      else if (page === 'achievements') hash = '#/achievements';
-      else if (page === 'points') hash = '#/points';
-      else if (page === 'abilities') hash = '#/abilities';
-      else if (page === 'activities') hash = '#/activities';
-      else if (page === 'news') hash = '#/news';
-      else if (page === 'settings') hash = '#/settings';
-      else if (page === 'sync') hash = '#/sync';
-      else if (page === 'userProfile' && userId) hash = `#/profile/${userId}`;
-      
+    // ============= ROUTING =============
+    const navigateTo = (page, userId=null) => {
+      const hash = page === 'home' ? '#/' : page === 'userProfile' && userId ? `#/profile/${userId}` : `#/${page}`;
       window.location.hash = hash;
       currentPage = page;
-      if (userId) viewedUserId = userId;
+      if(userId) viewedUserId = userId;
       render();
-    }
+    };
     
-    function handleRouting() {
+    const handleRouting = () => {
       const hash = window.location.hash.slice(2);
-      
-      if (hash.startsWith('leaderboard')) {
-        currentPage = 'leaderboard';
-      } else if (hash.startsWith('achievements')) {
-        currentPage = 'achievements';
-      } else if (hash.startsWith('points')) {
-        currentPage = 'points';
-      } else if (hash.startsWith('abilities')) {
-        currentPage = 'abilities';
-      } else if (hash.startsWith('activities')) {
-        currentPage = 'activities';
-      } else if (hash.startsWith('news')) {
-        currentPage = 'news';
-      } else if (hash.startsWith('profile/')) {
-        const userId = hash.split('/')[1];
-        viewedUserId = userId;
-        currentPage = 'userProfile';
-      } else if (hash.startsWith('settings')) {
-        currentPage = 'settings';
-      } else if (hash.startsWith('sync')) {
-        currentPage = 'sync';
-      } else {
-        currentPage = 'home';
-      }
-      
+      if(hash.startsWith('leaderboard')) currentPage = 'leaderboard';
+      else if(hash.startsWith('profile/')) { viewedUserId = hash.split('/')[1]; currentPage = 'userProfile'; }
+      else if(['achievements','points','abilities','activities','news','settings','sync'].includes(hash)) currentPage = hash;
+      else currentPage = 'home';
       render();
-    }
+    };
     
-    function closeMenu() {
-      menuOpen = false;
-      const menu = document.getElementById('menu');
-      const overlay = document.getElementById('menu-overlay');
-      if (menu) menu.classList.remove('open');
-      if (overlay) overlay.style.display = 'none';
-    }
+    const closeMenu = () => { menuOpen = false; document.getElementById('menu')?.classList.remove('open'); document.getElementById('menu-overlay')?.style.setProperty('display','none'); };
+    const openMenu = () => { menuOpen = true; document.getElementById('menu')?.classList.add('open'); document.getElementById('menu-overlay')?.style.setProperty('display','block'); };
     
-    function openMenu() {
-      menuOpen = true;
-      const menu = document.getElementById('menu');
-      const overlay = document.getElementById('menu-overlay');
-      if (menu) menu.classList.add('open');
-      if (overlay) overlay.style.display = 'block';
-    }
+    // ============= AUTH =============
+    const register = async () => {
+      const [username, password, firstName, lastName, stravaUsername, gender, birthDate] = 
+        ['reg-username','reg-password','reg-firstname','reg-lastname','reg-strava-username','reg-gender','reg-birthdate'].map(id => document.getElementById(id).value);
+      const err = document.getElementById('register-error');
+      if(!username || !password || !firstName || !lastName || !stravaUsername || !gender || !birthDate) { err.innerHTML = 'Заполните все поля'; return; }
+      err.innerHTML = '<span class="loader"></span> Регистрация...';
+      const { error } = await sb.auth.signUp({ email: username + '@challenge.local', password, options: { data: { username, first_name: firstName, last_name: lastName, name_full: `${firstName} ${lastName}`, strava_username: stravaUsername, gender, birth_date: birthDate } } });
+      if(error) err.innerHTML = error.message.includes('already registered') ? 'Логин уже занят' : error.message;
+      else { err.style.color = '#ffd966'; err.innerHTML = 'Регистрация успешна! Теперь войдите.'; showToast('Регистрация успешна!', 3000); setTimeout(() => navigateTo('home'), 1500); }
+    };
     
-    // ============= АВТОРИЗАЦИЯ =============
+    const login = async () => {
+      const username = document.getElementById('login-username').value, password = document.getElementById('login-password').value;
+      const err = document.getElementById('login-error');
+      if(!username || !password) { err.innerHTML = 'Введите логин и пароль'; return; }
+      err.innerHTML = '<span class="loader"></span> Вход...';
+      const { data, error } = await sb.auth.signInWithPassword({ email: username + '@challenge.local', password });
+      if(error) err.innerHTML = 'Неверный логин или пароль';
+      else { currentUser = data.user; await checkAdminStatus(); showToast(`Добро пожаловать, ${username}!`, 3000); navigateTo('home'); }
+    };
     
-    async function register() {
-      const username = document.getElementById('reg-username').value;
-      const password = document.getElementById('reg-password').value;
-      const firstName = document.getElementById('reg-firstname').value;
-      const lastName = document.getElementById('reg-lastname').value;
-      const stravaUsername = document.getElementById('reg-strava-username').value;
-      const gender = document.getElementById('reg-gender').value;
-      const birthDate = document.getElementById('reg-birthdate').value;
-      const errorDiv = document.getElementById('register-error');
-      
-      if (!username || !password || !firstName || !lastName || !stravaUsername || !gender || !birthDate) {
-        errorDiv.innerHTML = 'Заполните все поля';
-        return;
-      }
-      
-      errorDiv.innerHTML = '<span class="loader"></span> Регистрация...';
-      
-      const { data, error } = await sb.auth.signUp({
-        email: username + '@challenge.local',
-        password: password,
-        options: {
-          data: {
-            username: username,
-            first_name: firstName,
-            last_name: lastName,
-            name_full: `${firstName} ${lastName}`,
-            strava_username: stravaUsername,
-            gender: gender,
-            birth_date: birthDate
-          }
-        }
-      });
-      
-      if (error) {
-        errorDiv.innerHTML = error.message.includes('already registered') ? 'Логин уже занят' : error.message;
-      } else {
-        errorDiv.style.color = '#ffd966';
-        errorDiv.innerHTML = 'Регистрация успешна! Теперь войдите.';
-        showToast('Регистрация успешна! Теперь войдите в систему', 3000);
-        setTimeout(() => {
-          navigateTo('home');
-        }, 1500);
-      }
-    }
+    const logout = async () => { await sb.auth.signOut(); currentUser = null; isAdmin = false; showToast('Вы вышли из системы', 2000); navigateTo('home'); };
+    const checkAdminStatus = async () => { if(!currentUser) return false; const { data } = await sb.from('profiles').select('is_admin, role').eq('id', currentUser.id).single(); isAdmin = data?.is_admin === true || data?.role === 'admin' || currentUser.email === 'admin@challenge.local'; return isAdmin; };
     
-    async function login() {
-      const username = document.getElementById('login-username').value;
-      const password = document.getElementById('login-password').value;
-      const errorDiv = document.getElementById('login-error');
-      
-      if (!username || !password) {
-        errorDiv.innerHTML = 'Введите логин и пароль';
-        return;
-      }
-      
-      errorDiv.innerHTML = '<span class="loader"></span> Вход...';
-      
-      const { data, error } = await sb.auth.signInWithPassword({
-        email: username + '@challenge.local',
-        password: password
-      });
-      
-      if (error) {
-        errorDiv.innerHTML = 'Неверный логин или пароль';
-      } else {
-        currentUser = data.user;
-        await checkAdminStatus();
-        showToast(`Добро пожаловать, ${username}!`, 3000);
-        navigateTo('home');
-      }
-    }
+    // ============= DATA LOADING =============
+    const loadProfile = async () => { const { data } = await sb.from('profiles').select('*').eq('id', currentUser.id).single(); return data; };
+    const loadStats = async () => {
+      const { data } = await sb.from('activities').select('distance_km, duration_min, pace_min_per_km').eq('user_id', currentUser.id);
+      if(!data) return { totalKm:0, totalTime:'—', avgPace:'—', trainingsCount:0 };
+      const totalKm = data.reduce((s,a)=>s+(a.distance_km||0),0);
+      const totalTime = data.reduce((s,a)=>s+(a.duration_min||0),0);
+      const paces = data.filter(a=>a.pace_min_per_km).map(a=>{const m=a.pace_min_per_km.match(/(\d+):(\d+)/); return m?parseInt(m[1])*60+parseInt(m[2]):null}).filter(p=>p);
+      const avgPace = paces.length ? ((s=>{const min=Math.floor(s/60), sec=Math.round(s%60); return `${min}:${sec.toString().padStart(2,'0')}`})(paces.reduce((s,p)=>s+p,0)/paces.length)) : '—';
+      return { totalKm: totalKm.toFixed(2), totalTime: formatDuration(totalTime), avgPace, trainingsCount: data.length };
+    };
     
-    async function logout() {
-      await sb.auth.signOut();
-      currentUser = null;
-      isAdmin = false;
-      showToast('Вы вышли из системы', 2000);
-      navigateTo('home');
-    }
-    
-    async function checkAdminStatus() {
-      if (!currentUser) return false;
-      
-      const { data: profile } = await sb
-        .from('profiles')
-        .select('is_admin, role')
-        .eq('id', currentUser.id)
-        .single();
-      
-      isAdmin = profile?.is_admin === true || profile?.role === 'admin' || currentUser.email === 'admin@challenge.local';
-      return isAdmin;
-    }
-    
-    // ============= ЗАГРУЗКА ДАННЫХ =============
-    
-    async function loadProfile() {
-      const { data, error } = await sb
-        .from('profiles')
-        .select('*')
-        .eq('id', currentUser.id)
-        .single();
-      
-      if (error) return null;
-      return data;
-    }
-    
-    async function loadStats() {
-      const { data, error } = await sb
-        .from('activities')
-        .select('distance_km, duration_min, pace_min_per_km')
-        .eq('user_id', currentUser.id);
-      
-      if (error || !data) return { totalKm: 0, totalTime: 0, avgPace: null, trainingsCount: 0 };
-      
-      const totalKm = data.reduce((sum, a) => sum + (a.distance_km || 0), 0);
-      const totalTime = data.reduce((sum, a) => sum + (a.duration_min || 0), 0);
-      const trainingsCount = data.length;
-      
-      let avgPace = null;
-      const paces = data.filter(a => a.pace_min_per_km).map(a => {
-        const match = a.pace_min_per_km.match(/(\d+):(\d+)/);
-        if (match) return parseInt(match[1]) * 60 + parseInt(match[2]);
-        return null;
-      }).filter(p => p);
-      
-      if (paces.length > 0) {
-        const avgSec = paces.reduce((s, p) => s + p, 0) / paces.length;
-        const min = Math.floor(avgSec / 60);
-        const sec = Math.round(avgSec % 60);
-        avgPace = `${min}:${sec.toString().padStart(2, '0')}`;
-      }
-      
-      return {
-        totalKm: totalKm.toFixed(2),
-        totalTime: formatDuration(totalTime),
-        avgPace: avgPace || '—',
-        trainingsCount: trainingsCount
-      };
-    }
-    
-    async function loadPlaces(profile) {
-      const { data: leaderboard, error } = await sb
-        .from('leaderboard')
-        .select('*')
-        .order('total_km', { ascending: false });
-      
-      if (error) return { absolute: '—', gender: '—', age: '—', ageGroupName: '' };
-      
-      let absolute = '—', genderPlace = '—', agePlace = '—', ageGroupName = '';
-      
-      for (let i = 0; i < leaderboard.length; i++) {
-        if (leaderboard[i].user_id === currentUser.id) { 
-          absolute = (i + 1).toString(); 
-          break; 
-        }
-      }
-      
-      const genderLeaderboard = leaderboard.filter(l => l.gender === profile?.gender);
-      for (let i = 0; i < genderLeaderboard.length; i++) {
-        if (genderLeaderboard[i].user_id === currentUser.id) { 
-          genderPlace = (i + 1).toString(); 
-          break; 
-        }
-      }
-      
-      const age = profile?.birth_date ? Math.floor((new Date() - new Date(profile.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : null;
-      if (age) {
-        const ageGroup = getAgeGroup(age);
-        ageGroupName = ageGroup || '';
-        const ageLeaderboard = leaderboard.filter(l => l.age_group === ageGroup);
-        for (let i = 0; i < ageLeaderboard.length; i++) {
-          if (ageLeaderboard[i].user_id === currentUser.id) { 
-            agePlace = (i + 1).toString(); 
-            break; 
-          }
-        }
-      }
-      
+    const loadPlaces = async (profile) => {
+      const { data: lb } = await sb.from('leaderboard').select('*').order('total_km', { ascending: false });
+      if(!lb) return { absolute:'—', gender:'—', age:'—', ageGroupName:'' };
+      let absolute='—', genderPlace='—', agePlace='—', ageGroupName='';
+      for(let i=0;i<lb.length;i++) if(lb[i].user_id===currentUser.id) { absolute=(i+1).toString(); break; }
+      const genderLb = lb.filter(l=>l.gender===profile?.gender);
+      for(let i=0;i<genderLb.length;i++) if(genderLb[i].user_id===currentUser.id) { genderPlace=(i+1).toString(); break; }
+      const age = profile?.birth_date ? Math.floor((new Date()-new Date(profile.birth_date))/(365.25*24*60*60*1000)) : null;
+      if(age){ const ageGroup=getAgeGroup(age); ageGroupName=ageGroup||''; const ageLb=lb.filter(l=>l.age_group===ageGroup); for(let i=0;i<ageLb.length;i++) if(ageLb[i].user_id===currentUser.id) { agePlace=(i+1).toString(); break; } }
       return { absolute, gender: genderPlace, age: agePlace, ageGroupName };
-    }
+    };
     
-    async function loadWeeklyChart() {
-      const today = new Date();
-      const startOfWeek = new Date(today);
-      startOfWeek.setDate(today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1));
-      startOfWeek.setHours(0, 0, 0, 0);
-      const startOfWeekStr = startOfWeek.toISOString().split('T')[0];
-      
-      const { data, error } = await sb
-        .from('activities')
-        .select('distance_km, activity_date')
-        .eq('user_id', currentUser.id)
-        .gte('activity_date', startOfWeekStr);
-      
-      if (error) return [];
-      
+    const loadWeeklyChart = async () => {
+      const today = new Date(), startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - today.getDay() + (today.getDay()===0?-6:1));
+      startOfWeek.setHours(0,0,0,0);
+      const { data } = await sb.from('activities').select('distance_km, activity_date').eq('user_id', currentUser.id).gte('activity_date', startOfWeek.toISOString().split('T')[0]);
+      if(!data) return [];
       const days = [];
-      for (let i = 0; i < 7; i++) {
-        const date = new Date(startOfWeek);
-        date.setDate(startOfWeek.getDate() + i);
-        days.push({
-          name: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'][i],
-          date: date.toISOString().split('T')[0],
-          km: 0
-        });
-      }
-      
-      data.forEach(a => { 
-        const day = days.find(d => d.date === a.activity_date); 
-        if (day) day.km += a.distance_km || 0; 
-      });
-      
+      for(let i=0;i<7;i++){ const d=new Date(startOfWeek); d.setDate(startOfWeek.getDate()+i); days.push({ name:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'][i], date:d.toISOString().split('T')[0], km:0 }); }
+      data.forEach(a=>{ const day=days.find(d=>d.date===a.activity_date); if(day) day.km+=a.distance_km||0; });
       return days;
-    }
+    };
     
-    async function loadLeaderboard(limit = 100) {
-      let query = sb.from('leaderboard').select('*');
-      
-      if (leaderboardFilterGender !== 'all') {
-        query = query.eq('gender', leaderboardFilterGender);
-      }
-      if (leaderboardFilterAge !== 'all') {
-        query = query.eq('age_group', leaderboardFilterAge);
-      }
-      
-      const { data, error } = await query
-        .order(leaderboardSort, { ascending: leaderboardOrder === 'asc' })
-        .limit(limit);
-      
-      if (error) return [];
+    const loadLeaderboard = async (limit=100) => {
+      let q = sb.from('leaderboard').select('*');
+      if(leaderboardFilterGender !== 'all') q = q.eq('gender', leaderboardFilterGender);
+      if(leaderboardFilterAge !== 'all') q = q.eq('age_group', leaderboardFilterAge);
+      const { data } = await q.order(leaderboardSort, { ascending: leaderboardOrder==='asc' }).limit(limit);
       return data || [];
-    }
+    };
     
-    function changeLeaderboardSort(field) {
-      if (leaderboardSort === field) {
-        leaderboardOrder = leaderboardOrder === 'desc' ? 'asc' : 'desc';
-      } else {
-        leaderboardSort = field;
-        leaderboardOrder = 'desc';
-      }
-      if (currentPage === 'leaderboard') {
-        renderLeaderboardPage();
-      }
-    }
+    const loadAllActivities = async () => { const { data } = await sb.from('activities').select('*').eq('user_id', currentUser.id).order('activity_date', { ascending: false }); return data || []; };
+    const changeLeaderboardSort = f => { if(leaderboardSort===f) leaderboardOrder = leaderboardOrder==='desc'?'asc':'desc'; else { leaderboardSort=f; leaderboardOrder='desc'; } if(currentPage==='leaderboard') renderLeaderboardPage(); };
     
-    // ============= ОТРИСОВКА СТРАНИЦ =============
+    // ============= WEBHOOK FUNCTIONS =============
+    const setupWebhook = async () => {
+      const statusDiv = document.getElementById('webhook-setup-status'), btn = document.getElementById('setup-webhook-btn');
+      if(btn) { btn.disabled=true; btn.innerHTML='<span class="loader"></span> Настройка...'; }
+      if(statusDiv) statusDiv.innerHTML='<div class="loader"></div> Настройка Webhook...';
+      try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/webhook/subscribe`, { method:'POST', headers:{'Content-Type':'application/json'} });
+        const result = await res.json();
+        if(result.success) { statusDiv.innerHTML='<div style="color:#ffd966;">✅ Webhook успешно настроен! Новые тренировки будут приходить автоматически.</div>'; showToast('Webhook настроен!', 5000); setTimeout(()=>renderSyncPage(),2000); }
+        else throw new Error(result.error);
+      } catch(e) { statusDiv.innerHTML=`<div style="color:#ff6b6b;">❌ Ошибка: ${e.message}</div>`; showToast(`Ошибка: ${e.message}`,5000); }
+      finally { if(btn) { btn.disabled=false; btn.innerHTML='🔌 Настроить Webhook'; } }
+    };
     
-    function renderAuth() {
+    const deleteWebhook = async () => {
+      if(!confirm('Отключить Webhook? Новые тренировки перестанут приходить автоматически.')) return;
+      const btn = document.getElementById('delete-webhook-btn'), block = document.getElementById('webhook-status-block');
+      if(btn) { btn.disabled=true; btn.innerHTML='<span class="loader"></span> Отключение...'; }
+      try {
+        const statusRes = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/webhook/status`);
+        const status = await statusRes.json();
+        if(status.subscriptions?.length){
+          const id = status.subscriptions[0].id;
+          const res = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/webhook/delete?id=${id}`, { method:'DELETE' });
+          const result = await res.json();
+          if(result.success) { showToast('Webhook отключен',3000); setTimeout(()=>renderSyncPage(),1000); }
+          else throw new Error(result.error);
+        } else throw new Error('Нет активных подписок');
+      } catch(e) { showToast(`Ошибка: ${e.message}`,5000); if(block) block.innerHTML=`<div style="color:#ff6b6b;">❌ ${e.message}</div>`; }
+      finally { if(btn) { btn.disabled=false; btn.innerHTML='🗑 Отключить Webhook'; } }
+    };
+    
+    const checkWebhookStatus = async () => {
+      const block = document.getElementById('webhook-status-block');
+      if(block) block.innerHTML='<div class="loader"></div> Проверка...';
+      try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/webhook/status`);
+        const data = await res.json();
+        if(data.success && data.subscriptions?.length){
+          const sub = data.subscriptions[0];
+          block.innerHTML = `<div style="background:rgba(255,217,102,0.1);border-radius:20px;padding:16px;border:1px solid rgba(255,217,102,0.3);"><div style="display:flex;gap:12px;margin-bottom:12px;"><div style="font-size:24px;">✅</div><div><div style="font-weight:600;color:#ffd966;">Webhook активен</div><div style="font-size:12px;color:rgba(255,255,255,0.6);">ID: ${sub.id}</div></div></div><div style="font-size:13px;">📅 Создан: ${new Date(sub.created_at).toLocaleString()}</div><button id="delete-webhook-btn" style="margin-top:16px;background:linear-gradient(135deg,#e74c3c,#c0392b);">🗑 Отключить Webhook</button></div>`;
+          document.getElementById('delete-webhook-btn')?.addEventListener('click', deleteWebhook);
+        } else { block.innerHTML = '<div style="background:rgba(255,255,255,0.05);border-radius:20px;padding:16px;"><div style="font-weight:600;">🔌 Webhook не настроен</div><div style="font-size:12px;">Нажмите "Настроить Webhook" для активации</div></div>'; }
+      } catch(e) { block.innerHTML = `<div style="color:#ff6b6b;">❌ ${e.message}</div>`; }
+    };
+    
+    const syncClubActivities = async (customDate) => {
+      const btn = document.getElementById('sync-custom-btn'), statusDiv = document.getElementById('sync-status');
+      if(btn) btn.disabled=true;
+      if(statusDiv) statusDiv.innerHTML='<div class="loader"></div> Синхронизация...';
+      try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/club/sync`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(customDate ? { fromDate: customDate } : {}) });
+        const result = await res.json();
+        if(result.success) statusDiv.innerHTML = `<div style="color:#ffd966;">✅ ${result.message || `Синхронизировано ${result.saved} тренировок`}</div>`;
+        else throw new Error(result.error);
+      } catch(e) { statusDiv.innerHTML = `<div style="color:#ff6b6b;">❌ ${e.message}</div>`; }
+      finally { if(btn) btn.disabled=false; setTimeout(()=>{ if(statusDiv) statusDiv.innerHTML=''; },5000); }
+    };
+    
+    const checkRateLimit = async () => {
+      const btn = document.getElementById('check-rate-limit-btn'), div = document.getElementById('rate-limit-info');
+      if(btn) { btn.disabled=true; btn.innerHTML='<span class="loader"></span> Проверка...'; }
+      if(div) { div.style.display='block'; div.innerHTML='<div class="loader"></div> Получение...'; }
+      try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/rate-limit`);
+        const data = await res.json();
+        if(data.success){
+          const percent = data.usagePercent, color = data.status==='limited'?'#e74c3c':data.status==='warning'?'#e67e22':'#ffd966';
+          div.innerHTML = `<div style="background:rgba(255,255,255,0.05);border-radius:20px;padding:16px;"><div style="display:flex;justify-content:space-between;margin-bottom:12px;"><span>📊 Лимиты Strava API</span><span style="color:${color};">${data.remaining}/${data.limit}</span></div><div style="background:rgba(255,255,255,0.2);border-radius:10px;height:8px;"><div style="background:${color};width:${percent}%;height:100%;border-radius:10px;"></div></div><div>📈 Использовано: ${data.used} (${percent}%)<br>⏱ Сброс через: ${data.resetTimeRelative}</div></div>`;
+        } else throw new Error(data.error);
+      } catch(e) { div.innerHTML = `<div style="color:#ff6b6b;">❌ ${e.message}</div>`; }
+      finally { if(btn) { btn.disabled=false; btn.innerHTML='📊 Проверить лимиты'; } }
+    };
+    
+    // ============= RENDER PAGES =============
+    const renderAuth = () => {
       document.getElementById('app').innerHTML = `
-        <div class="container">
-          <div class="card">
-            <h1 style="color: white; text-align: center;">Спортивный челлендж</h1>
-            <p style="color: rgba(255,255,255,0.7); text-align: center; margin-bottom: 24px;">Присоединяйтесь к клубу Strava, чтобы ваши тренировки автоматически учитывались в челлендже</p>
-            
-            <div style="margin-bottom:24px; display:flex; gap:10px;">
-              <button style="flex:1; background: linear-gradient(135deg, #ffd966, #ffb347);" onclick="document.getElementById('login-form').style.display='block'; document.getElementById('register-form').style.display='none';">Вход</button>
-              <button style="flex:1; background: rgba(255,255,255,0.2);" onclick="document.getElementById('register-form').style.display='block'; document.getElementById('login-form').style.display='none';">Регистрация</button>
-            </div>
-            
-            <div id="login-form">
-              <input type="text" id="login-username" placeholder="Логин" autocomplete="username">
-              <input type="password" id="login-password" placeholder="Пароль" autocomplete="current-password">
-              <button onclick="login()">Войти</button>
-              <div id="login-error" class="error"></div>
-            </div>
-            
-            <div id="register-form" style="display:none;">
-              <input type="text" id="reg-username" placeholder="Логин" autocomplete="username">
-              <input type="text" id="reg-firstname" placeholder="Имя">
-              <input type="text" id="reg-lastname" placeholder="Фамилия">
-              <div class="info-text" style="margin-bottom: 8px;">
-                🔍 Как найти Strava username: зайдите в Strava → Настройки → Custom URL
-              </div>
-              <input type="text" id="reg-strava-username" placeholder="Strava username" autocomplete="off">
-              <select id="reg-gender">
-                <option value="">Пол</option>
-                <option value="male">Мужчина</option>
-                <option value="female">Женщина</option>
-              </select>
-              <input type="date" id="reg-birthdate" placeholder="Дата рождения">
-              <input type="password" id="reg-password" placeholder="Пароль" autocomplete="new-password">
-              <button onclick="register()">Зарегистрироваться</button>
-              <div id="register-error" class="error"></div>
-            </div>
-          </div>
-          
-          <div class="club-promo">
-            <p>Присоединяйтесь к клубу YANAO-UGRA-BATTLE на Strava</p>
-            <a href="https://www.strava.com/clubs/2034009" target="_blank" class="club-link">
-              <span>Перейти в клуб Strava</span>
-            </a>
-          </div>
-        </div>
-      `;
-    }
+        <div class="container"><div class="card"><h1 style="color:white;text-align:center;">Спортивный челлендж</h1><p style="color:rgba(255,255,255,0.7);text-align:center;">Присоединяйтесь к клубу Strava</p>
+        <div style="display:flex;gap:10px;margin-bottom:24px;"><button style="flex:1;" onclick="document.getElementById('login-form').style.display='block';document.getElementById('register-form').style.display='none';">Вход</button><button style="flex:1;background:rgba(255,255,255,0.2);" onclick="document.getElementById('register-form').style.display='block';document.getElementById('login-form').style.display='none';">Регистрация</button></div>
+        <div id="login-form"><input id="login-username" placeholder="Логин"><input id="login-password" type="password" placeholder="Пароль"><button onclick="login()">Войти</button><div id="login-error" class="error"></div></div>
+        <div id="register-form" style="display:none;"><input id="reg-username" placeholder="Логин"><input id="reg-firstname" placeholder="Имя"><input id="reg-lastname" placeholder="Фамилия"><div class="info-text">🔍 Как найти Strava username: Настройки → Custom URL</div><input id="reg-strava-username" placeholder="Strava username"><select id="reg-gender"><option value="">Пол</option><option value="male">Мужчина</option><option value="female">Женщина</option></select><input id="reg-birthdate" type="date" placeholder="Дата рождения"><input id="reg-password" type="password" placeholder="Пароль"><button onclick="register()">Зарегистрироваться</button><div id="register-error" class="error"></div></div></div>
+        <div class="club-promo"><p>Присоединяйтесь к клубу YANAO-UGRA-BATTLE</p><a href="https://www.strava.com/clubs/2034009" target="_blank" class="club-link">Перейти в клуб Strava</a></div></div>`;
+    };
     
-    async function renderHome() {
-      document.getElementById('app').innerHTML = `
-        <div class="fixed-header">
-          <div class="user-info">
-            <div class="user-name">Загрузка...</div>
-            <div class="user-details"></div>
-          </div>
-          <div class="burger" onclick="openMenu()">
-            <span></span><span></span><span></span>
-          </div>
-        </div>
-        
-        <div class="container">
-          <div class="club-promo">
-            <p>Присоединяйтесь к клубу YANAO-UGRA-BATTLE на Strava</p>
-            <a href="https://www.strava.com/clubs/2034009" target="_blank" class="club-link">
-              <span>Перейти в клуб Strava</span>
-            </a>
-          </div>
-          
-          <div id="stats-container" class="card" style="padding: 20px;">
-            <div class="skeleton" style="height: 180px;"></div>
-          </div>
-          
-          <div id="chart-container">
-            <div class="skeleton" style="height: 200px; border-radius: 28px;"></div>
-          </div>
-        </div>
-        
-        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
-        <div id="menu" class="menu">
-          <div class="menu-header"><strong>Меню</strong></div>
-          <div class="menu-item" onclick="navigateTo('home'); closeMenu();"><span>🏠</span><span>Главная</span></div>
-          <div class="menu-item" onclick="navigateTo('leaderboard'); closeMenu();"><span>🏆</span><span>Таблица лидеров</span></div>
-          <div class="menu-item" onclick="navigateTo('activities'); closeMenu();"><span>📋</span><span>Мои тренировки</span></div>
-          <div class="menu-item" onclick="navigateTo('achievements'); closeMenu();"><span>🏅</span><span>Достижения</span></div>
-          <div class="menu-item" onclick="navigateTo('points'); closeMenu();"><span>⭐</span><span>Баллы</span></div>
-          <div class="menu-item" onclick="navigateTo('abilities'); closeMenu();"><span>⚡</span><span>Способности</span></div>
-          <div class="menu-item" onclick="navigateTo('news'); closeMenu();"><span>📰</span><span>Лента новостей</span></div>
-          <div class="menu-item" onclick="navigateTo('settings'); closeMenu();"><span>⚙️</span><span>Настройки</span></div>
-          ${isAdmin ? `<div class="menu-item" onclick="navigateTo('sync'); closeMenu();"><span>🔄</span><span>Синхронизация</span></div>` : ''}
-          <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
-        </div>
-      `;
+    const renderHome = async () => {
+      document.getElementById('app').innerHTML = `<div class="fixed-header"><div class="user-info"><div class="user-name">Загрузка...</div><div class="user-details"></div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div><div class="container"><div class="club-promo"><p>Присоединяйтесь к клубу YANAO-UGRA-BATTLE</p><a href="https://www.strava.com/clubs/2034009" target="_blank" class="club-link">Перейти в клуб Strava</a></div><div id="stats-container" class="card"><div class="skeleton" style="height:180px;"></div></div><div id="chart-container"><div class="skeleton" style="height:200px;"></div></div><div id="news-container"><div class="skeleton" style="height:250px;"></div></div></div><div id="menu-overlay" class="menu-overlay"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div>${['home','leaderboard','activities','achievements','points','abilities','news','settings'].map(p=>`<div class="menu-item" onclick="navigateTo('${p}');closeMenu();"><span>${p==='home'?'🏠':p==='leaderboard'?'🏆':p==='activities'?'📋':p==='achievements'?'🏅':p==='points'?'⭐':p==='abilities'?'⚡':p==='news'?'📰':'⚙️'}</span><span>${p==='home'?'Главная':p==='leaderboard'?'Таблица лидеров':p==='activities'?'Мои тренировки':p==='achievements'?'Достижения':p==='points'?'Баллы':p==='abilities'?'Способности':p==='news'?'Лента новостей':'Настройки'}</span></div>`).join('')}${isAdmin?'<div class="menu-item" onclick="navigateTo(\'sync\');closeMenu();"><span>🔄</span><span>Синхронизация</span></div>':''}<div class="menu-item" onclick="logout();closeMenu();"><span>🚪</span><span>Выход</span></div></div>`;
       
+      const [profile, stats, places, weeklyData] = await Promise.all([loadProfile(), loadStats(), loadPlaces(await loadProfile()), loadWeeklyChart()]);
+      const maxKm = Math.max(...weeklyData.map(d=>d.km),1), totalPoints = Math.floor(stats.totalKm*10), totalAchievements = Math.floor(stats.trainingsCount/5);
+      const genderText = profile?.gender==='male'?'мужчины':profile?.gender==='female'?'женщины':'', ageText = places.ageGroupName?`${places.ageGroupName} лет`:'';
+      
+      document.getElementById('app').innerHTML = `
+        <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(profile?.name_full||currentUser.email?.split('@')[0])}</div><div class="user-details">${profile?.gender==='male'?'Мужчина':'Женщина'}, ${profile?.birth_date?Math.floor((new Date()-new Date(profile.birth_date))/(365.25*24*60*60*1000)):'—'} лет</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
+        <div class="container"><div class="club-promo"><p>Присоединяйтесь к клубу YANAO-UGRA-BATTLE</p><a href="https://www.strava.com/clubs/2034009" target="_blank" class="club-link">Перейти в клуб Strava</a></div>
+        <div class="card"><div class="stats-row"><div class="stat-item"><div class="stat-value">${stats.totalKm}</div><div class="stat-label">км всего</div></div><div class="stat-item"><div class="stat-value">${stats.totalTime}</div><div class="stat-label">время</div></div><div class="stat-item"><div class="stat-value">${stats.avgPace}</div><div class="stat-label">темп</div></div></div>
+        <div class="info-row"><div class="info-card" onclick="navigateTo('points')"><div class="info-value">${totalPoints}</div><div class="info-label">баллов</div></div><div class="info-card" onclick="navigateTo('achievements')"><div class="info-value">${totalAchievements}/20</div><div class="info-label">достижений</div></div><div class="info-card" onclick="navigateTo('leaderboard')"><div class="info-value">${stats.trainingsCount}</div><div class="info-label">тренировок</div></div></div>
+        <div class="places-row"><div class="place-card" onclick="navigateTo('leaderboard')"><div class="place-title">Абсолют</div><div class="place-value">${places.absolute} место</div></div><div class="place-card" onclick="navigateTo('leaderboard')"><div class="place-title">${genderText||'Среди участников'}</div><div class="place-value">${places.gender} место</div></div><div class="place-card" onclick="navigateTo('leaderboard')"><div class="place-title">${ageText||'Возрастная группа'}</div><div class="place-value">${places.age} место</div></div></div></div>
+        <div class="chart"><h3>Недельная динамика</h3><div class="chart-bars">${weeklyData.map(day=>`<div class="bar-container"><div class="bar-value">${day.km.toFixed(1)}</div><div class="bar" style="height:${Math.max(4,(day.km/maxKm)*100)}px"></div><div class="bar-label">${day.name}<br>${day.date.slice(5)}</div></div>`).join('')}</div></div>
+        <div class="card"><h3 style="color:white;">📰 Последние события</h3><div class="news-feed">${newsFeed.slice(0,5).map(i=>`<div class="news-item"><div class="news-icon">${i.icon}</div><div class="news-content"><div class="news-text">${escapeHtml(i.user)} ${escapeHtml(i.text)}</div><div class="news-time">${escapeHtml(i.time)}</div></div></div>`).join('')}</div><div class="show-all" onclick="navigateTo('news')">Все новости →</div></div></div>
+        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div>${['home','leaderboard','activities','achievements','points','abilities','news','settings'].map(p=>`<div class="menu-item" onclick="navigateTo('${p}');closeMenu();"><span>${p==='home'?'🏠':p==='leaderboard'?'🏆':p==='activities'?'📋':p==='achievements'?'🏅':p==='points'?'⭐':p==='abilities'?'⚡':p==='news'?'📰':'⚙️'}</span><span>${p==='home'?'Главная':p==='leaderboard'?'Таблица лидеров':p==='activities'?'Мои тренировки':p==='achievements'?'Достижения':p==='points'?'Баллы':p==='abilities'?'Способности':p==='news'?'Лента новостей':'Настройки'}</span></div>`).join('')}${isAdmin?'<div class="menu-item" onclick="navigateTo(\'sync\');closeMenu();"><span>🔄</span><span>Синхронизация</span></div>':''}<div class="menu-item" onclick="logout();closeMenu();"><span>🚪</span><span>Выход</span></div></div>`;
+    };
+    
+    const renderSyncPage = async () => {
       const profile = await loadProfile();
-      const stats = await loadStats();
-      const places = await loadPlaces(profile);
-      const weeklyData = await loadWeeklyChart();
-      const maxKm = Math.max(...weeklyData.map(d => d.km), 1);
-      const totalPoints = Math.floor(stats.totalKm * 10);
-      const totalAchievements = Math.floor(stats.trainingsCount / 5);
-      const maxAchievements = 20;
-      
-      const genderText = profile?.gender === 'male' ? 'мужчины' : profile?.gender === 'female' ? 'женщины' : '';
-      const ageGroupText = places.ageGroupName ? `${places.ageGroupName} лет` : '';
-      
-      // Последние 5 новостей
-      const latestNews = newsFeed.slice(0, 5);
+      let webhookStatus = null;
+      try { const res = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/webhook/status`); webhookStatus = await res.json(); } catch(e) {}
+      const hasSubscription = webhookStatus?.subscriptions?.length > 0, sub = hasSubscription ? webhookStatus.subscriptions[0] : null;
       
       document.getElementById('app').innerHTML = `
-        <div class="fixed-header">
-          <div class="user-info">
-            <div class="user-name">${escapeHtml(profile?.name_full || currentUser.email?.split('@')[0])}</div>
-            <div class="user-details">
-              ${profile?.gender === 'male' ? 'Мужчина' : profile?.gender === 'female' ? 'Женщина' : '—'}, 
-              ${profile?.birth_date ? Math.floor((new Date() - new Date(profile.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : '—'} лет
-            </div>
-          </div>
-          <div class="burger" onclick="openMenu()">
-            <span></span><span></span><span></span>
-          </div>
-        </div>
-        
-        <div class="container">
-          <div class="club-promo">
-            <p>Присоединяйтесь к клубу YANAO-UGRA-BATTLE на Strava</p>
-            <a href="https://www.strava.com/clubs/2034009" target="_blank" class="club-link">
-              <span>Перейти в клуб Strava</span>
-            </a>
-          </div>
-          
-          <!-- Статистика в 3 колонки -->
-          <div class="card">
-            <div class="stats-row">
-              <div class="stat-item">
-                <div class="stat-value">${stats.totalKm}</div>
-                <div class="stat-label">км всего</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-value">${stats.totalTime}</div>
-                <div class="stat-label">время</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-value">${stats.avgPace}</div>
-                <div class="stat-label">средний темп</div>
-              </div>
-            </div>
-            
-            <div class="info-row">
-              <div class="info-card" onclick="navigateTo('points')">
-                <div class="info-value">${totalPoints}</div>
-                <div class="info-label">баллов</div>
-              </div>
-              <div class="info-card" onclick="navigateTo('achievements')">
-                <div class="info-value">${totalAchievements} / ${maxAchievements}</div>
-                <div class="info-label">достижений</div>
-              </div>
-              <div class="info-card" onclick="navigateTo('leaderboard')">
-                <div class="info-value">${stats.trainingsCount}</div>
-                <div class="info-label">тренировок</div>
-              </div>
-            </div>
-            
-            <div class="places-row">
-              <div class="place-card" onclick="navigateTo('leaderboard')">
-                <div class="place-title">Абсолют</div>
-                <div class="place-value">${places.absolute} место</div>
-              </div>
-              <div class="place-card" onclick="navigateTo('leaderboard')">
-                <div class="place-title">${genderText || 'Среди участников'}</div>
-                <div class="place-value">${places.gender} место</div>
-              </div>
-              <div class="place-card" onclick="navigateTo('leaderboard')">
-                <div class="place-title">${ageGroupText || 'Возрастная группа'}</div>
-                <div class="place-value">${places.age} место</div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Лента новостей -->
-          <div class="card">
-            <h3 style="color: white; margin-bottom: 16px;">📰 Последние события</h3>
-            <div class="news-feed">
-              ${latestNews.map(item => `
-                <div class="news-item">
-                  <div class="news-icon">${item.icon}</div>
-                  <div class="news-content">
-                    <div class="news-text">${escapeHtml(item.user)} ${escapeHtml(item.text)}</div>
-                    <div class="news-time">${escapeHtml(item.time)}</div>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-            <div class="show-all" onclick="navigateTo('news')">Все новости →</div>
-          </div>
-          
-          <!-- График тренировок -->
-          <div class="chart">
-            <h3>Недельная динамика</h3>
-            <div class="chart-bars">
-              ${weeklyData.map(day => `
-                <div class="bar-container">
-                  <div class="bar-value">${day.km.toFixed(1)}</div>
-                  <div class="bar" style="height: ${Math.max(4, (day.km / maxKm) * 100)}px"></div>
-                  <div class="bar-label">${day.name}<br>${day.date.slice(5)}</div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        </div>
-        
-        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
-        <div id="menu" class="menu">
-          <div class="menu-header"><strong>Меню</strong></div>
-          <div class="menu-item" onclick="navigateTo('home'); closeMenu();"><span>🏠</span><span>Главная</span></div>
-          <div class="menu-item" onclick="navigateTo('leaderboard'); closeMenu();"><span>🏆</span><span>Таблица лидеров</span></div>
-          <div class="menu-item" onclick="navigateTo('activities'); closeMenu();"><span>📋</span><span>Мои тренировки</span></div>
-          <div class="menu-item" onclick="navigateTo('achievements'); closeMenu();"><span>🏅</span><span>Достижения</span></div>
-          <div class="menu-item" onclick="navigateTo('points'); closeMenu();"><span>⭐</span><span>Баллы</span></div>
-          <div class="menu-item" onclick="navigateTo('abilities'); closeMenu();"><span>⚡</span><span>Способности</span></div>
-          <div class="menu-item" onclick="navigateTo('news'); closeMenu();"><span>📰</span><span>Лента новостей</span></div>
-          <div class="menu-item" onclick="navigateTo('settings'); closeMenu();"><span>⚙️</span><span>Настройки</span></div>
-          ${isAdmin ? `<div class="menu-item" onclick="navigateTo('sync'); closeMenu();"><span>🔄</span><span>Синхронизация</span></div>` : ''}
-          <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
-        </div>
-      `;
-    }
-    
-    // Остальные функции (renderActivitiesPage, renderNewsPage, renderLeaderboardPage, renderAchievementsPage, renderPointsPage, renderAbilitiesPage, renderSettingsPage, renderSyncPage, renderUserProfile, saveSettings, syncClubActivities, resetSyncDate, checkRateLimit) остаются без изменений...
-    
-    // Для краткости, остальные функции здесь не повторяем, они такие же как в предыдущей версии
-    
-    async function renderActivitiesPage() {
-      const profile = await loadProfile();
-      const activities = await loadAllActivities();
+        <div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(profile?.name_full||currentUser.email?.split('@')[0])}</div><div class="user-details">Администратор</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div>
+        <div class="container"><div class="card"><h2 style="color:white;">🔔 Мгновенная синхронизация (Webhook)</h2><div class="info-text">⚡ После настройки Webhook новые тренировки будут появляться <strong>мгновенно</strong> (через 5-10 секунд). Не тратятся лимиты API.</div>
+        <div id="webhook-status-block">${hasSubscription?`<div style="background:rgba(255,217,102,0.1);border-radius:20px;padding:16px;"><div style="display:flex;gap:12px;"><div style="font-size:24px;">✅</div><div><div style="color:#ffd966;">Webhook активен</div><div style="font-size:12px;">ID: ${sub.id}</div></div></div><button id="delete-webhook-btn" style="margin-top:16px;background:linear-gradient(135deg,#e74c3c,#c0392b);">🗑 Отключить Webhook</button></div>`:`<div style="background:rgba(255,255,255,0.05);border-radius:20px;padding:16px;"><div style="font-weight:600;">🔌 Webhook не настроен</div><button id="setup-webhook-btn" style="margin-top:12px;background:linear-gradient(135deg,#9b59b6,#8e44ad);">🔌 Настроить Webhook</button><div id="webhook-setup-status" class="info-text"></div></div>`}</div></div>
+        <div class="card"><h2 style="color:white;">🔄 Ручная синхронизация</h2><div class="info-text">Только для исторических данных (если нужны)</div><input type="date" id="sync-start-date" value="2026-06-01"><button id="sync-custom-btn">🔄 Синхронизировать историю</button><div id="sync-status" class="sync-status"></div></div>
+        <div class="card"><h2 style="color:white;">📊 Статус API</h2><div style="display:flex;gap:12px;"><button id="check-rate-limit-btn">📊 Проверить лимиты</button><button id="check-webhook-status-btn">🔍 Статус Webhook</button></div><div id="rate-limit-info" style="display:none;"></div></div></div>
+        <div id="menu-overlay" class="menu-overlay"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div>${['home','leaderboard','activities','achievements','points','abilities','news','settings','sync'].map(p=>`<div class="menu-item" onclick="navigateTo('${p}');closeMenu();"><span>${p==='home'?'🏠':p==='leaderboard'?'🏆':p==='activities'?'📋':p==='achievements'?'🏅':p==='points'?'⭐':p==='abilities'?'⚡':p==='news'?'📰':p==='settings'?'⚙️':'🔄'}</span><span>${p==='home'?'Главная':p==='leaderboard'?'Таблица лидеров':p==='activities'?'Мои тренировки':p==='achievements'?'Достижения':p==='points'?'Баллы':p==='abilities'?'Способности':p==='news'?'Лента новостей':p==='settings'?'Настройки':'Синхронизация'}</span></div>`).join('')}<div class="menu-item" onclick="logout();closeMenu();"><span>🚪</span><span>Выход</span></div></div>`;
       
-      document.getElementById('app').innerHTML = `
-        <div class="fixed-header">
-          <div class="user-info">
-            <div class="user-name">${escapeHtml(profile?.name_full || currentUser.email?.split('@')[0])}</div>
-          </div>
-          <div class="burger" onclick="openMenu()">
-            <span></span><span></span><span></span>
-          </div>
-        </div>
-        
-        <div class="container">
-          <div class="card">
-            <h2 style="color: white;">Мои тренировки</h2>
-            <div class="activities-list">
-              ${activities.map(a => `
-                <div class="activity-item">
-                  <div class="activity-info">
-                    <div class="activity-name">${escapeHtml(a.name || 'Без названия')}</div>
-                    <div class="activity-meta">
-                      ${formatDate(a.activity_date)} | ${(a.distance_km || 0).toFixed(2)} км
-                      ${a.duration_min ? ' | ' + formatDuration(a.duration_min) : ''}
-                      ${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}
-                      ${a.url ? `<a href="${escapeHtml(a.url)}" target="_blank" style="color: #ffd966; margin-left: 8px;">🔗 Strava</a>` : ''}
-                    </div>
-                  </div>
-                </div>
-              `).join('') || '<div style="text-align:center; color:rgba(255,255,255,0.6); padding:40px;">Нет тренировок<br><small>Присоединитесь к клубу Strava, чтобы тренировки автоматически загружались</small></div>'}
-            </div>
-          </div>
-        </div>
-        
-        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
-        <div id="menu" class="menu">
-          <div class="menu-header"><strong>Меню</strong></div>
-          <div class="menu-item" onclick="navigateTo('home'); closeMenu();"><span>🏠</span><span>Главная</span></div>
-          <div class="menu-item" onclick="navigateTo('leaderboard'); closeMenu();"><span>🏆</span><span>Таблица лидеров</span></div>
-          <div class="menu-item" onclick="navigateTo('activities'); closeMenu();"><span>📋</span><span>Мои тренировки</span></div>
-          <div class="menu-item" onclick="navigateTo('achievements'); closeMenu();"><span>🏅</span><span>Достижения</span></div>
-          <div class="menu-item" onclick="navigateTo('points'); closeMenu();"><span>⭐</span><span>Баллы</span></div>
-          <div class="menu-item" onclick="navigateTo('abilities'); closeMenu();"><span>⚡</span><span>Способности</span></div>
-          <div class="menu-item" onclick="navigateTo('news'); closeMenu();"><span>📰</span><span>Лента новостей</span></div>
-          <div class="menu-item" onclick="navigateTo('settings'); closeMenu();"><span>⚙️</span><span>Настройки</span></div>
-          ${isAdmin ? `<div class="menu-item" onclick="navigateTo('sync'); closeMenu();"><span>🔄</span><span>Синхронизация</span></div>` : ''}
-          <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
-        </div>
-      `;
-    }
+      document.getElementById('setup-webhook-btn')?.addEventListener('click', setupWebhook);
+      document.getElementById('delete-webhook-btn')?.addEventListener('click', deleteWebhook);
+      document.getElementById('check-webhook-status-btn')?.addEventListener('click', checkWebhookStatus);
+      document.getElementById('sync-custom-btn')?.addEventListener('click', () => { const d=document.getElementById('sync-start-date')?.value; if(d) syncClubActivities(d); else showToast('Выберите дату',3000); });
+      document.getElementById('check-rate-limit-btn')?.addEventListener('click', checkRateLimit);
+    };
     
-    async function renderNewsPage() {
-      const profile = await loadProfile();
-      
-      document.getElementById('app').innerHTML = `
-        <div class="fixed-header">
-          <div class="user-info">
-            <div class="user-name">${escapeHtml(profile?.name_full || currentUser.email?.split('@')[0])}</div>
-          </div>
-          <div class="burger" onclick="openMenu()">
-            <span></span><span></span><span></span>
-          </div>
-        </div>
-        
-        <div class="container">
-          <div class="card">
-            <h2 style="color: white;">Лента новостей</h2>
-            <div class="news-feed">
-              ${newsFeed.map(item => `
-                <div class="news-item">
-                  <div class="news-icon">${item.icon}</div>
-                  <div class="news-content">
-                    <div class="news-text">${escapeHtml(item.user)} ${escapeHtml(item.text)}</div>
-                    <div class="news-time">${escapeHtml(item.time)}</div>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        </div>
-        
-        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
-        <div id="menu" class="menu">
-          <div class="menu-header"><strong>Меню</strong></div>
-          <div class="menu-item" onclick="navigateTo('home'); closeMenu();"><span>🏠</span><span>Главная</span></div>
-          <div class="menu-item" onclick="navigateTo('leaderboard'); closeMenu();"><span>🏆</span><span>Таблица лидеров</span></div>
-          <div class="menu-item" onclick="navigateTo('activities'); closeMenu();"><span>📋</span><span>Мои тренировки</span></div>
-          <div class="menu-item" onclick="navigateTo('achievements'); closeMenu();"><span>🏅</span><span>Достижения</span></div>
-          <div class="menu-item" onclick="navigateTo('points'); closeMenu();"><span>⭐</span><span>Баллы</span></div>
-          <div class="menu-item" onclick="navigateTo('abilities'); closeMenu();"><span>⚡</span><span>Способности</span></div>
-          <div class="menu-item" onclick="navigateTo('news'); closeMenu();"><span>📰</span><span>Лента новостей</span></div>
-          <div class="menu-item" onclick="navigateTo('settings'); closeMenu();"><span>⚙️</span><span>Настройки</span></div>
-          ${isAdmin ? `<div class="menu-item" onclick="navigateTo('sync'); closeMenu();"><span>🔄</span><span>Синхронизация</span></div>` : ''}
-          <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
-        </div>
-      `;
-    }
+    const renderActivitiesPage = async () => {
+      const profile = await loadProfile(), activities = await loadAllActivities();
+      document.getElementById('app').innerHTML = `<div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(profile?.name_full||currentUser.email?.split('@')[0])}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div><div class="container"><div class="card"><h2 style="color:white;">Мои тренировки</h2><div class="activities-list">${activities.map(a=>`<div class="activity-item"><div><div class="activity-name">${escapeHtml(a.name||'Без названия')}</div><div class="activity-meta">${formatDate(a.activity_date)} | ${(a.distance_km||0).toFixed(2)} км${a.duration_min?` | ${formatDuration(a.duration_min)}`:''}${a.pace_min_per_km?` | темп ${a.pace_min_per_km}`:''}${a.url?` | <a href="${escapeHtml(a.url)}" target="_blank" style="color:#ffd966;">Strava</a>`:''}</div></div></div>`).join('')||'<div style="text-align:center;color:rgba(255,255,255,0.6);padding:40px;">Нет тренировок</div>'}</div></div></div><div id="menu-overlay" class="menu-overlay"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div>${['home','leaderboard','activities','achievements','points','abilities','news','settings'].map(p=>`<div class="menu-item" onclick="navigateTo('${p}');closeMenu();"><span>${p==='home'?'🏠':p==='leaderboard'?'🏆':p==='activities'?'📋':p==='achievements'?'🏅':p==='points'?'⭐':p==='abilities'?'⚡':p==='news'?'📰':'⚙️'}</span><span>${p==='home'?'Главная':p==='leaderboard'?'Таблица лидеров':p==='activities'?'Мои тренировки':p==='achievements'?'Достижения':p==='points'?'Баллы':p==='abilities'?'Способности':p==='news'?'Лента новостей':'Настройки'}</span></div>`).join('')}${isAdmin?'<div class="menu-item" onclick="navigateTo(\'sync\');closeMenu();"><span>🔄</span><span>Синхронизация</span></div>':''}<div class="menu-item" onclick="logout();closeMenu();"><span>🚪</span><span>Выход</span></div></div>`;
+    };
     
-    async function renderLeaderboardPage() {
-      const profile = await loadProfile();
-      const leaderboard = await loadLeaderboard();
-      
-      const getMedalBadge = (position) => {
-        if (position === 0) return '<span class="badge badge-gold">🥇</span>';
-        if (position === 1) return '<span class="badge badge-silver">🥈</span>';
-        if (position === 2) return '<span class="badge badge-bronze">🥉</span>';
-        return '';
-      };
-      
-      const ageGroups = ['18-24', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60-64', '65-69', '70+'];
-      
-      document.getElementById('app').innerHTML = `
-        <div class="fixed-header">
-          <div class="user-info">
-            <div class="user-name">${escapeHtml(profile?.name_full || currentUser.email?.split('@')[0])}</div>
-          </div>
-          <div class="burger" onclick="openMenu()">
-            <span></span><span></span><span></span>
-          </div>
-        </div>
-        
-        <div class="container">
-          <div class="card">
-            <h2 style="color: white;">Таблица лидеров</h2>
-            
-            <div class="filter-bar">
-              <select id="filter-gender" onchange="leaderboardFilterGender=this.value; renderLeaderboardPage()">
-                <option value="all">Все участники</option>
-                <option value="male" ${leaderboardFilterGender === 'male' ? 'selected' : ''}>Мужчины</option>
-                <option value="female" ${leaderboardFilterGender === 'female' ? 'selected' : ''}>Женщины</option>
-              </select>
-              <select id="filter-age" onchange="leaderboardFilterAge=this.value; renderLeaderboardPage()">
-                <option value="all">Все возраста</option>
-                ${ageGroups.map(age => `<option value="${age}" ${leaderboardFilterAge === age ? 'selected' : ''}>${age} лет</option>`).join('')}
-              </select>
-            </div>
-            
-            <div style="overflow-x: auto;">
-              <table class="leaderboard-table">
-                <thead>
-                  <tr>
-                    <th onclick="changeLeaderboardSort('position')">Место</th>
-                    <th onclick="changeLeaderboardSort('participant')">Участник</th>
-                    <th onclick="changeLeaderboardSort('total_km')">Км</th>
-                    <th onclick="changeLeaderboardSort('activities_count')">Тренировок</th>
-                    <th onclick="changeLeaderboardSort('total_time_min')">Время</th>
-                    <th onclick="changeLeaderboardSort('avg_pace_seconds')">Темп</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${leaderboard.map((item, idx) => `
-                    <tr class="leaderboard-row" onclick="navigateTo('userProfile', '${item.user_id}')">
-                      <td><strong>${idx + 1}</strong> ${getMedalBadge(idx)}</td>
-                      <td><strong>${escapeHtml(item.participant)}</strong></td>
-                      <td><strong>${(item.total_km || 0).toFixed(2)}</strong></td>
-                      <td>${item.activities_count || 0}</td>
-                      <td>${formatDuration(item.total_time_min || 0)}</td>
-                      <td>${formatPaceFromSeconds(item.avg_pace_seconds) || '—'}</td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-            ${leaderboard.length === 0 ? '<div style="text-align:center; color:rgba(255,255,255,0.6); padding:40px;">Нет данных для отображения</div>' : ''}
-          </div>
-        </div>
-        
-        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
-        <div id="menu" class="menu">
-          <div class="menu-header"><strong>Меню</strong></div>
-          <div class="menu-item" onclick="navigateTo('home'); closeMenu();"><span>🏠</span><span>Главная</span></div>
-          <div class="menu-item" onclick="navigateTo('leaderboard'); closeMenu();"><span>🏆</span><span>Таблица лидеров</span></div>
-          <div class="menu-item" onclick="navigateTo('activities'); closeMenu();"><span>📋</span><span>Мои тренировки</span></div>
-          <div class="menu-item" onclick="navigateTo('achievements'); closeMenu();"><span>🏅</span><span>Достижения</span></div>
-          <div class="menu-item" onclick="navigateTo('points'); closeMenu();"><span>⭐</span><span>Баллы</span></div>
-          <div class="menu-item" onclick="navigateTo('abilities'); closeMenu();"><span>⚡</span><span>Способности</span></div>
-          <div class="menu-item" onclick="navigateTo('news'); closeMenu();"><span>📰</span><span>Лента новостей</span></div>
-          <div class="menu-item" onclick="navigateTo('settings'); closeMenu();"><span>⚙️</span><span>Настройки</span></div>
-          ${isAdmin ? `<div class="menu-item" onclick="navigateTo('sync'); closeMenu();"><span>🔄</span><span>Синхронизация</span></div>` : ''}
-          <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
-        </div>
-      `;
-    }
+    const renderLeaderboardPage = async () => {
+      const profile = await loadProfile(), leaderboard = await loadLeaderboard();
+      const getMedal = i => i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+      const ageGroups = ['18-24','25-29','30-34','35-39','40-44','45-49','50-54','55-59','60-64','65-69','70+'];
+      document.getElementById('app').innerHTML = `<div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(profile?.name_full||currentUser.email?.split('@')[0])}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div><div class="container"><div class="card"><h2 style="color:white;">Таблица лидеров</h2><div class="filter-bar"><select id="filter-gender" onchange="leaderboardFilterGender=this.value;renderLeaderboardPage()"><option value="all">Все участники</option><option value="male">Мужчины</option><option value="female">Женщины</option></select><select id="filter-age" onchange="leaderboardFilterAge=this.value;renderLeaderboardPage()"><option value="all">Все возраста</option>${ageGroups.map(a=>`<option value="${a}">${a} лет</option>`).join('')}</select></div><table class="leaderboard-table"><thead><tr><th onclick="changeLeaderboardSort('position')">Место</th><th onclick="changeLeaderboardSort('participant')">Участник</th><th onclick="changeLeaderboardSort('total_km')">Км</th><th onclick="changeLeaderboardSort('activities_count')">Тренировок</th><th onclick="changeLeaderboardSort('total_time_min')">Время</th><th onclick="changeLeaderboardSort('avg_pace_seconds')">Темп</th></tr></thead><tbody>${leaderboard.map((i,idx)=>`<tr class="leaderboard-row" onclick="navigateTo('userProfile','${i.user_id}')"><td><strong>${idx+1}</strong> ${getMedal(idx)}</td><td><strong>${escapeHtml(i.participant)}</strong></td><td><strong>${(i.total_km||0).toFixed(2)}</strong></td><td>${i.activities_count||0}</td><td>${formatDuration(i.total_time_min||0)}</td><td>${formatPace(i.avg_pace_seconds)||'—'}</td></tr>`).join('')}</tbody></table></div></div><div id="menu-overlay" class="menu-overlay"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div>${['home','leaderboard','activities','achievements','points','abilities','news','settings'].map(p=>`<div class="menu-item" onclick="navigateTo('${p}');closeMenu();"><span>${p==='home'?'🏠':p==='leaderboard'?'🏆':p==='activities'?'📋':p==='achievements'?'🏅':p==='points'?'⭐':p==='abilities'?'⚡':p==='news'?'📰':'⚙️'}</span><span>${p==='home'?'Главная':p==='leaderboard'?'Таблица лидеров':p==='activities'?'Мои тренировки':p==='achievements'?'Достижения':p==='points'?'Баллы':p==='abilities'?'Способности':p==='news'?'Лента новостей':'Настройки'}</span></div>`).join('')}${isAdmin?'<div class="menu-item" onclick="navigateTo(\'sync\');closeMenu();"><span>🔄</span><span>Синхронизация</span></div>':''}<div class="menu-item" onclick="logout();closeMenu();"><span>🚪</span><span>Выход</span></div></div>`;
+    };
     
-    async function renderAchievementsPage() {
-      const profile = await loadProfile();
-      const stats = await loadStats();
-      const totalAchievements = Math.floor(stats.trainingsCount / 5);
-      const maxAchievements = 20;
-      
-      document.getElementById('app').innerHTML = `
-        <div class="fixed-header">
-          <div class="user-info">
-            <div class="user-name">${escapeHtml(profile?.name_full || currentUser.email?.split('@')[0])}</div>
-          </div>
-          <div class="burger" onclick="openMenu()">
-            <span></span><span></span><span></span>
-          </div>
-        </div>
-        
-        <div class="container">
-          <div class="card">
-            <h2 style="color: white;">Достижения</h2>
-            <div class="stat-value" style="text-align: center; font-size: 48px; color: #ffd966;">${totalAchievements} / ${maxAchievements}</div>
-            <div class="stat-label" style="text-align: center; margin-bottom: 20px; color: rgba(255,255,255,0.7);">получено достижений</div>
-            
-            <div class="stats-row">
-              <div class="stat-item"><div class="stat-value">🏅</div><div class="stat-label">Первый километр</div><div class="stat-label" style="color: ${stats.totalKm > 0 ? '#ffd966' : 'rgba(255,255,255,0.5)'};">${stats.totalKm > 0 ? '✅' : '❌'}</div></div>
-              <div class="stat-item"><div class="stat-value">🏅</div><div class="stat-label">10 км</div><div class="stat-label" style="color: ${stats.totalKm >= 10 ? '#ffd966' : 'rgba(255,255,255,0.5)'};">${stats.totalKm >= 10 ? '✅' : '❌'}</div></div>
-              <div class="stat-item"><div class="stat-value">🏅</div><div class="stat-label">Полумарафон</div><div class="stat-label" style="color: ${stats.totalKm >= 21.1 ? '#ffd966' : 'rgba(255,255,255,0.5)'};">${stats.totalKm >= 21.1 ? '✅' : '❌'}</div></div>
-              <div class="stat-item"><div class="stat-value">🏅</div><div class="stat-label">Марафон</div><div class="stat-label" style="color: ${stats.totalKm >= 42.2 ? '#ffd966' : 'rgba(255,255,255,0.5)'};">${stats.totalKm >= 42.2 ? '✅' : '❌'}</div></div>
-            </div>
-          </div>
-        </div>
-        
-        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
-        <div id="menu" class="menu">
-          <div class="menu-header"><strong>Меню</strong></div>
-          <div class="menu-item" onclick="navigateTo('home'); closeMenu();"><span>🏠</span><span>Главная</span></div>
-          <div class="menu-item" onclick="navigateTo('leaderboard'); closeMenu();"><span>🏆</span><span>Таблица лидеров</span></div>
-          <div class="menu-item" onclick="navigateTo('activities'); closeMenu();"><span>📋</span><span>Мои тренировки</span></div>
-          <div class="menu-item" onclick="navigateTo('achievements'); closeMenu();"><span>🏅</span><span>Достижения</span></div>
-          <div class="menu-item" onclick="navigateTo('points'); closeMenu();"><span>⭐</span><span>Баллы</span></div>
-          <div class="menu-item" onclick="navigateTo('abilities'); closeMenu();"><span>⚡</span><span>Способности</span></div>
-          <div class="menu-item" onclick="navigateTo('news'); closeMenu();"><span>📰</span><span>Лента новостей</span></div>
-          <div class="menu-item" onclick="navigateTo('settings'); closeMenu();"><span>⚙️</span><span>Настройки</span></div>
-          ${isAdmin ? `<div class="menu-item" onclick="navigateTo('sync'); closeMenu();"><span>🔄</span><span>Синхронизация</span></div>` : ''}
-          <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
-        </div>
-      `;
-    }
+    const renderSettingsPage = async () => {
+      const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+      document.getElementById('app').innerHTML = `<div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(profile?.name_full||currentUser.email?.split('@')[0])}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div><div class="container"><div class="card"><h2 style="color:white;">⚙️ Настройки профиля</h2>${['name','lastname','city'].map(f=>`<div style="margin-bottom:20px;"><label>${f==='name'?'Имя':f==='lastname'?'Фамилия':'Город'}</label><input id="settings-${f}" placeholder="${f==='name'?'Имя':f==='lastname'?'Фамилия':'Город'}" value="${escapeHtml(profile?.[f==='name'?'first_name':f==='lastname'?'last_name':'city']||'')}"></div>`).join('')}
+      <div style="margin-bottom:20px;"><label>Пол</label><select id="settings-gender"><option value="male" ${profile?.gender==='male'?'selected':''}>Мужчина</option><option value="female" ${profile?.gender==='female'?'selected':''}>Женщина</option></select></div>
+      <div style="margin-bottom:20px;"><label>Дата рождения</label><input type="date" id="settings-birthdate" value="${profile?.birth_date||''}"></div>
+      <div style="margin-bottom:20px;"><label>Strava username</label><div class="info-text">🔍 Как найти: Strava → Настройки → Custom URL</div><input id="settings-strava-username" placeholder="Strava username" value="${escapeHtml(profile?.strava_username||'')}"></div>
+      <button onclick="saveSettings()">💾 Сохранить</button><div id="settings-error" class="error"></div></div></div><div id="menu-overlay" class="menu-overlay"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div>${['home','leaderboard','activities','achievements','points','abilities','news','settings'].map(p=>`<div class="menu-item" onclick="navigateTo('${p}');closeMenu();"><span>${p==='home'?'🏠':p==='leaderboard'?'🏆':p==='activities'?'📋':p==='achievements'?'🏅':p==='points'?'⭐':p==='abilities'?'⚡':p==='news'?'📰':'⚙️'}</span><span>${p==='home'?'Главная':p==='leaderboard'?'Таблица лидеров':p==='activities'?'Мои тренировки':p==='achievements'?'Достижения':p==='points'?'Баллы':p==='abilities'?'Способности':p==='news'?'Лента новостей':'Настройки'}</span></div>`).join('')}${isAdmin?'<div class="menu-item" onclick="navigateTo(\'sync\');closeMenu();"><span>🔄</span><span>Синхронизация</span></div>':''}<div class="menu-item" onclick="logout();closeMenu();"><span>🚪</span><span>Выход</span></div></div>`;
+    };
     
-    async function renderPointsPage() {
-      const profile = await loadProfile();
-      const stats = await loadStats();
-      const totalPoints = Math.floor(stats.totalKm * 10);
-      
-      document.getElementById('app').innerHTML = `
-        <div class="fixed-header">
-          <div class="user-info">
-            <div class="user-name">${escapeHtml(profile?.name_full || currentUser.email?.split('@')[0])}</div>
-          </div>
-          <div class="burger" onclick="openMenu()">
-            <span></span><span></span><span></span>
-          </div>
-        </div>
-        
-        <div class="container">
-          <div class="card">
-            <h2 style="color: white;">Баллы</h2>
-            <div class="stat-value" style="text-align: center; font-size: 64px; color: #ffd966;">${totalPoints}</div>
-            <div class="stat-label" style="text-align: center; margin-bottom: 20px; color: rgba(255,255,255,0.7);">общий счет</div>
-            <div class="info-text">
-              <strong style="color: #ffd966;">Правила начисления:</strong><br>
-              • 1 км = 10 баллов<br>
-              • Бонус за регулярность: +50 баллов за каждую неделю с тренировками<br>
-              • Бонус за достижения: +100 баллов за каждый новый рекорд
-            </div>
-          </div>
-        </div>
-        
-        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
-        <div id="menu" class="menu">
-          <div class="menu-header"><strong>Меню</strong></div>
-          <div class="menu-item" onclick="navigateTo('home'); closeMenu();"><span>🏠</span><span>Главная</span></div>
-          <div class="menu-item" onclick="navigateTo('leaderboard'); closeMenu();"><span>🏆</span><span>Таблица лидеров</span></div>
-          <div class="menu-item" onclick="navigateTo('activities'); closeMenu();"><span>📋</span><span>Мои тренировки</span></div>
-          <div class="menu-item" onclick="navigateTo('achievements'); closeMenu();"><span>🏅</span><span>Достижения</span></div>
-          <div class="menu-item" onclick="navigateTo('points'); closeMenu();"><span>⭐</span><span>Баллы</span></div>
-          <div class="menu-item" onclick="navigateTo('abilities'); closeMenu();"><span>⚡</span><span>Способности</span></div>
-          <div class="menu-item" onclick="navigateTo('news'); closeMenu();"><span>📰</span><span>Лента новостей</span></div>
-          <div class="menu-item" onclick="navigateTo('settings'); closeMenu();"><span>⚙️</span><span>Настройки</span></div>
-          ${isAdmin ? `<div class="menu-item" onclick="navigateTo('sync'); closeMenu();"><span>🔄</span><span>Синхронизация</span></div>` : ''}
-          <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
-        </div>
-      `;
-    }
-    
-    async function renderAbilitiesPage() {
-      const profile = await loadProfile();
-      const stats = await loadStats();
-      
-      const enduranceLevel = Math.min(5, Math.floor(stats.totalKm / 100) + 1);
-      const speedLevel = Math.min(5, Math.floor(parseFloat(stats.avgPace?.split(':')[0] || 7) / 2));
-      const strengthLevel = Math.min(5, Math.floor(stats.trainingsCount / 20) + 1);
-      
-      document.getElementById('app').innerHTML = `
-        <div class="fixed-header">
-          <div class="user-info">
-            <div class="user-name">${escapeHtml(profile?.name_full || currentUser.email?.split('@')[0])}</div>
-          </div>
-          <div class="burger" onclick="openMenu()">
-            <span></span><span></span><span></span>
-          </div>
-        </div>
-        
-        <div class="container">
-          <div class="card">
-            <h2 style="color: white;">Способности</h2>
-            <div class="stats-row">
-              <div class="stat-item"><div class="stat-value">🏃‍♂️</div><div class="stat-label">Выносливость</div><div class="stat-label" style="color: #ffd966;">Уровень ${enduranceLevel}</div></div>
-              <div class="stat-item"><div class="stat-value">⚡</div><div class="stat-label">Скорость</div><div class="stat-label" style="color: #ffd966;">Уровень ${speedLevel}</div></div>
-              <div class="stat-item"><div class="stat-value">⛰️</div><div class="stat-label">Сила</div><div class="stat-label" style="color: #ffd966;">Уровень ${strengthLevel}</div></div>
-              <div class="stat-item"><div class="stat-value">❤️</div><div class="stat-label">Восстановление</div><div class="stat-label" style="color: #ffd966;">Уровень ${Math.floor(enduranceLevel / 2) + 1}</div></div>
-            </div>
-            <div class="info-text" style="margin-top: 20px;">
-              <strong style="color: #ffd966;">Как повысить уровень:</strong><br>
-              • Выносливость: общий километраж (100 км = уровень 2, 200 км = уровень 3)<br>
-              • Скорость: средний темп быстрее 5:00/км<br>
-              • Сила: количество тренировок (20 тренировок = уровень 2)<br>
-              • Восстановление: регулярность тренировок
-            </div>
-          </div>
-        </div>
-        
-        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
-        <div id="menu" class="menu">
-          <div class="menu-header"><strong>Меню</strong></div>
-          <div class="menu-item" onclick="navigateTo('home'); closeMenu();"><span>🏠</span><span>Главная</span></div>
-          <div class="menu-item" onclick="navigateTo('leaderboard'); closeMenu();"><span>🏆</span><span>Таблица лидеров</span></div>
-          <div class="menu-item" onclick="navigateTo('activities'); closeMenu();"><span>📋</span><span>Мои тренировки</span></div>
-          <div class="menu-item" onclick="navigateTo('achievements'); closeMenu();"><span>🏅</span><span>Достижения</span></div>
-          <div class="menu-item" onclick="navigateTo('points'); closeMenu();"><span>⭐</span><span>Баллы</span></div>
-          <div class="menu-item" onclick="navigateTo('abilities'); closeMenu();"><span>⚡</span><span>Способности</span></div>
-          <div class="menu-item" onclick="navigateTo('news'); closeMenu();"><span>📰</span><span>Лента новостей</span></div>
-          <div class="menu-item" onclick="navigateTo('settings'); closeMenu();"><span>⚙️</span><span>Настройки</span></div>
-          ${isAdmin ? `<div class="menu-item" onclick="navigateTo('sync'); closeMenu();"><span>🔄</span><span>Синхронизация</span></div>` : ''}
-          <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
-        </div>
-      `;
-    }
-    
-    async function renderSettingsPage() {
-      const { data: profile, error } = await sb
-        .from('profiles')
-        .select('*')
-        .eq('id', currentUser.id)
-        .single();
-      
-      document.getElementById('app').innerHTML = `
-        <div class="fixed-header">
-          <div class="user-info">
-            <div class="user-name">${escapeHtml(profile?.name_full || currentUser.email?.split('@')[0])}</div>
-          </div>
-          <div class="burger" onclick="openMenu()">
-            <span></span><span></span><span></span>
-          </div>
-        </div>
-        
-        <div class="container">
-          <div class="card">
-            <h2 style="color: white;">⚙️ Настройки профиля</h2>
-            
-            <div style="margin-bottom: 20px;">
-              <label>Имя</label>
-              <input type="text" id="settings-name" placeholder="Имя" value="${escapeHtml(profile?.first_name || '')}">
-            </div>
-            
-            <div style="margin-bottom: 20px;">
-              <label>Фамилия</label>
-              <input type="text" id="settings-lastname" placeholder="Фамилия" value="${escapeHtml(profile?.last_name || '')}">
-            </div>
-            
-            <div style="margin-bottom: 20px;">
-              <label>Пол</label>
-              <select id="settings-gender">
-                <option value="male" ${profile?.gender === 'male' ? 'selected' : ''}>Мужчина</option>
-                <option value="female" ${profile?.gender === 'female' ? 'selected' : ''}>Женщина</option>
-              </select>
-            </div>
-            
-            <div style="margin-bottom: 20px;">
-              <label>Дата рождения</label>
-              <input type="date" id="settings-birthdate" placeholder="Дата рождения" value="${profile?.birth_date || ''}">
-            </div>
-            
-            <div style="margin-bottom: 20px;">
-              <label>Город</label>
-              <input type="text" id="settings-city" placeholder="Город" value="${escapeHtml(profile?.city || '')}">
-            </div>
-            
-            <div style="margin-bottom: 20px;">
-              <label>Strava username</label>
-              <div class="info-text" style="margin-bottom: 8px;">
-                🔍 Как найти Strava username: зайдите в Strava → Настройки → Custom URL<br>
-                Пример: если URL = strava.com/athletes/fedor_stroitel, то username = fedor_stroitel
-              </div>
-              <input type="text" id="settings-strava-username" placeholder="Strava username" value="${escapeHtml(profile?.strava_username || '')}">
-            </div>
-            
-            <button onclick="saveSettings()" style="margin-top: 8px;">💾 Сохранить изменения</button>
-            <div id="settings-error" class="error"></div>
-          </div>
-          
-          <div class="card">
-            <h3 style="color: white;">ℹ️ Информация</h3>
-            <div class="info-text">
-              <strong style="color: #ffd966;">Как работают тренировки:</strong><br>
-              • Ваши тренировки из клуба Strava синхронизируются автоматически<br>
-              • Для корректной синхронизации укажите ваш Strava username<br>
-              • После сохранения настроек запустите синхронизацию на странице администрирования
-            </div>
-          </div>
-        </div>
-        
-        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
-        <div id="menu" class="menu">
-          <div class="menu-header"><strong>Меню</strong></div>
-          <div class="menu-item" onclick="navigateTo('home'); closeMenu();"><span>🏠</span><span>Главная</span></div>
-          <div class="menu-item" onclick="navigateTo('leaderboard'); closeMenu();"><span>🏆</span><span>Таблица лидеров</span></div>
-          <div class="menu-item" onclick="navigateTo('activities'); closeMenu();"><span>📋</span><span>Мои тренировки</span></div>
-          <div class="menu-item" onclick="navigateTo('achievements'); closeMenu();"><span>🏅</span><span>Достижения</span></div>
-          <div class="menu-item" onclick="navigateTo('points'); closeMenu();"><span>⭐</span><span>Баллы</span></div>
-          <div class="menu-item" onclick="navigateTo('abilities'); closeMenu();"><span>⚡</span><span>Способности</span></div>
-          <div class="menu-item" onclick="navigateTo('news'); closeMenu();"><span>📰</span><span>Лента новостей</span></div>
-          <div class="menu-item" onclick="navigateTo('settings'); closeMenu();"><span>⚙️</span><span>Настройки</span></div>
-          ${isAdmin ? `<div class="menu-item" onclick="navigateTo('sync'); closeMenu();"><span>🔄</span><span>Синхронизация</span></div>` : ''}
-          <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
-        </div>
-      `;
-    }
-    
-    async function saveSettings() {
+    const saveSettings = async () => {
       const firstName = document.getElementById('settings-name')?.value || '';
       const lastName = document.getElementById('settings-lastname')?.value || '';
       const gender = document.getElementById('settings-gender')?.value || '';
@@ -1730,626 +638,67 @@
       const city = document.getElementById('settings-city')?.value || '';
       const stravaUsername = document.getElementById('settings-strava-username')?.value || '';
       const errorDiv = document.getElementById('settings-error');
-      
-      if (!errorDiv) return;
-      
+      if(!errorDiv) return;
       errorDiv.innerHTML = '<span class="loader"></span> Сохранение...';
-      
-      const { error } = await sb
-        .from('profiles')
-        .update({
-          first_name: firstName,
-          last_name: lastName,
-          name_full: `${firstName} ${lastName}`.trim(),
-          gender: gender,
-          birth_date: birthDate,
-          city: city,
-          strava_username: stravaUsername || null,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', currentUser.id);
-      
-      if (error) {
-        errorDiv.innerHTML = '❌ ' + error.message;
-        errorDiv.style.color = '#ff6b6b';
-      } else {
-        errorDiv.innerHTML = '✅ Настройки сохранены';
-        errorDiv.style.color = '#ffd966';
-        showToast('Профиль обновлен!', 2000);
-        setTimeout(() => { 
-          if (errorDiv) errorDiv.innerHTML = ''; 
-        }, 3000);
-      }
-    }
-    
-    async function renderSyncPage() {
-  const profile = await loadProfile();
-  
-  // Получаем статус Webhook при загрузке
-  let webhookStatus = null;
-  try {
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/webhook/status`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    });
-    webhookStatus = await response.json();
-  } catch (e) {
-    console.error('Error fetching webhook status:', e);
-  }
-  
-  const hasSubscription = webhookStatus?.subscriptions?.length > 0;
-  const subscription = hasSubscription ? webhookStatus.subscriptions[0] : null;
-  
-  document.getElementById('app').innerHTML = `
-    <div class="fixed-header">
-      <div class="user-info">
-        <div class="user-name">${escapeHtml(profile?.name_full || currentUser.email?.split('@')[0])}</div>
-        <div class="user-details">Администратор</div>
-      </div>
-      <div class="burger" onclick="openMenu()">
-        <span></span><span></span><span></span>
-      </div>
-    </div>
-    
-    <div class="container">
-      <!-- Webhook блок -->
-      <div class="card">
-        <h2 style="color: white;">🔔 Мгновенная синхронизация (Webhook)</h2>
-        
-        <div style="margin-bottom: 20px;">
-          <div class="info-text" style="margin-bottom: 16px;">
-            <strong>⚡ Как это работает:</strong><br>
-            • После настройки Webhook, новые тренировки будут появляться в приложении <strong>мгновенно</strong> (через 5-10 секунд)<br>
-            • Не нужно запускать синхронизацию вручную<br>
-            • Не тратятся лимиты API Strava<br>
-            • Работает автоматически 24/7
-          </div>
-        </div>
-        
-        <div id="webhook-status-block" style="margin-bottom: 20px;">
-          ${hasSubscription ? `
-            <div style="background: rgba(255, 217, 102, 0.1); border-radius: 20px; padding: 16px; border: 1px solid rgba(255, 217, 102, 0.3);">
-              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                <div style="font-size: 24px;">✅</div>
-                <div>
-                  <div style="font-weight: 600; color: #ffd966;">Webhook активен</div>
-                  <div style="font-size: 12px; color: rgba(255,255,255,0.6);">ID подписки: ${subscription?.id || '—'}</div>
-                </div>
-              </div>
-              <div style="font-size: 13px; color: rgba(255,255,255,0.7);">
-                📅 Создан: ${subscription?.created_at ? new Date(subscription.created_at).toLocaleString() : '—'}
-              </div>
-              <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 8px;">
-                🔗 Callback URL: ${subscription?.callback_url || '—'}
-              </div>
-              <button id="delete-webhook-btn" style="margin-top: 16px; background: linear-gradient(135deg, #e74c3c, #c0392b);">🗑 Отключить Webhook</button>
-            </div>
-          ` : `
-            <div style="background: rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 16px; border: 1px dashed rgba(255, 255, 255, 0.3);">
-              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                <div style="font-size: 24px;">🔌</div>
-                <div>
-                  <div style="font-weight: 600; color: rgba(255,255,255,0.8);">Webhook не настроен</div>
-                  <div style="font-size: 12px; color: rgba(255,255,255,0.6);">Тренировки не будут приходить автоматически</div>
-                </div>
-              </div>
-              <button id="setup-webhook-btn" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">🔌 Настроить Webhook</button>
-              <div id="webhook-setup-status" class="info-text" style="margin-top: 12px;"></div>
-            </div>
-          `}
-        </div>
-      </div>
-      
-      <!-- Ручная синхронизация (только для истории) -->
-      <div class="card">
-        <h2 style="color: white;">🔄 Ручная синхронизация (для истории)</h2>
-        
-        <div class="info-text" style="margin-bottom: 16px;">
-          ⚠️ Webhook уже обрабатывает новые тренировки. Ручная синхронизация нужна только для загрузки <strong>исторических данных</strong> (если они нужны).
-        </div>
-        
-        <div style="margin-bottom: 16px;">
-          <label style="display: block; margin-bottom: 8px;">📅 Дата начала (если нужны старые тренировки):</label>
-          <input type="date" id="sync-start-date" value="2026-06-01" style="margin-bottom: 12px;">
-          <button id="sync-custom-btn" style="background: linear-gradient(135deg, #289672, #1e6f5c);">🔄 Синхронизировать историю</button>
-        </div>
-        
-        <div id="sync-status" class="sync-status"></div>
-      </div>
-      
-      <!-- Проверка лимитов -->
-      <div class="card">
-        <h2 style="color: white;">📊 Статус API Strava</h2>
-        
-        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
-          <button id="check-rate-limit-btn" style="background: linear-gradient(135deg, #3498db, #2980b9); flex: 1;">📊 Проверить лимиты</button>
-          <button id="check-webhook-status-btn" style="background: linear-gradient(135deg, #9b59b6, #8e44ad); flex: 1;">🔍 Статус Webhook</button>
-        </div>
-        
-        <div id="rate-limit-info" style="display: none;"></div>
-      </div>
-    </div>
-    
-    <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
-    <div id="menu" class="menu">
-      <div class="menu-header"><strong>Меню</strong></div>
-      <div class="menu-item" onclick="navigateTo('home'); closeMenu();"><span>🏠</span><span>Главная</span></div>
-      <div class="menu-item" onclick="navigateTo('leaderboard'); closeMenu();"><span>🏆</span><span>Таблица лидеров</span></div>
-      <div class="menu-item" onclick="navigateTo('activities'); closeMenu();"><span>📋</span><span>Мои тренировки</span></div>
-      <div class="menu-item" onclick="navigateTo('achievements'); closeMenu();"><span>🏅</span><span>Достижения</span></div>
-      <div class="menu-item" onclick="navigateTo('points'); closeMenu();"><span>⭐</span><span>Баллы</span></div>
-      <div class="menu-item" onclick="navigateTo('abilities'); closeMenu();"><span>⚡</span><span>Способности</span></div>
-      <div class="menu-item" onclick="navigateTo('news'); closeMenu();"><span>📰</span><span>Лента новостей</span></div>
-      <div class="menu-item" onclick="navigateTo('settings'); closeMenu();"><span>⚙️</span><span>Настройки</span></div>
-      <div class="menu-item" onclick="navigateTo('sync'); closeMenu();"><span>🔄</span><span>Синхронизация</span></div>
-      <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
-    </div>
-  `;
-  
-  // Добавляем обработчики
-  const setupBtn = document.getElementById('setup-webhook-btn');
-  if (setupBtn) {
-    setupBtn.onclick = () => setupWebhook();
-  }
-  
-  const deleteBtn = document.getElementById('delete-webhook-btn');
-  if (deleteBtn) {
-    deleteBtn.onclick = () => deleteWebhook();
-  }
-  
-  const checkWebhookBtn = document.getElementById('check-webhook-status-btn');
-  if (checkWebhookBtn) {
-    checkWebhookBtn.onclick = () => checkWebhookStatus();
-  }
-  
-  const syncCustomBtn = document.getElementById('sync-custom-btn');
-  if (syncCustomBtn) {
-    syncCustomBtn.onclick = () => {
-      const date = document.getElementById('sync-start-date')?.value;
-      if (date) syncClubActivities(date);
-      else showToast('Выберите дату', 3000);
+      const { error } = await sb.from('profiles').update({ first_name: firstName, last_name: lastName, name_full: `${firstName} ${lastName}`.trim(), gender, birth_date: birthDate, city, strava_username: stravaUsername || null }).eq('id', currentUser.id);
+      if(error) { errorDiv.innerHTML = '❌ ' + error.message; errorDiv.style.color = '#ff6b6b'; }
+      else { errorDiv.innerHTML = '✅ Настройки сохранены'; errorDiv.style.color = '#ffd966'; showToast('Профиль обновлен!', 2000); setTimeout(()=>errorDiv.innerHTML='',3000); }
     };
-  }
-  
-  const checkRateLimitBtn = document.getElementById('check-rate-limit-btn');
-  if (checkRateLimitBtn) {
-    checkRateLimitBtn.onclick = () => checkRateLimit();
-  }
-}
-
-// ============= ФУНКЦИИ ДЛЯ WEBHOOK =============
-
-async function setupWebhook() {
-  const statusDiv = document.getElementById('webhook-setup-status');
-  const setupBtn = document.getElementById('setup-webhook-btn');
-  
-  if (setupBtn) {
-    setupBtn.disabled = true;
-    setupBtn.innerHTML = '<span class="loader"></span> Настройка...';
-  }
-  
-  if (statusDiv) {
-    statusDiv.innerHTML = '<div class="loader"></div> Настройка Webhook...';
-  }
-  
-  try {
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/webhook/subscribe`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
-    });
     
-    const result = await response.json();
+    const renderAchievementsPage = async () => {
+      const profile = await loadProfile(), stats = await loadStats();
+      const total = Math.floor(stats.trainingsCount/5);
+      document.getElementById('app').innerHTML = `<div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(profile?.name_full||currentUser.email?.split('@')[0])}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div><div class="container"><div class="card"><h2 style="color:white;">Достижения</h2><div class="stat-value" style="text-align:center;font-size:48px;color:#ffd966;">${total}/20</div><div class="stats-row"><div class="stat-item"><div>🏅</div><div>Первый км</div><div>${stats.totalKm>0?'✅':'❌'}</div></div><div class="stat-item"><div>🏅</div><div>10 км</div><div>${stats.totalKm>=10?'✅':'❌'}</div></div><div class="stat-item"><div>🏅</div><div>Полумарафон</div><div>${stats.totalKm>=21.1?'✅':'❌'}</div></div><div class="stat-item"><div>🏅</div><div>Марафон</div><div>${stats.totalKm>=42.2?'✅':'❌'}</div></div></div></div></div><div id="menu-overlay" class="menu-overlay"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div>${['home','leaderboard','activities','achievements','points','abilities','news','settings'].map(p=>`<div class="menu-item" onclick="navigateTo('${p}');closeMenu();"><span>${p==='home'?'🏠':p==='leaderboard'?'🏆':p==='activities'?'📋':p==='achievements'?'🏅':p==='points'?'⭐':p==='abilities'?'⚡':p==='news'?'📰':'⚙️'}</span><span>${p==='home'?'Главная':p==='leaderboard'?'Таблица лидеров':p==='activities'?'Мои тренировки':p==='achievements'?'Достижения':p==='points'?'Баллы':p==='abilities'?'Способности':p==='news'?'Лента новостей':'Настройки'}</span></div>`).join('')}${isAdmin?'<div class="menu-item" onclick="navigateTo(\'sync\');closeMenu();"><span>🔄</span><span>Синхронизация</span></div>':''}<div class="menu-item" onclick="logout();closeMenu();"><span>🚪</span><span>Выход</span></div></div>`;
+    };
     
-    if (result.success) {
-      statusDiv.innerHTML = `
-        <div style="color: #ffd966;">
-          ✅ Webhook успешно настроен!<br>
-          Новые тренировки будут приходить автоматически.<br>
-          ID подписки: ${result.data?.id || '—'}
-        </div>
-      `;
-      showToast('Webhook настроен! Новые тренировки будут приходить автоматически', 5000);
-      
-      // Перезагружаем страницу через 2 секунды, чтобы обновить статус
-      setTimeout(() => {
-        renderSyncPage();
-      }, 2000);
-    } else {
-      throw new Error(result.error || 'Неизвестная ошибка');
-    }
-  } catch (error) {
-    console.error('Error setting up webhook:', error);
-    if (statusDiv) {
-      statusDiv.innerHTML = `<div style="color: #ff6b6b;">❌ Ошибка: ${error.message}</div>`;
-    }
-    showToast(`Ошибка настройки Webhook: ${error.message}`, 5000);
-  } finally {
-    if (setupBtn) {
-      setupBtn.disabled = false;
-      setupBtn.innerHTML = '🔌 Настроить Webhook';
-    }
-  }
-}
-
-async function deleteWebhook() {
-  if (!confirm('Вы уверены, что хотите отключить Webhook? Новые тренировки перестанут приходить автоматически.')) {
-    return;
-  }
-  
-  const deleteBtn = document.getElementById('delete-webhook-btn');
-  const statusBlock = document.getElementById('webhook-status-block');
-  
-  if (deleteBtn) {
-    deleteBtn.disabled = true;
-    deleteBtn.innerHTML = '<span class="loader"></span> Отключение...';
-  }
-  
-  try {
-    // Сначала получаем ID подписки
-    const statusResponse = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/webhook/status`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    });
-    const status = await statusResponse.json();
+    const renderPointsPage = async () => {
+      const profile = await loadProfile(), stats = await loadStats();
+      const points = Math.floor(stats.totalKm * 10);
+      document.getElementById('app').innerHTML = `<div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(profile?.name_full||currentUser.email?.split('@')[0])}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div><div class="container"><div class="card"><h2 style="color:white;">Баллы</h2><div class="stat-value" style="text-align:center;font-size:64px;color:#ffd966;">${points}</div><div class="info-text"><strong style="color:#ffd966;">Правила:</strong><br>• 1 км = 10 баллов<br>• +50 за неделю с тренировками<br>• +100 за рекорд</div></div></div><div id="menu-overlay" class="menu-overlay"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div>${['home','leaderboard','activities','achievements','points','abilities','news','settings'].map(p=>`<div class="menu-item" onclick="navigateTo('${p}');closeMenu();"><span>${p==='home'?'🏠':p==='leaderboard'?'🏆':p==='activities'?'📋':p==='achievements'?'🏅':p==='points'?'⭐':p==='abilities'?'⚡':p==='news'?'📰':'⚙️'}</span><span>${p==='home'?'Главная':p==='leaderboard'?'Таблица лидеров':p==='activities'?'Мои тренировки':p==='achievements'?'Достижения':p==='points'?'Баллы':p==='abilities'?'Способности':p==='news'?'Лента новостей':'Настройки'}</span></div>`).join('')}${isAdmin?'<div class="menu-item" onclick="navigateTo(\'sync\');closeMenu();"><span>🔄</span><span>Синхронизация</span></div>':''}<div class="menu-item" onclick="logout();closeMenu();"><span>🚪</span><span>Выход</span></div></div>`;
+    };
     
-    if (status.subscriptions && status.subscriptions.length > 0) {
-      const subscriptionId = status.subscriptions[0].id;
-      
-      const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/webhook/delete?id=${subscriptionId}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' }
-      });
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        showToast('Webhook отключен', 3000);
-        // Перезагружаем страницу
-        setTimeout(() => {
-          renderSyncPage();
-        }, 1000);
-      } else {
-        throw new Error(result.error || 'Неизвестная ошибка');
-      }
-    } else {
-      throw new Error('Нет активных подписок');
-    }
-  } catch (error) {
-    console.error('Error deleting webhook:', error);
-    showToast(`Ошибка отключения Webhook: ${error.message}`, 5000);
-    if (statusBlock) {
-      statusBlock.innerHTML = `<div style="color: #ff6b6b;">❌ Ошибка: ${error.message}</div>`;
-    }
-  } finally {
-    if (deleteBtn) {
-      deleteBtn.disabled = false;
-      deleteBtn.innerHTML = '🗑 Отключить Webhook';
-    }
-  }
-}
-
-async function checkWebhookStatus() {
-  const statusDiv = document.getElementById('webhook-status-block');
-  
-  if (statusDiv) {
-    statusDiv.innerHTML = '<div class="loader"></div> Проверка статуса...';
-  }
-  
-  try {
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/webhook/status`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    });
+    const renderAbilitiesPage = async () => {
+      const profile = await loadProfile(), stats = await loadStats();
+      const endurance = Math.min(5, Math.floor(stats.totalKm/100)+1);
+      const speed = Math.min(5, Math.floor(parseFloat(stats.avgPace?.split(':')[0]||7)/2));
+      const strength = Math.min(5, Math.floor(stats.trainingsCount/20)+1);
+      document.getElementById('app').innerHTML = `<div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(profile?.name_full||currentUser.email?.split('@')[0])}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div><div class="container"><div class="card"><h2 style="color:white;">Способности</h2><div class="stats-row"><div class="stat-item"><div>🏃‍♂️</div><div>Выносливость</div><div>Уровень ${endurance}</div></div><div class="stat-item"><div>⚡</div><div>Скорость</div><div>Уровень ${speed}</div></div><div class="stat-item"><div>⛰️</div><div>Сила</div><div>Уровень ${strength}</div></div><div class="stat-item"><div>❤️</div><div>Восстановление</div><div>Уровень ${Math.floor(endurance/2)+1}</div></div></div><div class="info-text"><strong>Как повысить:</strong><br>• Выносливость: километраж (100/200/300 км)<br>• Скорость: темп быстрее 5:00/км<br>• Сила: количество тренировок (20/40/60)</div></div></div><div id="menu-overlay" class="menu-overlay"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div>${['home','leaderboard','activities','achievements','points','abilities','news','settings'].map(p=>`<div class="menu-item" onclick="navigateTo('${p}');closeMenu();"><span>${p==='home'?'🏠':p==='leaderboard'?'🏆':p==='activities'?'📋':p==='achievements'?'🏅':p==='points'?'⭐':p==='abilities'?'⚡':p==='news'?'📰':'⚙️'}</span><span>${p==='home'?'Главная':p==='leaderboard'?'Таблица лидеров':p==='activities'?'Мои тренировки':p==='achievements'?'Достижения':p==='points'?'Баллы':p==='abilities'?'Способности':p==='news'?'Лента новостей':'Настройки'}</span></div>`).join('')}${isAdmin?'<div class="menu-item" onclick="navigateTo(\'sync\');closeMenu();"><span>🔄</span><span>Синхронизация</span></div>':''}<div class="menu-item" onclick="logout();closeMenu();"><span>🚪</span><span>Выход</span></div></div>`;
+    };
     
-    const result = await response.json();
+    const renderNewsPage = async () => {
+      const profile = await loadProfile();
+      document.getElementById('app').innerHTML = `<div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(profile?.name_full||currentUser.email?.split('@')[0])}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div><div class="container"><div class="card"><h2 style="color:white;">📰 Лента новостей</h2><div class="news-feed">${newsFeed.map(i=>`<div class="news-item"><div class="news-icon">${i.icon}</div><div class="news-content"><div class="news-text">${escapeHtml(i.user)} ${escapeHtml(i.text)}</div><div class="news-time">${escapeHtml(i.time)}</div></div></div>`).join('')}</div></div></div><div id="menu-overlay" class="menu-overlay"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div>${['home','leaderboard','activities','achievements','points','abilities','news','settings'].map(p=>`<div class="menu-item" onclick="navigateTo('${p}');closeMenu();"><span>${p==='home'?'🏠':p==='leaderboard'?'🏆':p==='activities'?'📋':p==='achievements'?'🏅':p==='points'?'⭐':p==='abilities'?'⚡':p==='news'?'📰':'⚙️'}</span><span>${p==='home'?'Главная':p==='leaderboard'?'Таблица лидеров':p==='activities'?'Мои тренировки':p==='achievements'?'Достижения':p==='points'?'Баллы':p==='abilities'?'Способности':p==='news'?'Лента новостей':'Настройки'}</span></div>`).join('')}${isAdmin?'<div class="menu-item" onclick="navigateTo(\'sync\');closeMenu();"><span>🔄</span><span>Синхронизация</span></div>':''}<div class="menu-item" onclick="logout();closeMenu();"><span>🚪</span><span>Выход</span></div></div>`;
+    };
     
-    if (result.success && result.subscriptions && result.subscriptions.length > 0) {
-      const sub = result.subscriptions[0];
-      statusDiv.innerHTML = `
-        <div style="background: rgba(255, 217, 102, 0.1); border-radius: 20px; padding: 16px; border: 1px solid rgba(255, 217, 102, 0.3);">
-          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-            <div style="font-size: 24px;">✅</div>
-            <div>
-              <div style="font-weight: 600; color: #ffd966;">Webhook активен</div>
-              <div style="font-size: 12px; color: rgba(255,255,255,0.6);">ID подписки: ${sub.id}</div>
-            </div>
-          </div>
-          <div style="font-size: 13px; color: rgba(255,255,255,0.7);">
-            📅 Создан: ${new Date(sub.created_at).toLocaleString()}
-          </div>
-          <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 8px;">
-            🔗 Callback URL: ${sub.callback_url}
-          </div>
-        </div>
-      `;
-      showToast('Webhook активен', 2000);
-    } else {
-      statusDiv.innerHTML = `
-        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 16px; border: 1px dashed rgba(255, 255, 255, 0.3);">
-          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-            <div style="font-size: 24px;">🔌</div>
-            <div>
-              <div style="font-weight: 600; color: rgba(255,255,255,0.8);">Webhook не настроен</div>
-              <div style="font-size: 12px; color: rgba(255,255,255,0.6);">Нажмите "Настроить Webhook" для активации</div>
-            </div>
-          </div>
-        </div>
-      `;
-      showToast('Webhook не настроен', 2000);
-    }
-  } catch (error) {
-    console.error('Error checking webhook status:', error);
-    if (statusDiv) {
-      statusDiv.innerHTML = `<div style="color: #ff6b6b;">❌ Ошибка: ${error.message}</div>`;
-    }
-  }
-}
-
-async function syncClubActivities(customDate = null) {
-  const syncCustomBtn = document.getElementById('sync-custom-btn');
-  const statusDiv = document.getElementById('sync-status');
-  
-  if (!statusDiv) return;
-  
-  if (syncCustomBtn) syncCustomBtn.disabled = true;
-  
-  statusDiv.innerHTML = '<div class="loader"></div> Синхронизация истории...';
-  
-  try {
-    const requestBody = customDate ? { fromDate: customDate } : {};
+    const renderUserProfile = async () => {
+      const { data: profile } = await sb.from('profiles').select('*').eq('id', viewedUserId).single();
+      if(!profile) { showToast('Пользователь не найден',2000); navigateTo('home'); return; }
+      const { data: activities } = await sb.from('activities').select('*').eq('user_id', viewedUserId).order('activity_date', { ascending: false }).limit(20);
+      const totalKm = (activities||[]).reduce((s,a)=>s+(a.distance_km||0),0).toFixed(2);
+      document.getElementById('app').innerHTML = `<div class="fixed-header"><div class="user-info"><div class="user-name">${escapeHtml(profile.name_full)}</div><div class="user-details">${profile.gender==='male'?'Мужчина':'Женщина'}, ${profile.birth_date?Math.floor((new Date()-new Date(profile.birth_date))/(365.25*24*60*60*1000)):'—'} лет${profile.city?` | ${escapeHtml(profile.city)}`:''}</div></div><div class="burger" onclick="openMenu()"><span></span><span></span><span></span></div></div><div class="container"><div class="card"><div class="stats-row"><div class="stat-item"><div class="stat-value">${totalKm}</div><div>км</div></div><div class="stat-item"><div class="stat-value">${activities?.length||0}</div><div>тренировок</div></div><div class="stat-item"><div class="stat-value">${formatDuration((activities||[]).reduce((s,a)=>s+(a.duration_min||0),0))}</div><div>время</div></div></div></div><div class="card"><h3 style="color:white;">Последние тренировки</h3><div class="activities-list">${(activities||[]).map(a=>`<div class="activity-item"><div><div class="activity-name">${escapeHtml(a.name||'Без названия')}</div><div class="activity-meta">${formatDate(a.activity_date)} | ${(a.distance_km||0).toFixed(2)} км${a.duration_min?` | ${formatDuration(a.duration_min)}`:''}</div></div></div>`).join('')||'<div style="text-align:center;padding:20px;">Нет тренировок</div>'}</div></div></div><div id="menu-overlay" class="menu-overlay"></div><div id="menu" class="menu"><div class="menu-header"><strong>Меню</strong></div>${['home','leaderboard','activities','achievements','points','abilities','news','settings'].map(p=>`<div class="menu-item" onclick="navigateTo('${p}');closeMenu();"><span>${p==='home'?'🏠':p==='leaderboard'?'🏆':p==='activities'?'📋':p==='achievements'?'🏅':p==='points'?'⭐':p==='abilities'?'⚡':p==='news'?'📰':'⚙️'}</span><span>${p==='home'?'Главная':p==='leaderboard'?'Таблица лидеров':p==='activities'?'Мои тренировки':p==='achievements'?'Достижения':p==='points'?'Баллы':p==='abilities'?'Способности':p==='news'?'Лента новостей':'Настройки'}</span></div>`).join('')}${isAdmin?'<div class="menu-item" onclick="navigateTo(\'sync\');closeMenu();"><span>🔄</span><span>Синхронизация</span></div>':''}<div class="menu-item" onclick="logout();closeMenu();"><span>🚪</span><span>Выход</span></div></div>`;
+    };
     
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/club/sync`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestBody)
-    });
-    
-    const result = await response.json();
-    
-    if (result.success) {
-      statusDiv.innerHTML = `<div style="color: #ffd966;">✅ ${result.message || `Синхронизировано ${result.saved} тренировок`}</div>`;
-      showToast(result.message || `Синхронизировано ${result.saved} тренировок`, 4000);
-    } else {
-      throw new Error(result.error || 'Неизвестная ошибка');
-    }
-  } catch (error) {
-    console.error('Sync error:', error);
-    statusDiv.innerHTML = `<div style="color: #ff6b6b;">❌ ${error.message || 'Ошибка соединения'}</div>`;
-    showToast(`Ошибка синхронизации: ${error.message}`, 5000);
-  } finally {
-    if (syncCustomBtn) syncCustomBtn.disabled = false;
-    setTimeout(() => {
-      if (statusDiv && statusDiv.innerHTML && !statusDiv.innerHTML.includes('✅')) {
-        statusDiv.innerHTML = '';
-      }
-    }, 5000);
-  }
-}
-
-async function checkRateLimit() {
-  const checkBtn = document.getElementById('check-rate-limit-btn');
-  const rateLimitDiv = document.getElementById('rate-limit-info');
-  
-  if (checkBtn) {
-    checkBtn.disabled = true;
-    checkBtn.innerHTML = '<span class="loader"></span> Проверка...';
-  }
-  
-  if (rateLimitDiv) {
-    rateLimitDiv.style.display = 'block';
-    rateLimitDiv.innerHTML = '<div class="loader"></div> Получение информации о лимитах...';
-  }
-  
-  try {
-    const response = await fetch(`${SUPABASE_URL}/functions/v1/parse-activity/rate-limit`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    });
-    
-    const data = await response.json();
-    
-    if (data.success) {
-      const percent = data.usagePercent;
-      let color = '#ffd966';
-      
-      if (data.status === 'warning') {
-        color = '#e67e22';
-      } else if (data.status === 'limited') {
-        color = '#e74c3c';
-      }
-      
-      rateLimitDiv.innerHTML = `
-        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 16px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <span style="font-weight: 600; color: white;">📊 Лимиты Strava API</span>
-            <span style="color: ${color}; font-weight: 700;">${data.remaining} / ${data.limit}</span>
-          </div>
-          <div style="background: rgba(255,255,255,0.2); border-radius: 10px; height: 8px; overflow: hidden; margin-bottom: 12px;">
-            <div style="background: ${color}; width: ${percent}%; height: 100%; border-radius: 10px;"></div>
-          </div>
-          <div style="font-size: 13px; color: rgba(255,255,255,0.7);">
-            📈 Использовано: ${data.used} запросов (${percent}%)<br>
-            ⏱ Сброс через: ${data.resetTimeRelative}
-          </div>
-          <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 8px;">
-            ${data.statusMessage}
-          </div>
-        </div>
-      `;
-    } else {
-      throw new Error(data.error || 'Не удалось получить информацию');
-    }
-  } catch (error) {
-    console.error('Error checking rate limit:', error);
-    if (rateLimitDiv) {
-      rateLimitDiv.innerHTML = `
-        <div style="background: rgba(231, 76, 60, 0.1); border-radius: 20px; padding: 16px;">
-          <div style="color: #ff6b6b;">❌ Ошибка: ${error.message}</div>
-        </div>
-      `;
-    }
-  } finally {
-    if (checkBtn) {
-      checkBtn.disabled = false;
-      checkBtn.innerHTML = '📊 Проверить лимиты';
-    }
-  }
-}
-    
-    async function loadAllActivities() {
-      const { data, error } = await sb
-        .from('activities')
-        .select('*')
-        .eq('user_id', currentUser.id)
-        .order('activity_date', { ascending: false });
-      
-      if (error) return [];
-      return data || [];
-    }
-    
-    async function renderUserProfile() {
-      const { data: profile, error } = await sb
-        .from('profiles')
-        .select('*')
-        .eq('id', viewedUserId)
-        .single();
-      
-      if (error || !profile) { 
-        showToast('Пользователь не найден', 2000);
-        navigateTo('home'); 
-        return; 
-      }
-      
-      const { data: activities } = await sb
-        .from('activities')
-        .select('*')
-        .eq('user_id', viewedUserId)
-        .order('activity_date', { ascending: false })
-        .limit(20);
-      
-      const totalKm = (activities || []).reduce((s, a) => s + (a.distance_km || 0), 0).toFixed(2);
-      const trainingsCount = (activities || []).length;
-      const totalTime = (activities || []).reduce((s, a) => s + (a.duration_min || 0), 0);
-      
-      document.getElementById('app').innerHTML = `
-        <div class="fixed-header">
-          <div class="user-info">
-            <div class="user-name">${escapeHtml(profile.name_full)}</div>
-            <div class="user-details">
-              ${profile.gender === 'male' ? 'Мужчина' : profile.gender === 'female' ? 'Женщина' : '—'}, 
-              ${profile.birth_date ? Math.floor((new Date() - new Date(profile.birth_date)) / (365.25 * 24 * 60 * 60 * 1000)) : '—'} лет
-              ${profile.city ? ` | ${escapeHtml(profile.city)}` : ''}
-            </div>
-          </div>
-          <div class="burger" onclick="openMenu()">
-            <span></span><span></span><span></span>
-          </div>
-        </div>
-        
-        <div class="container">
-          <div class="card">
-            <div class="stats-row">
-              <div class="stat-item"><div class="stat-value">${totalKm}</div><div class="stat-label">км всего</div></div>
-              <div class="stat-item"><div class="stat-value">${trainingsCount}</div><div class="stat-label">тренировок</div></div>
-              <div class="stat-item"><div class="stat-value">${formatDuration(totalTime)}</div><div class="stat-label">общее время</div></div>
-            </div>
-          </div>
-          
-          <div class="card">
-            <h3 style="color: white;">Последние тренировки</h3>
-            <div class="activities-list">
-              ${(activities || []).map(a => `
-                <div class="activity-item">
-                  <div class="activity-info">
-                    <div class="activity-name">${escapeHtml(a.name || 'Без названия')}</div>
-                    <div class="activity-meta">
-                      ${formatDate(a.activity_date)} | ${(a.distance_km || 0).toFixed(2)} км
-                      ${a.duration_min ? ' | ' + formatDuration(a.duration_min) : ''}
-                      ${a.pace_min_per_km ? ' | темп ' + a.pace_min_per_km : ''}
-                    </div>
-                  </div>
-                </div>
-              `).join('') || '<div style="text-align:center; color:rgba(255,255,255,0.6); padding:20px;">Нет тренировок</div>'}
-            </div>
-            <div class="show-all" onclick="navigateTo('home')">← Назад на главную</div>
-          </div>
-        </div>
-        
-        <div id="menu-overlay" class="menu-overlay" onclick="closeMenu()"></div>
-        <div id="menu" class="menu">
-          <div class="menu-header"><strong>Меню</strong></div>
-          <div class="menu-item" onclick="navigateTo('home'); closeMenu();"><span>🏠</span><span>Главная</span></div>
-          <div class="menu-item" onclick="navigateTo('leaderboard'); closeMenu();"><span>🏆</span><span>Таблица лидеров</span></div>
-          <div class="menu-item" onclick="navigateTo('activities'); closeMenu();"><span>📋</span><span>Мои тренировки</span></div>
-          <div class="menu-item" onclick="navigateTo('achievements'); closeMenu();"><span>🏅</span><span>Достижения</span></div>
-          <div class="menu-item" onclick="navigateTo('points'); closeMenu();"><span>⭐</span><span>Баллы</span></div>
-          <div class="menu-item" onclick="navigateTo('abilities'); closeMenu();"><span>⚡</span><span>Способности</span></div>
-          <div class="menu-item" onclick="navigateTo('news'); closeMenu();"><span>📰</span><span>Лента новостей</span></div>
-          <div class="menu-item" onclick="navigateTo('settings'); closeMenu();"><span>⚙️</span><span>Настройки</span></div>
-          ${isAdmin ? `<div class="menu-item" onclick="navigateTo('sync'); closeMenu();"><span>🔄</span><span>Синхронизация</span></div>` : ''}
-          <div class="menu-item" onclick="logout(); closeMenu();"><span>🚪</span><span>Выход</span></div>
-        </div>
-      `;
-    }
-    
-    async function initSession() {
+    const initSession = async () => {
       const { data: { session } } = await sb.auth.getSession();
-      if (session) {
-        currentUser = session.user;
-        await checkAdminStatus();
-      }
+      if(session) { currentUser = session.user; await checkAdminStatus(); }
       handleRouting();
-    }
+    };
     
-    async function render() {
-      if (!currentUser) {
-        renderAuth();
-        return;
-      }
-      
-      if (currentPage === 'home') {
-        await renderHome();
-      } else if (currentPage === 'leaderboard') {
-        await renderLeaderboardPage();
-      } else if (currentPage === 'achievements') {
-        await renderAchievementsPage();
-      } else if (currentPage === 'points') {
-        await renderPointsPage();
-      } else if (currentPage === 'abilities') {
-        await renderAbilitiesPage();
-      } else if (currentPage === 'activities') {
-        await renderActivitiesPage();
-      } else if (currentPage === 'news') {
-        await renderNewsPage();
-      } else if (currentPage === 'settings') {
-        await renderSettingsPage();
-      } else if (currentPage === 'sync' && isAdmin) {
-        await renderSyncPage();
-      } else if (currentPage === 'userProfile') {
-        await renderUserProfile();
-      } else {
-        await renderHome();
-      }
-    }
+    const render = async () => {
+      if(!currentUser) { renderAuth(); return; }
+      const pages = { home: renderHome, leaderboard: renderLeaderboardPage, achievements: renderAchievementsPage, points: renderPointsPage, abilities: renderAbilitiesPage, activities: renderActivitiesPage, news: renderNewsPage, settings: renderSettingsPage, userProfile: renderUserProfile };
+      if(currentPage === 'sync' && isAdmin) await renderSyncPage();
+      else if(pages[currentPage]) await pages[currentPage]();
+      else await renderHome();
+    };
     
-    // Делаем функции глобальными
-    window.register = register;
-    window.login = login;
-    window.logout = logout;
-    window.syncClubActivities = syncClubActivities;
-    window.resetSyncDate = resetSyncDate;
-    window.navigateTo = navigateTo;
-    window.openMenu = openMenu;
-    window.closeMenu = closeMenu;
-    window.saveSettings = saveSettings;
-    window.changeLeaderboardSort = changeLeaderboardSort;
-    window.checkRateLimit = checkRateLimit;
-    window.leaderboardFilterGender = leaderboardFilterGender;
-    window.leaderboardFilterAge = leaderboardFilterAge;
+    window.register = register; window.login = login; window.logout = logout;
+    window.navigateTo = navigateTo; window.openMenu = openMenu; window.closeMenu = closeMenu;
+    window.saveSettings = saveSettings; window.changeLeaderboardSort = changeLeaderboardSort;
+    window.leaderboardFilterGender = leaderboardFilterGender; window.leaderboardFilterAge = leaderboardFilterAge;
     
-    // Запуск
     initSession();
-    window.addEventListener('popstate', () => handleRouting());
+    window.addEventListener('popstate', handleRouting);
   </script>
 </body>
 </html>
